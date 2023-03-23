@@ -21,7 +21,7 @@ fun MapScreen() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "HOME",
+            text = "MAP",
             fontSize = MaterialTheme.typography.h3.fontSize,
             fontWeight = FontWeight.Bold,
             color = Color.White
