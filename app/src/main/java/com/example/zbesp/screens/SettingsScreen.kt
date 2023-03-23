@@ -17,14 +17,14 @@ fun SettingsScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Blue),
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = "SETTINGS",
             fontSize = MaterialTheme.typography.h3.fontSize,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color.Black
         )
     }
 }

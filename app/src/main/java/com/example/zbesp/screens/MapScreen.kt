@@ -17,14 +17,14 @@ fun MapScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Magenta),
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = "MAP",
             fontSize = MaterialTheme.typography.h3.fontSize,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color.Black
         )
     }
 }
