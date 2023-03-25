@@ -1,10 +1,13 @@
 package com.example.zbesp
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -19,12 +22,14 @@ import com.example.zbesp.ui.theme.SapphireBlue
 fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomBar(navController = navController)}
-    ) {
-        BottomNavGraph(navController = navController)
-    }
+        bottomBar = { BottomBar(navController = navController) },
+        content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
+            Box(modifier = Modifier.padding(padding)) {
+                BottomNavGraph(navController = navController)
+            }
+        }
+    )
 }
-
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
@@ -74,6 +79,9 @@ fun RowScope.AddItem(
         }
     )
 }
+
+
+
 
 //
 //@Composable
