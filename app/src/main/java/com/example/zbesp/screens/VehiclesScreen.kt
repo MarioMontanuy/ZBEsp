@@ -23,20 +23,20 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.example.zbesp.data.Post
-import com.example.zbesp.data.PostRepo
+import com.example.zbesp.data.Vehicle
+import com.example.zbesp.data.VehiclesRepo
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen() {
-    val posts = remember { PostRepo.getPosts() }
+    val vehicles = remember { VehiclesRepo.getVehicles() }
     LazyColumn {
         item {
             Header("My Vehicles")
         }
-        items(posts) { post ->
-            PostItem(post = post)
+        items(vehicles) { vehicle ->
+            PostItem(vehicle = vehicle)
             Divider(startIndent = 50.dp)
         }
     }
@@ -81,25 +81,34 @@ fun Header(
 
 @Composable
 private fun PostMetadata(
-    post: Post,
+    vehicle: Vehicle,
     modifier: Modifier = Modifier
 ) {
     val divider = "  •  "
     val tagDivider = "  "
     val text = buildAnnotatedString {
-        append(post.metadata.date)
+        append(vehicle.metadata.type.toString())
+        append(divider)
+        append(vehicle.metadata.country)
+        append(divider)
+        append(vehicle.metadata.registrationYear)
+        append(divider)
+        append(vehicle.metadata.environmentalSticker.toString())
         append(divider)
         val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
             background = MaterialTheme.colors.primary.copy(alpha = 0.1f)
         )
-        post.tags.forEachIndexed { index, tag ->
-            if (index != 0) {
-                append(tagDivider)
+        withStyle(tagStyle) {
+                append(" Sticker: ${vehicle.metadata.environmentalSticker.toString().uppercase(Locale.getDefault())} ")
             }
-            withStyle(tagStyle) {
-                append(" ${tag.uppercase(Locale.getDefault())} ")
-            }
-        }
+//        post.tags.forEachIndexed { index, tag ->
+//            if (index != 0) {
+//                append(tagDivider)
+//            }
+//            withStyle(tagStyle) {
+//                append(" ${tag.uppercase(Locale.getDefault())} ")
+//            }
+//        }
     }
     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
         androidx.compose.material.Text(
@@ -113,7 +122,7 @@ private fun PostMetadata(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
-    post: Post,
+    vehicle: Vehicle,
     modifier: Modifier = Modifier
 ) {
     ListItem(
@@ -122,16 +131,16 @@ fun PostItem(
             .padding(vertical = 8.dp),
         icon = {
             Image(
-                painter = painterResource(post.imageThumbId),
+                painter = painterResource(vehicle.imageThumbId),
                 contentDescription = null,
                 modifier = Modifier.clip(shape = MaterialTheme.shapes.small)
             )
         },
         text = {
-            Text(text = post.title)
+            Text(text = vehicle.name)
         },
         secondaryText = {
-            PostMetadata(post)
+            PostMetadata(vehicle)
         }
     )
 }
