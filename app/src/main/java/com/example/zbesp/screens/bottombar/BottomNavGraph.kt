@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.zbesp.screens.MapScreen
 import com.example.zbesp.screens.SettingsScreen
-import com.example.zbesp.screens.vehicles.VehiclesNavHost
+import com.example.zbesp.screens.vehicles.VehiclesNavGraph
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -15,7 +15,7 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Map.route
     ) {
         composable(route = BottomBarScreen.Vehicles.route) {
-            VehiclesNavHost()
+            VehiclesNavGraph()
         }
 
         composable(route = BottomBarScreen.Map.route) {

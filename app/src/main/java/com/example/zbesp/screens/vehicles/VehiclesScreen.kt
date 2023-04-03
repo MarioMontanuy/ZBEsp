@@ -47,50 +47,6 @@ fun VehiclesScreen(navController: NavController) {
     }
     VehiclesFloatingActionButton(navController = navController)
 }
-
-@Composable
-fun VehiclesNavHost(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = VehiclesScreens.VehiclesList.route
-) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable(VehiclesScreens.VehiclesList.route) {
-            VehiclesScreen(navController = navController)
-        }
-        composable(VehiclesScreens.VehicleDetail.route) {
-            VehicleDetailScreen()
-        }
-        composable(VehiclesScreens.NewVehicle.route) {
-            NewVehicleDetailScreen()
-        }
-    }
-}
-
-@Composable
-fun VehiclesFloatingActionButton(navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize()){
-        FloatingActionButton(
-            modifier = Modifier
-                .padding(all = 16.dp)
-                .align(alignment = Alignment.BottomEnd),
-            onClick = { navController.navigate(VehiclesScreens.NewVehicle.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            } },
-            backgroundColor = SapphireBlue,
-            contentColor = Color.White
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Crear nota")
-        }
-    }
-}
-
-
 @Composable
 fun Header(
     text: String,
@@ -110,7 +66,6 @@ fun Header(
         )
     }
 }
-
 @Composable
 private fun PostMetadata(
     vehicle: Vehicle,
@@ -147,10 +102,6 @@ private fun PostMetadata(
         )
     }
 }
-
-
-
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
@@ -182,9 +133,21 @@ fun PostItem(
         }
     )
 }
-
-//@Composable
-//@Preview
-//fun VehiclesScreenPreview(){
-//    VehiclesScreen()
-//}
+@Composable
+fun VehiclesFloatingActionButton(navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize()){
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .align(alignment = Alignment.BottomEnd),
+            onClick = { navController.navigate(VehiclesScreens.NewVehicle.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            } },
+            backgroundColor = SapphireBlue,
+            contentColor = Color.White
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Crear nota")
+        }
+    }
+}
