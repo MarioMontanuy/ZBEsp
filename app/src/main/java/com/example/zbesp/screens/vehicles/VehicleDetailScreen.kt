@@ -31,30 +31,25 @@ fun VehicleDetailScreen(name: Vehicle?){
         }
 
         Text(
-            text = name!!.name,
-            style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive)
+            text = name!!.name
         )
-
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = name.metadata.country
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = name.metadata.registrationYear
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = name.metadata.type.toString()
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = name.metadata.environmentalSticker.toString()
+        )
         Spacer(modifier = Modifier.height(15.dp))
 
-        TextField(
-            label = { Text(text = "Username") },
-            value = username.value,
-            onValueChange = { username.value = it }
-        )
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-        Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
-            Button(
-                onClick = {},
-                shape = RoundedCornerShape(50.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-            ) {
-                Text(text = "Forgot Password")
-            }
-        }
     }
 }
