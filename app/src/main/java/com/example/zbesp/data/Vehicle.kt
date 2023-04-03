@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 import com.example.zbesp.ui.theme.Turquoise
 import com.example.zbesp.ui.theme.Blue
 import com.example.zbesp.R
-
 @Immutable
 data class Vehicle(
     val id: Long,
@@ -54,7 +53,7 @@ private val vehicleNone = Vehicle(
 )
 
 private val vehicleB = Vehicle(
-    id = 1L,
+    id = 2L,
     name = "Car3",
     route = "Car3",
     metadata = Metadata(
@@ -70,7 +69,7 @@ private val vehicleB = Vehicle(
 )
 
 private val vehicleC = Vehicle(
-    id = 1L,
+    id = 3L,
     name = "Car2",
     route = "Car2",
     metadata = Metadata(
@@ -86,7 +85,7 @@ private val vehicleC = Vehicle(
 )
 
 private val vehicleECO = Vehicle(
-    id = 1L,
+    id = 4L,
     name = "Car4",
     route = "Car4",
     metadata = Metadata(
@@ -102,7 +101,7 @@ private val vehicleECO = Vehicle(
 )
 
 private val vehicleZero = Vehicle(
-    id = 1L,
+    id = 5L,
     name = "Car4",
     route = "Car4",
     metadata = Metadata(
@@ -152,3 +151,6 @@ enum class EnvironmentalSticker (type: String) {
     None("None");
 }
 
+fun getVehicle(vehicleId: String): Vehicle{
+    return vehicles.first {it.id == vehicleId.toLong()}
+}

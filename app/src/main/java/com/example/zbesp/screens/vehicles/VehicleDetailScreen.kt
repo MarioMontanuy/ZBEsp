@@ -20,7 +20,7 @@ import com.example.zbesp.data.Vehicle
 
 
 @Composable
-fun VehicleDetailScreen(){
+fun VehicleDetailScreen(name: Vehicle?){
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.Center,
@@ -31,7 +31,7 @@ fun VehicleDetailScreen(){
         }
 
         Text(
-            text = "Forgot Password",
+            text = name!!.name,
             style = TextStyle(fontSize = 40.sp, fontFamily = FontFamily.Cursive)
         )
 

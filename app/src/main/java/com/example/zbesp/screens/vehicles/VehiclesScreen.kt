@@ -111,7 +111,7 @@ fun PostItem(
 ) {
     ListItem(
         modifier = modifier
-            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.route) {
+            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }   },
