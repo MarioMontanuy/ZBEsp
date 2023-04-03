@@ -34,7 +34,7 @@ fun VehiclesNavGraph(
                 }
             )
         ) { entry ->
-            VehicleDetailScreen(name = getVehicle(entry.arguments?.getString("vehicle")!!))
+            VehicleDetailScreen(vehicle = getVehicle(entry.arguments?.getString("vehicle")!!))
         }
         composable(VehiclesScreens.NewVehicle.route) {
             NewVehicleDetailScreen()
