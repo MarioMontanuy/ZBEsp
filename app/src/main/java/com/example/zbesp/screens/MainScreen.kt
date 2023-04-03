@@ -1,4 +1,4 @@
-package com.example.zbesp
+package com.example.zbesp.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.zbesp.screens.bottombar.BottomBarScreen
+import com.example.zbesp.screens.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.SapphireBlue
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

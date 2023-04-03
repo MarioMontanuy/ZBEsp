@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.ui.theme.BottomNavigationBarTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.zbesp.ui.theme.SapphireBlue

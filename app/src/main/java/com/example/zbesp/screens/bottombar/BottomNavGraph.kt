@@ -1,4 +1,4 @@
-package com.example.zbesp
+package com.example.zbesp.screens.bottombar
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.zbesp.screens.MapScreen
 import com.example.zbesp.screens.SettingsScreen
-import com.example.zbesp.screens.VehiclesScreen
+import com.example.zbesp.screens.vehicles.VehiclesNavHost
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -15,7 +15,7 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Map.route
     ) {
         composable(route = BottomBarScreen.Vehicles.route) {
-            VehiclesScreen()
+            VehiclesNavHost()
         }
 
         composable(route = BottomBarScreen.Map.route) {

@@ -1,8 +1,7 @@
-package com.example.zbesp.screens
+package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,39 +16,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehiclesRepo
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun VehiclesScreen() {
+fun VehiclesScreen(navController: NavController) {
     val vehicles = remember { VehiclesRepo.getVehicles() }
     LazyColumn {
         item {
             Header("My Vehicles")
         }
         items(vehicles) { vehicle ->
-            PostItem(vehicle = vehicle)
+            PostItem(vehicle = vehicle, navController = navController)
             Divider(startIndent = 50.dp)
         }
     }
-    VehiclesFloatingActionButton()
+    VehiclesFloatingActionButton(navController = navController)
 }
+
 @Composable
-fun VehiclesFloatingActionButton() {
+fun VehiclesNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = VehiclesScreens.VehiclesList.route
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        composable(VehiclesScreens.VehiclesList.route) {
+            VehiclesScreen(navController = navController)
+        }
+        composable(VehiclesScreens.VehicleDetail.route) {
+            VehicleDetailScreen()
+        }
+        composable(VehiclesScreens.NewVehicle.route) {
+            NewVehicleDetailScreen()
+        }
+    }
+}
+
+@Composable
+fun VehiclesFloatingActionButton(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()){
         FloatingActionButton(
             modifier = Modifier
                 .padding(all = 16.dp)
                 .align(alignment = Alignment.BottomEnd),
-            onClick = { /* Tus acciones */ },
+            onClick = { navController.navigate(VehiclesScreens.NewVehicle.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            } },
             backgroundColor = SapphireBlue,
             contentColor = Color.White
         ) {
@@ -84,23 +116,20 @@ private fun PostMetadata(
     vehicle: Vehicle,
     modifier: Modifier = Modifier
 ) {
-    val divider = "  •  "
-    val tagDivider = "  "
+    val divider = "\n"
+    val tagDivider = "\t\t\t"
     val text = buildAnnotatedString {
-        append(vehicle.metadata.type.toString())
-        append(divider)
-        append(vehicle.metadata.country)
-        append(divider)
-        append(vehicle.metadata.registrationYear)
-        append(divider)
-        append(vehicle.metadata.environmentalSticker.toString())
-        append(divider)
-        val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
-            background = MaterialTheme.colors.primary.copy(alpha = 0.1f)
-        )
-        withStyle(tagStyle) {
-                append(" Sticker: ${vehicle.metadata.environmentalSticker.toString().uppercase(Locale.getDefault())} ")
-            }
+//        append(vehicle.metadata.type.toString())
+//        append(tagDivider)
+//        val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
+//            background = vehicle.metadata.stickerColor.copy(alpha = 0.2f)
+//        )
+//        withStyle(tagStyle) {
+//                append(" Sticker: ${vehicle.metadata.environmentalSticker.toString().uppercase(Locale.getDefault())} ")
+//            }
+        if (vehicle.metadata.enabled) {
+            append("Vehículo activo")
+        }
 //        post.tags.forEachIndexed { index, tag ->
 //            if (index != 0) {
 //                append(tagDivider)
@@ -119,21 +148,30 @@ private fun PostMetadata(
     }
 }
 
+
+
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
     vehicle: Vehicle,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     ListItem(
         modifier = modifier
-            .clickable { /* todo */ }
-            .padding(vertical = 8.dp),
+            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }   },
         icon = {
             Image(
                 painter = painterResource(vehicle.imageThumbId),
                 contentDescription = null,
-                modifier = Modifier.clip(shape = MaterialTheme.shapes.small)
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .clip(shape = MaterialTheme.shapes.small)
+                    .size(45.dp)
             )
         },
         text = {

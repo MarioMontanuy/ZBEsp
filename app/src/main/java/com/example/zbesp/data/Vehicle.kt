@@ -1,14 +1,18 @@
 package com.example.zbesp.data
 
-import android.os.Environment
 import androidx.annotation.DrawableRes
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
+import com.example.zbesp.ui.theme.Turquoise
+import com.example.zbesp.ui.theme.Blue
 import com.example.zbesp.R
 
 @Immutable
 data class Vehicle(
     val id: Long,
     val name: String,
+    val route: String,
     val metadata: Metadata,
     @DrawableRes val imageId: Int,
     @DrawableRes val imageThumbId: Int,
@@ -19,7 +23,9 @@ data class Metadata(
     val country: String,
     val type: VehicleType,
     val registrationYear: String,
-    val environmentalSticker: EnvironmentalSticker
+    val environmentalSticker: EnvironmentalSticker,
+    val stickerColor: Color,
+    val enabled: Boolean
 )
 
 //@Immutable
@@ -31,46 +37,101 @@ data class Metadata(
 
 //private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
 
-private val vehicle1 = Vehicle(
+private val vehicleNone = Vehicle(
     id = 1L,
     name = "Car1",
+    route = "Car1",
     metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
-        environmentalSticker = EnvironmentalSticker.None
+        environmentalSticker = EnvironmentalSticker.None,
+        stickerColor = Color.Gray,
+        enabled = true
     ),
-    imageId = R.drawable.ic_launcher_background,
-    imageThumbId = R.drawable.ic_launcher_background,
+    imageId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,
 )
 
-private val vehicle2 = Vehicle(
+private val vehicleB = Vehicle(
     id = 1L,
-    name = "Car2",
+    name = "Car3",
+    route = "Car3",
     metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
-        environmentalSticker = EnvironmentalSticker.None
+        environmentalSticker = EnvironmentalSticker.B,
+        stickerColor = Color.Yellow,
+        enabled = false
     ),
-    imageId = R.drawable.ic_launcher_background,
-    imageThumbId = R.drawable.ic_launcher_background,
+    imageId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,
 )
+
+private val vehicleC = Vehicle(
+    id = 1L,
+    name = "Car2",
+    route = "Car2",
+    metadata = Metadata(
+        country = "Spain",
+        type = VehicleType.PrivateCar,
+        registrationYear = "2001",
+        environmentalSticker = EnvironmentalSticker.C,
+        stickerColor = Color.Green,
+        enabled = false
+    ),
+    imageId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,
+)
+
+private val vehicleECO = Vehicle(
+    id = 1L,
+    name = "Car4",
+    route = "Car4",
+    metadata = Metadata(
+        country = "Spain",
+        type = VehicleType.PrivateCar,
+        registrationYear = "2001",
+        environmentalSticker = EnvironmentalSticker.ECO,
+        stickerColor = Turquoise,
+        enabled = false
+    ),
+    imageId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,
+)
+
+private val vehicleZero = Vehicle(
+    id = 1L,
+    name = "Car4",
+    route = "Car4",
+    metadata = Metadata(
+        country = "Spain",
+        type = VehicleType.PrivateCar,
+        registrationYear = "2001",
+        environmentalSticker = EnvironmentalSticker.Zero,
+        stickerColor = Blue,
+        enabled = false
+    ),
+    imageId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,
+)
+
 object VehiclesRepo {
     fun getVehicles(): List<Vehicle> = vehicles
     fun getFeaturedPost(): Vehicle = vehicles.random()
 }
 
 private val vehicles = listOf(
-    vehicle1,
-    vehicle2,
-    vehicle1.copy(id = 6L),
-    vehicle1.copy(id = 7L),
-    vehicle1.copy(id = 8L),
-    vehicle1.copy(id = 9L),
-    vehicle1.copy(id = 10L),
-    vehicle1.copy(id = 11L),
-    vehicle1.copy(id = 12L),
+    vehicleNone,
+    vehicleB,
+    vehicleC,
+    vehicleECO,
+    vehicleZero,
+    vehicleNone.copy(id = 9L),
+    vehicleNone.copy(id = 10L),
+    vehicleNone.copy(id = 11L),
+    vehicleNone.copy(id = 12L),
 )
 
 enum class VehicleType (type: String) {
