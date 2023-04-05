@@ -131,6 +131,10 @@ private val vehicles = listOf(
     vehicleNone.copy(id = 10L),
     vehicleNone.copy(id = 11L),
     vehicleNone.copy(id = 12L),
+    vehicleNone.copy(id = 13L),
+    vehicleNone.copy(id = 14L),
+    vehicleNone.copy(id = 15L),
+    vehicleNone.copy(id = 16L),
 )
 
 enum class VehicleType (type: String) {

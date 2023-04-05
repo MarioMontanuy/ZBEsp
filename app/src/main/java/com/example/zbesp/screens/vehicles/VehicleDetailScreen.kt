@@ -33,43 +33,56 @@ import com.example.zbesp.data.Vehicle
 import com.example.zbesp.ui.theme.Typography
 import com.example.zbesp.R
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.SubtitleText
+import com.example.zbesp.ui.theme.TitleText
 
 
 @Composable
 fun VehicleDetailScreen(vehicle: Vehicle?) {
 
     Column {
-        AddRow(title = "Name", subtitle = vehicle!!.name)
-        Divider(startIndent = 50.dp)
-        AddRow(title = "Country", subtitle = vehicle.metadata.country)
-        Divider(startIndent = 50.dp)
-        AddRow(title = "Registration Yeay", subtitle = vehicle.metadata.registrationYear)
-        Divider(startIndent = 50.dp)
-        AddRow(title = "Type", subtitle = vehicle.metadata.type.toString())
-        Divider(startIndent = 50.dp)
-        AddRow(title = "Environmental Sticker", subtitle = vehicle.metadata.environmentalSticker.toString())
-        Divider(startIndent = 50.dp)
+        if(vehicle!!.metadata.enabled)
+        {
+            AddEnabledInfoRow()
+            Divider(startIndent = 20.dp)
+        }
+        AddTextRow(title = "Name", subtitle = vehicle.name)
+        AddTextRow(title = "Country", subtitle = vehicle.metadata.country)
+        AddTextRow(title = "Registration Year", subtitle = vehicle.metadata.registrationYear)
+        AddTextRow(title = "Type", subtitle = vehicle.metadata.type.toString())
+        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.metadata.environmentalSticker.toString())
     }
 
 
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddRow(title: String, subtitle: String){
+fun AddTextRow(title: String, subtitle: String){
+    ListItem(
+        Modifier.padding(5.dp),
+        text = {
+            TitleText(text = title, TextAlign.Start)
+        },
+        secondaryText = {
+            SubtitleText(text = subtitle, TextAlign.Start)
+        },
+    )
+    Divider(startIndent = 20.dp)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun AddEnabledInfoRow(){
     ListItem(
         Modifier.padding(20.dp),
         text = {
-            Text(
-                text = title,
-                color = SapphireBlue,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.body1
-            )
+            TitleText(text = "This vehicle is enabled", TextAlign.Center)
         },
         secondaryText = {
-            Text(text = subtitle, style = MaterialTheme.typography.body2)
-        }
+            SubtitleText("All information shown is related to the characteristics of this vehicle", TextAlign.Center)
+        },
     )
+    Divider(startIndent = 20.dp)
 }
 //    Surface(
 //        modifier = Modifier
