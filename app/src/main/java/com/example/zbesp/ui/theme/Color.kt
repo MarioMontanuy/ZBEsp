@@ -1,5 +1,7 @@
 package com.example.zbesp.ui.theme
 
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -29,3 +31,12 @@ fun formTextFieldColors(
     errorCursorColor = errorCursorColor,
     focusedIndicatorColor = SapphireBlue
 )
+@Composable
+fun getButtonColors(): ButtonColors{
+    return ButtonDefaults.buttonColors(
+        backgroundColor = Color.White,
+        contentColor = SapphireBlue,
+        disabledBackgroundColor = Color.White,
+        disabledContentColor = SapphireBlue
+    )
+}

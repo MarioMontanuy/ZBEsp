@@ -13,4 +13,9 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="ThemeOverlay.MyApp.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorSecondary">@color/sapphire_blue</item>
+        <item name="colorPrimary">@color/sapphire_blue</item> <!-- button text color -->
+    </style>
 </resources>
