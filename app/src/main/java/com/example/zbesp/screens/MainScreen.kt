@@ -15,8 +15,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.zbesp.screens.bottombar.BottomBarScreen
-import com.example.zbesp.screens.bottombar.BottomNavGraph
+import com.example.zbesp.navigation.bottombar.BottomBarScreen
+import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.SapphireBlue
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

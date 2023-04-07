@@ -1,4 +1,4 @@
-package com.example.zbesp.screens.vehicles
+package com.example.zbesp.navigation.vehicles
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,8 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.getVehicle
+import com.example.zbesp.screens.vehicles.NewVehicleDetailScreen
+import com.example.zbesp.screens.vehicles.VehicleDetailScreen
+import com.example.zbesp.screens.vehicles.VehiclesScreen
 
 @Composable
 fun VehiclesNavGraph(

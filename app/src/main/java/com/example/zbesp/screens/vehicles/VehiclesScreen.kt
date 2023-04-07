@@ -21,17 +21,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehiclesRepo
+import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.TitleText
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
@@ -71,28 +71,10 @@ private fun PostMetadata(
     vehicle: Vehicle,
     modifier: Modifier = Modifier
 ) {
-    val divider = "\n"
-    val tagDivider = "\t\t\t"
     val text = buildAnnotatedString {
-//        append(vehicle.metadata.type.toString())
-//        append(tagDivider)
-//        val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
-//            background = vehicle.metadata.stickerColor.copy(alpha = 0.2f)
-//        )
-//        withStyle(tagStyle) {
-//                append(" Sticker: ${vehicle.metadata.environmentalSticker.toString().uppercase(Locale.getDefault())} ")
-//            }
         if (vehicle.metadata.enabled) {
             append("Vehículo activo")
         }
-//        post.tags.forEachIndexed { index, tag ->
-//            if (index != 0) {
-//                append(tagDivider)
-//            }
-//            withStyle(tagStyle) {
-//                append(" ${tag.uppercase(Locale.getDefault())} ")
-//            }
-//        }
     }
     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
         androidx.compose.material.Text(
@@ -126,7 +108,7 @@ fun PostItem(
             )
         },
         text = {
-            Text(text = vehicle.name)
+            TitleText(text = vehicle.name, alignment = TextAlign.Start)
         },
         secondaryText = {
             PostMetadata(vehicle)

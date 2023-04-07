@@ -1,12 +1,13 @@
-package com.example.zbesp.screens.bottombar
+package com.example.zbesp.navigation.bottombar
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.zbesp.navigation.settings.SettingsNavGraph
 import com.example.zbesp.screens.MapScreen
-import com.example.zbesp.screens.SettingsScreen
-import com.example.zbesp.screens.vehicles.VehiclesNavGraph
+import com.example.zbesp.screens.settings.SettingsScreen
+import com.example.zbesp.navigation.vehicles.VehiclesNavGraph
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
@@ -23,7 +24,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
 
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsScreen()
+            SettingsNavGraph()
         }
     }
 }

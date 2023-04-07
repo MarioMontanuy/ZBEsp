@@ -1,4 +1,4 @@
-package com.example.zbesp.screens.bottombar
+package com.example.zbesp.navigation.bottombar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar

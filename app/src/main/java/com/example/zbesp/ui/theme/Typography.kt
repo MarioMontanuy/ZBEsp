@@ -49,3 +49,8 @@ fun SubtitleText(text: String, alignment: TextAlign){
         textAlign = alignment
     )
 }
+
+@Composable
+fun CommonText(){
+    //TODO make a common text for info screens like about us
+}

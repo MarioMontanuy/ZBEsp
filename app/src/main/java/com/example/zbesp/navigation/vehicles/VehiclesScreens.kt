@@ -1,4 +1,4 @@
-package com.example.zbesp.screens.vehicles
+package com.example.zbesp.navigation.vehicles
 
 sealed class VehiclesScreens(val route: String) {
     object VehiclesList : VehiclesScreens(route = "vehicles_list")

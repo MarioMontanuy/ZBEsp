@@ -41,6 +41,7 @@ import com.example.zbesp.ui.theme.TitleText
 fun VehicleDetailScreen(vehicle: Vehicle?) {
 
     Column {
+        Header(text = "Vehicle")
         if(vehicle!!.metadata.enabled)
         {
             AddEnabledInfoRow()
