@@ -1,4 +1,4 @@
-package com.example.zbesp.screens
+package com.example.zbesp.screens.map
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,27 +10,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MapScreen() {
+    // TODO Map does not appear
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "MAP",
-            fontSize = MaterialTheme.typography.h3.fontSize,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
+        MapActivity()
+//        Text(
+//            text = "MAP",
+//            fontSize = MaterialTheme.typography.h3.fontSize,
+//            fontWeight = FontWeight.Bold,
+//            color = Color.Black
+//        )
     }
-}
-
-@Composable
-@Preview
-fun MapScreenPreview(){
-    MapScreen()
 }

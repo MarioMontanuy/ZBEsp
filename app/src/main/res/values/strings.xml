@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ZBEsp</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core</string>
+    <string name="settings">Settings</string>
 </resources>
