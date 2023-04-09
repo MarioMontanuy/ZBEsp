@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -22,6 +23,7 @@ import com.example.zbesp.ui.theme.BottomNavigationBarTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.google.android.material.snackbar.Snackbar
+import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
     private var settings = false
@@ -30,6 +32,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissionOnCreate()
+        val ctx = applicationContext
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         setContent {
             BottomNavigationBarTheme {
                 val systemUiController = rememberSystemUiController()
@@ -51,8 +55,12 @@ class MainActivity : ComponentActivity() {
         super.onResume()
 
             if (!checkPermissions() && !settings) {
+                Log.i("Main", "OnResume")
                 requestPermissions()
             }
+//            else {
+//                PERMISSIONS_GRANTED = true
+//            }
 
     }
 //    private fun requestPermission() {
@@ -124,7 +132,7 @@ private fun showSnackbar(
             android.Manifest.permission.ACCESS_FINE_LOCATION
         ) || ActivityCompat.shouldShowRequestPermissionRationale(
             this,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
         )
         if (locationPermissions) {
             showSnackbar(
@@ -156,9 +164,13 @@ private fun showSnackbar(
             when {
                 (permissions.getOrDefault(android.Manifest.permission.ACCESS_FINE_LOCATION, false)
                         || permissions.getOrDefault(
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ,
                     false
-                )) -> {
+                )
+                        || permissions.getOrDefault(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, false)
+                        ) -> {
                 }
                 else -> {
                     showSnackbar(
@@ -179,9 +191,8 @@ private fun showSnackbar(
             }
         }
     }
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun checkPermissions(): Boolean {
+    fun checkPermissions(): Boolean {
         val permissionFineState = ActivityCompat.checkSelfPermission(
             this,
             android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -194,5 +205,10 @@ private fun showSnackbar(
         return (((permissionFineState == PackageManager.PERMISSION_GRANTED) ||
                 (permissionCoarseState == PackageManager.PERMISSION_GRANTED)))
     }
+//companion object {
+//    var PERMISSIONS_GRANTED: Boolean = false
+//}
 }
+
+
 
