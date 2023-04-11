@@ -1,6 +1,7 @@
 package com.example.zbesp.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -18,16 +19,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.SapphireBlue
+import java.io.InputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(inputStream: InputStream) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
         content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
             Box(modifier = Modifier.padding(padding)) {
-                BottomNavGraph(navController = navController)
+                BottomNavGraph(navController = navController, inputStream)
             }
         }
     )

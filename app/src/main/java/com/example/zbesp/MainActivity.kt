@@ -3,6 +3,7 @@ package com.example.zbesp
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -20,18 +21,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.ui.theme.BottomNavigationBarTheme
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
+import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.config.Configuration
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.io.InputStream
 
 class MainActivity : ComponentActivity() {
+    private lateinit var map: MapView
     private var settings = false
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermissionOnCreate()
+        Log.i("MainActivity1", "applname:" + applicationContext.packageName)
+        Log.i("MainActivity1", "raw:" + R.raw.lleida)
+        val res = resources.openRawResource(R.raw.lleida)
+        Log.i("MainActivity1", "raw2:$res")
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         setContent {
@@ -46,7 +56,7 @@ class MainActivity : ComponentActivity() {
 //                        color = if (darkTheme) Color.Black else RoyalBlue
 //                    )
                 }
-                MainScreen()
+                MainScreen(applicationContext.resources.openRawResource(R.raw.lleida))
             }
         }
     }
@@ -63,6 +73,7 @@ class MainActivity : ComponentActivity() {
 //            }
 
     }
+
 //    private fun requestPermission() {
 //        ActivityCompat.requestPermissions(
 //            this,
@@ -205,10 +216,43 @@ private fun showSnackbar(
         return (((permissionFineState == PackageManager.PERMISSION_GRANTED) ||
                 (permissionCoarseState == PackageManager.PERMISSION_GRANTED)))
     }
-//companion object {
-//    var PERMISSIONS_GRANTED: Boolean = false
-//}
+
+//    class KmlLoader(stream: InputStream): AsyncTask<Void, Void, Void>() {
+//        //    private var progressDialog: ProgressDialog = ProgressDialog(MainActivity().applicationContext)
+//        private lateinit var kmlDocument: KmlDocument
+//        private var currentStream = stream
+//        @Deprecated("Deprecated in Java")
+//        override fun doInBackground(vararg params: Void?): Void? {
+//            Log.i("KmlLoader", "doInBackground")
+//            kmlDocument = KmlDocument()
+////        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
+//            kmlDocument.parseKMLStream(resources, null);
+//            val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
+//            map.overlays.add(kmlOverlay)
+//            return null
+//        }
+//
+//        @Deprecated("Deprecated in Java")
+//        override fun onPreExecute() {
+//            super.onPreExecute()
+//            Log.i("KmlLoader", "onPreExecute")
+//
+////        progressDialog.setMessage("Loading Project...")
+////        progressDialog.show()
+//        }
+//
+//        override fun onPostExecute(result: Void?) {
+////        progressDialog.dismiss()
+//            Log.i("KmlLoader", "onPostExecute")
+//            map.invalidate()
+//            val boundingBox = kmlDocument.mKmlRoot.boundingBox
+//            map.zoomToBoundingBox(boundingBox, true);
+////        map.controller.setCenter(boundingBox.center)
+//            super.onPostExecute(result)
+//        }
+//    }
 }
+
 
 
 
