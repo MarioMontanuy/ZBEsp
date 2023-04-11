@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 //                        color = if (darkTheme) Color.Black else RoyalBlue
 //                    )
                 }
-                MainScreen(applicationContext.resources.openRawResource(R.raw.lleida))
+                MainScreen(applicationContext.resources.openRawResource(R.raw.lleida_verde))
             }
         }
     }

@@ -1,22 +1,14 @@
 package com.example.zbesp.screens.map
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.ProgressDialog
-import android.content.Context
 import android.os.AsyncTask
-import android.provider.ContactsContract.Directory.PACKAGE_NAME
-import android.renderscript.ScriptGroup.Input
 import android.util.Log
-import androidx.core.content.ContextCompat
-import androidx.test.InstrumentationRegistry.getContext
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import com.example.zbesp.MainActivity
-import com.example.zbesp.R
+import androidx.compose.ui.graphics.Color
 import org.osmdroid.bonuspack.kml.KmlDocument
+import org.osmdroid.bonuspack.kml.LineStyle
+import org.osmdroid.bonuspack.kml.Style
+import org.osmdroid.bonuspack.kml.StyleSelector
 import java.io.InputStream
-import kotlin.coroutines.coroutineContext
 
 
 class KmlLoader(inputStream: InputStream): AsyncTask<Void, Void, Void>() {
@@ -29,7 +21,10 @@ class KmlLoader(inputStream: InputStream): AsyncTask<Void, Void, Void>() {
         Log.i("KmlLoader2", "doInBackground")
         kmlDocument = KmlDocument()
 //        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
-        kmlDocument.parseKMLStream(currentInputStream, null);
+        kmlDocument.parseKMLStream(currentInputStream, null)
+        val s = Style()
+        s.mLineStyle = LineStyle(0xFF0F52BA.toInt(), 8.0f)
+        kmlDocument.addStyle(s)
         val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
         map.overlays.add(kmlOverlay)
         return null
