@@ -40,3 +40,13 @@ fun getButtonColors(): ButtonColors{
         disabledContentColor = SapphireBlue
     )
 }
+
+@Composable
+fun getButtonColorsReversed(): ButtonColors{
+    return ButtonDefaults.buttonColors(
+        backgroundColor = SapphireBlue,
+        contentColor = Color.White,
+        disabledBackgroundColor = SapphireBlue,
+        disabledContentColor = Color.White
+    )
+}

@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +36,17 @@ fun TitleText(text: String, alignment: TextAlign){
     Text(
         text = text,
         color = SapphireBlue,
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.body1,
+        textAlign = alignment
+    )
+}
+
+@Composable
+fun TitleTextWhite(text: String, alignment: TextAlign){
+    Text(
+        text = text,
+        color = Color.White,
         fontWeight = FontWeight.Bold,
         style = MaterialTheme.typography.body1,
         textAlign = alignment

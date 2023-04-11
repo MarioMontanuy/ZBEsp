@@ -24,7 +24,7 @@ data class Metadata(
     val registrationYear: String,
     val environmentalSticker: EnvironmentalSticker,
     val stickerColor: Color,
-    val enabled: Boolean
+    var enabled: Boolean
 )
 
 //@Immutable
@@ -119,6 +119,12 @@ private val vehicleZero = Vehicle(
 object VehiclesRepo {
     fun getVehicles(): List<Vehicle> = vehicles
     fun getFeaturedPost(): Vehicle = vehicles.random()
+}
+
+fun noEnabledVehicle(){
+    vehicles.forEach {
+        vehicle -> vehicle.metadata.enabled = false
+    }
 }
 
 private val vehicles = listOf(

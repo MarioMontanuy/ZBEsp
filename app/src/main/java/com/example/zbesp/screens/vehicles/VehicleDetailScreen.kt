@@ -30,11 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.zbesp.data.Vehicle
-import com.example.zbesp.ui.theme.Typography
 import com.example.zbesp.R
-import com.example.zbesp.ui.theme.SapphireBlue
-import com.example.zbesp.ui.theme.SubtitleText
-import com.example.zbesp.ui.theme.TitleText
+import com.example.zbesp.data.noEnabledVehicle
+import com.example.zbesp.ui.theme.*
 
 
 @Composable
@@ -52,6 +50,20 @@ fun VehicleDetailScreen(vehicle: Vehicle?) {
         AddTextRow(title = "Registration Year", subtitle = vehicle.metadata.registrationYear)
         AddTextRow(title = "Type", subtitle = vehicle.metadata.type.toString())
         AddTextRow(title = "Environmental Sticker", subtitle = vehicle.metadata.environmentalSticker.toString())
+        Spacer(modifier = Modifier.padding(50.dp))
+        Button(
+            onClick = {
+                // TODO hacer esto más eficiente
+                noEnabledVehicle()
+                // TODO al pulsar el botón, debe aparecer automaticamente el texto que indica q el
+                //  vehiculo esta habilitado
+                vehicle.metadata.enabled = true
+            },
+            colors = getButtonColorsReversed(),
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
+        ) {
+            TitleTextWhite("Mark as current vehicle", TextAlign.Start)
+        }
     }
 
 

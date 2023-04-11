@@ -56,6 +56,8 @@ class MainActivity : ComponentActivity() {
 //                        color = if (darkTheme) Color.Black else RoyalBlue
 //                    )
                 }
+                //TODO evitar pasar el inputStream desde aqui (la primera vez se muestra en el mapa,
+                // pero en el resto el input stream esta cerrado y no se muestra la zbe en el mapa)
                 MainScreen(applicationContext.resources.openRawResource(R.raw.lleida_verde))
             }
         }

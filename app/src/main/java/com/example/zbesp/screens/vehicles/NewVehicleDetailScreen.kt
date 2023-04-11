@@ -22,9 +22,7 @@ import com.example.zbesp.R
 import com.example.zbesp.data.EnvironmentalSticker
 import com.example.zbesp.data.VehicleType
 import com.example.zbesp.screens.MainScreen
-import com.example.zbesp.ui.theme.TitleText
-import com.example.zbesp.ui.theme.formTextFieldColors
-import com.example.zbesp.ui.theme.getButtonColors
+import com.example.zbesp.ui.theme.*
 import java.util.*
 
 
@@ -52,7 +50,6 @@ fun NewVehicleDetailScreen() {
 @Composable
 fun AddTextFieldRow(label: String) {
     var textState by remember { mutableStateOf("") }
-
     TextField(
         value = textState,
         singleLine = true,

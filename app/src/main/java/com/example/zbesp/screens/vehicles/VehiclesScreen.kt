@@ -73,7 +73,7 @@ private fun PostMetadata(
 ) {
     val text = buildAnnotatedString {
         if (vehicle.metadata.enabled) {
-            append("Vehículo activo")
+            append("Current vehicle")
         }
     }
     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
