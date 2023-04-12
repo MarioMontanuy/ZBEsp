@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehiclesRepo
+import com.example.zbesp.data.vehicleNone
+import com.example.zbesp.data.vehicles
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
@@ -40,7 +43,7 @@ fun VehiclesScreen(navController: NavController) {
         item {
             Header("My Vehicles")
         }
-        items(vehicles) { vehicle ->
+        items(vehicles.value) { vehicle ->
             PostItem(vehicle = vehicle, navController = navController)
             Divider(startIndent = 50.dp)
         }
@@ -68,11 +71,11 @@ fun Header(
 }
 @Composable
 private fun PostMetadata(
-    vehicle: Vehicle,
+    vehicle: MutableState<Vehicle>,
     modifier: Modifier = Modifier
 ) {
     val text = buildAnnotatedString {
-        if (vehicle.metadata.enabled) {
+        if (vehicle.value.metadata.value.enabled.value) {
             append("Current vehicle")
         }
     }
@@ -87,19 +90,19 @@ private fun PostMetadata(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
-    vehicle: Vehicle,
+    vehicle: MutableState<Vehicle>,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
     ListItem(
         modifier = modifier
-            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
+            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.value.id.toString())) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }   },
         icon = {
             Image(
-                painter = painterResource(vehicle.imageThumbId),
+                painter = painterResource(vehicle.value.imageThumbId),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -108,7 +111,7 @@ fun PostItem(
             )
         },
         text = {
-            TitleText(text = vehicle.name, alignment = TextAlign.Start)
+            TitleText(text = vehicle.value.name, alignment = TextAlign.Start)
         },
         secondaryText = {
             PostMetadata(vehicle)
@@ -125,7 +128,8 @@ fun VehiclesFloatingActionButton(navController: NavController) {
             onClick = { navController.navigate(VehiclesScreens.NewVehicle.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
-            } },
+            }
+                },
             backgroundColor = SapphireBlue,
             contentColor = Color.White
         ) {

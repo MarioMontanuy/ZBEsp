@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.test.InstrumentationRegistry.getContext
 import com.example.zbesp.MainActivity
 import com.example.zbesp.R
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
@@ -30,6 +30,8 @@ import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.screens.vehicles.VehiclesFloatingActionButton
 import com.example.zbesp.ui.theme.SapphireBlue
 import org.osmdroid.bonuspack.kml.KmlDocument
+import org.osmdroid.bonuspack.kml.LineStyle
+import org.osmdroid.bonuspack.kml.Style
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -38,6 +40,21 @@ import java.io.InputStream
 lateinit var map: MapView
 @SuppressLint("StaticFieldLeak")
 private lateinit var currentInputStream: InputStream
+/*
+class KmlLoader: AppCompatActivity() {
+    fun load() {
+        val kmlDocument = KmlDocument()
+//        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
+        kmlDocument.parseKMLStream(resources.openRawResource(R.raw.lleida), null)
+        val s = Style()
+        s.mLineStyle = LineStyle(Color.Blue.value.toInt(), 8.0f)
+        kmlDocument.addStyle(s)
+        val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
+        map.overlays.add(kmlOverlay)
+        map.invalidate()
+        // KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+}*/
 @Composable
 fun MapScreen(inputStream: InputStream) {
     currentInputStream = inputStream
@@ -49,9 +66,11 @@ fun MapScreen(inputStream: InputStream) {
             map = it.findViewById(R.id.mapView)
             map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
             initializeMap()
+            loadKml()
+            //val kmlLoader = KmlLoader()
+            //kmlLoader.load()
         }
     )
-    loadKml()
     CurrentLocationFloatingActionButton()
 }
 
@@ -84,8 +103,16 @@ fun CurrentLocationFloatingActionButton() {
 }
 
 fun loadKml() {
-
-    KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    val kmlDocument = KmlDocument()
+//        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
+    kmlDocument.parseKMLStream(currentInputStream, null)
+    val s = Style()
+    s.mLineStyle = LineStyle(Color.Blue.value.toInt(), 8.0f)
+    kmlDocument.addStyle(s)
+    val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
+    map.overlays.add(kmlOverlay)
+    map.invalidate()
+    // KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 }
 
 object MyLocationOverlay {

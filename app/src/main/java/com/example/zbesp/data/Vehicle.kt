@@ -3,6 +3,8 @@ package com.example.zbesp.data
 import androidx.annotation.DrawableRes
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.zbesp.ui.theme.Turquoise
 import com.example.zbesp.ui.theme.Blue
@@ -12,7 +14,7 @@ data class Vehicle(
     val id: Long,
     val name: String,
     val route: String,
-    val metadata: Metadata,
+    val metadata: MutableState<Metadata>,
     @DrawableRes val imageId: Int,
     @DrawableRes val imageThumbId: Int,
 )
@@ -24,7 +26,7 @@ data class Metadata(
     val registrationYear: String,
     val environmentalSticker: EnvironmentalSticker,
     val stickerColor: Color,
-    var enabled: Boolean
+    var enabled: MutableState<Boolean>
 )
 
 //@Immutable
@@ -36,111 +38,103 @@ data class Metadata(
 
 //private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
 
-private val vehicleNone = Vehicle(
-    id = 1L,
+val vehicleNone: MutableState<Vehicle> = mutableStateOf(
+    Vehicle(id = 1L,
     name = "Car1",
     route = "Car1",
-    metadata = Metadata(
+    metadata = mutableStateOf(Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.None,
         stickerColor = Color.Gray,
-        enabled = true
-    ),
+        enabled = mutableStateOf(true)
+    )),
     imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageThumbId = R.drawable.vehicle,)
+
 )
 
-private val vehicleB = Vehicle(
+private val vehicleB: MutableState<Vehicle> = mutableStateOf(Vehicle(
     id = 2L,
-    name = "Car3",
-    route = "Car3",
-    metadata = Metadata(
+    name = "Car2",
+    route = "Car2",
+    metadata = mutableStateOf(Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.B,
         stickerColor = Color.Yellow,
-        enabled = false
-    ),
+        enabled = mutableStateOf(false)
+    )),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-)
+))
 
-private val vehicleC = Vehicle(
+private val vehicleC: MutableState<Vehicle> = mutableStateOf(Vehicle(
     id = 3L,
-    name = "Car2",
-    route = "Car2",
-    metadata = Metadata(
+    name = "Car3",
+    route = "Car3",
+    metadata = mutableStateOf(Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.C,
         stickerColor = Color.Green,
-        enabled = false
-    ),
+        enabled = mutableStateOf(false)
+    )),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-)
+))
 
-private val vehicleECO = Vehicle(
+private val vehicleECO: MutableState<Vehicle> = mutableStateOf(Vehicle(
     id = 4L,
     name = "Car4",
     route = "Car4",
-    metadata = Metadata(
+    metadata = mutableStateOf(Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.ECO,
         stickerColor = Turquoise,
-        enabled = false
-    ),
+        enabled = mutableStateOf(false)
+    )),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-)
+))
 
-private val vehicleZero = Vehicle(
+private val vehicleZero: MutableState<Vehicle> = mutableStateOf(Vehicle(
     id = 5L,
-    name = "Car4",
-    route = "Car4",
-    metadata = Metadata(
+    name = "Car5",
+    route = "Car5",
+    metadata = mutableStateOf(Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.Zero,
         stickerColor = Blue,
-        enabled = false
-    ),
+        enabled = mutableStateOf(false)
+    )),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-)
+))
 
 object VehiclesRepo {
-    fun getVehicles(): List<Vehicle> = vehicles
-    fun getFeaturedPost(): Vehicle = vehicles.random()
+    fun getVehicles(): MutableState<List<MutableState<Vehicle>>> = vehicles
 }
 
 fun noEnabledVehicle(){
-    vehicles.forEach {
-        vehicle -> vehicle.metadata.enabled = false
+    vehicles.value.forEach {
+        vehicle -> vehicle.value.metadata.value.enabled = mutableStateOf(false)
     }
 }
 
-private val vehicles = listOf(
-    vehicleNone,
-    vehicleB,
-    vehicleC,
-    vehicleECO,
-    vehicleZero,
-    vehicleB.copy(id = 9L),
-    vehicleB.copy(id = 10L),
-    vehicleB.copy(id = 11L),
-    vehicleB.copy(id = 12L),
-    vehicleB.copy(id = 13L),
-    vehicleB.copy(id = 14L),
-    vehicleB.copy(id = 15L),
-    vehicleB.copy(id = 16L),
+var vehicles: MutableState<List<MutableState<Vehicle>>> = mutableStateOf(
+    listOf(vehicleNone,
+        vehicleB,
+        vehicleC,
+        vehicleECO,
+        vehicleZero,)
 )
 
 enum class VehicleType (type: String) {
@@ -161,6 +155,6 @@ enum class EnvironmentalSticker (type: String) {
     None("None");
 }
 
-fun getVehicle(vehicleId: String): Vehicle{
-    return vehicles.first {it.id == vehicleId.toLong()}
+fun getVehicle(vehicleId: String): MutableState<Vehicle>{
+    return vehicles.value.first {it.value.id == vehicleId.toLong()}
 }

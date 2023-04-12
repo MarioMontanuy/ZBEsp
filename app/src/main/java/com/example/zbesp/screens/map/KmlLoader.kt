@@ -1,4 +1,4 @@
-package com.example.zbesp.screens.map
+/*package com.example.zbesp.screens.map
 
 import android.annotation.SuppressLint
 import android.os.AsyncTask
@@ -20,6 +20,7 @@ class KmlLoader(inputStream: InputStream): AsyncTask<Void, Void, Void>() {
     override fun doInBackground(vararg params: Void?): Void? {
         Log.i("KmlLoader2", "doInBackground")
         kmlDocument = KmlDocument()
+
 //        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
         kmlDocument.parseKMLStream(currentInputStream, null)
         val s = Style()
@@ -49,3 +50,4 @@ class KmlLoader(inputStream: InputStream): AsyncTask<Void, Void, Void>() {
         super.onPostExecute(result)
     }
 }
+*/

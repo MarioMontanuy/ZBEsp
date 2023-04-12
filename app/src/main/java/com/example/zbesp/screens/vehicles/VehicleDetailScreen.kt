@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,24 +33,26 @@ import androidx.compose.ui.unit.sp
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.R
 import com.example.zbesp.data.noEnabledVehicle
+import com.example.zbesp.data.vehicleNone
+import com.example.zbesp.data.vehicles
 import com.example.zbesp.ui.theme.*
 
 
 @Composable
-fun VehicleDetailScreen(vehicle: Vehicle?) {
+fun VehicleDetailScreen(vehicle: MutableState<Vehicle>) {
 
     Column {
         Header(text = "Vehicle")
-        if(vehicle!!.metadata.enabled)
+        if(vehicle.value.metadata.value.enabled.value)
         {
             AddEnabledInfoRow()
             Divider(startIndent = 20.dp)
         }
-        AddTextRow(title = "Name", subtitle = vehicle.name)
-        AddTextRow(title = "Country", subtitle = vehicle.metadata.country)
-        AddTextRow(title = "Registration Year", subtitle = vehicle.metadata.registrationYear)
-        AddTextRow(title = "Type", subtitle = vehicle.metadata.type.toString())
-        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.metadata.environmentalSticker.toString())
+        AddTextRow(title = "Name", subtitle = vehicle.value.name)
+        AddTextRow(title = "Country", subtitle = vehicle.value.metadata.value.country)
+        AddTextRow(title = "Registration Year", subtitle = vehicle.value.metadata.value.registrationYear)
+        AddTextRow(title = "Type", subtitle = vehicle.value.metadata.value.type.toString())
+        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.value.metadata.value.environmentalSticker.toString())
         Spacer(modifier = Modifier.padding(50.dp))
         Button(
             onClick = {
@@ -57,7 +60,8 @@ fun VehicleDetailScreen(vehicle: Vehicle?) {
                 noEnabledVehicle()
                 // TODO al pulsar el botón, debe aparecer automaticamente el texto que indica q el
                 //  vehiculo esta habilitado
-                vehicle.metadata.enabled = true
+                vehicle.value.metadata.value.enabled = mutableStateOf(true)
+                vehicles.value = vehicles.value + vehicleNone
             },
             colors = getButtonColorsReversed(),
             modifier = Modifier.fillMaxWidth().padding(20.dp),
@@ -65,8 +69,6 @@ fun VehicleDetailScreen(vehicle: Vehicle?) {
             TitleTextWhite("Mark as current vehicle", TextAlign.Start)
         }
     }
-
-
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
