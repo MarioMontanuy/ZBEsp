@@ -9,9 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.zbesp.data.getVehicle
-import com.example.zbesp.screens.vehicles.NewVehicleDetailScreen
-import com.example.zbesp.screens.vehicles.VehicleDetailScreen
-import com.example.zbesp.screens.vehicles.VehiclesScreen
+import com.example.zbesp.screens.vehicles.*
 
 @Composable
 fun VehiclesNavGraph(
@@ -39,7 +37,8 @@ fun VehiclesNavGraph(
             VehicleDetailScreen(vehicle = getVehicle(entry.arguments?.getString("vehicle")!!))
         }
         composable(VehiclesScreens.NewVehicle.route) {
-            NewVehicleDetailScreen()
+            val viewModel = MainViewModel()
+            SingleTextField(viewModel)
         }
     }
 }

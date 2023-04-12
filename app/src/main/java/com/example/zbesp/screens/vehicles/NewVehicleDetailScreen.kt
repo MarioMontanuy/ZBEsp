@@ -20,15 +20,21 @@ import androidx.compose.ui.unit.dp
 import com.example.zbesp.MainActivity
 import com.example.zbesp.R
 import com.example.zbesp.data.EnvironmentalSticker
+import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehicleType
+import com.example.zbesp.data.noEnabledVehicle
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.ui.theme.*
 import java.util.*
+import kotlin.reflect.typeOf
 
 
 private lateinit var mDatePickerDialog: DatePickerDialog
 private lateinit var mDate: MutableState<String>
-
+private lateinit var selectedCountry: String
+private lateinit var selectedYear: String
+private lateinit var selectedType: VehicleType
+private lateinit var selectedSticker: EnvironmentalSticker
 @Composable
 fun NewVehicleDetailScreen() {
     DatePicker()
@@ -39,16 +45,28 @@ fun NewVehicleDetailScreen() {
             .padding(top = 50.dp)
             .fillMaxWidth()
     ) {
-        AddTextFieldRow("Enter name")
+        var vehicleName = AddTextFieldRow("Enter name")
         DropDownMenu(arrayOf("Spain"), "Enter country")
         CalendarButton("Enter Registration Year")
         DropDownMenu(VehicleType.values(), "Enter Type")
         DropDownMenu(EnvironmentalSticker.values(), "Enter Environmental Sticker")
+        Spacer(modifier = Modifier.padding(50.dp))
+        Button(
+            onClick = {
+//                      val vehicle = Vehicle(1L,vehicleName,)
+            },
+            colors = getButtonColorsReversed(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+        ) {
+            TitleTextWhite("Create Vehicle", TextAlign.Start)
+        }
     }
 }
 
 @Composable
-fun AddTextFieldRow(label: String) {
+fun AddTextFieldRow(label: String): String {
     var textState by remember { mutableStateOf("") }
     TextField(
         value = textState,
@@ -58,6 +76,7 @@ fun AddTextFieldRow(label: String) {
         label = { TitleText(label, TextAlign.Start) },
         colors = formTextFieldColors()
     )
+    return textState
 }
 @Composable
 fun CalendarButton(text: String){

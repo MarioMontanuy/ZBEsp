@@ -26,7 +26,7 @@ data class Metadata(
     val registrationYear: String,
     val environmentalSticker: EnvironmentalSticker,
     val stickerColor: Color,
-    var enabled: MutableState<Boolean>
+    var enabled: Boolean
 )
 
 //@Immutable
@@ -48,7 +48,7 @@ val vehicleNone: Vehicle =
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.None,
         stickerColor = Color.Gray,
-        enabled = mutableStateOf(true)
+        enabled = true
     ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
@@ -64,7 +64,7 @@ private val vehicleB: Vehicle = Vehicle(
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.B,
         stickerColor = Color.Yellow,
-        enabled = mutableStateOf(false)
+        enabled = false
     ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
@@ -81,7 +81,7 @@ private val vehicleC: Vehicle = Vehicle(
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.C,
         stickerColor = Color.Green,
-        enabled = mutableStateOf(false)
+        enabled = false
     ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
@@ -97,7 +97,7 @@ private val vehicleECO: Vehicle = Vehicle(
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.ECO,
         stickerColor = Turquoise,
-        enabled = mutableStateOf(false)
+        enabled = false
     ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
@@ -113,7 +113,7 @@ private val vehicleZero: Vehicle = Vehicle(
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.Zero,
         stickerColor = Blue,
-        enabled = mutableStateOf(false)
+        enabled = false
     ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
@@ -125,7 +125,7 @@ object VehiclesRepo {
 
 fun noEnabledVehicle(){
     vehicles.forEach {
-        vehicle -> vehicle.metadata.enabled = mutableStateOf(false)
+        vehicle -> vehicle.metadata.enabled = false
     }
 }
 
