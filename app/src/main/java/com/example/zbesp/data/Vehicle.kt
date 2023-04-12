@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.ui.theme.Turquoise
 import com.example.zbesp.ui.theme.Blue
 import com.example.zbesp.R
@@ -29,13 +30,19 @@ data class Metadata(
     var enabled: Boolean
 )
 
-//@Immutable
-//data class PostAuthor(
-//    val name: String,
-//    val url: String? = null
-//)
 
+data class VehicleType(val type: String) : PickerValue() {
+    override fun searchFilter(query: String): Boolean {
+        return this.type.startsWith(query)
+    }
 
+    fun self(): String? {
+        VehicleTypeEnum.values().forEach { value -> if (value.name == type) {
+            return value.name }
+        }
+        return null
+    }
+}
 //private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
 
 val vehicleNone: Vehicle =
@@ -109,7 +116,7 @@ private val vehicleZero: Vehicle = Vehicle(
     route = "Car5",
     metadata = Metadata(
         country = "Spain",
-        type = VehicleType.PrivateCar,
+        type = V,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.Zero,
         stickerColor = Blue,
@@ -138,7 +145,7 @@ var vehicles: List<Vehicle> =
 )
 
 
-enum class VehicleType (type: String) {
+enum class VehicleTypeEnum (type: String) {
     PrivateCar("Private Car"),
     MotorHome("Motor Home"),
     Truck("Truck"),
