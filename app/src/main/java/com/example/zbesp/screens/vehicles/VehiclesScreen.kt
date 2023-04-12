@@ -43,7 +43,7 @@ fun VehiclesScreen(navController: NavController) {
         item {
             Header("My Vehicles")
         }
-        items(vehicles.value) { vehicle ->
+        items(vehicles) { vehicle ->
             PostItem(vehicle = vehicle, navController = navController)
             Divider(startIndent = 50.dp)
         }
@@ -71,11 +71,11 @@ fun Header(
 }
 @Composable
 private fun PostMetadata(
-    vehicle: MutableState<Vehicle>,
+    vehicle: Vehicle,
     modifier: Modifier = Modifier
 ) {
     val text = buildAnnotatedString {
-        if (vehicle.value.metadata.value.enabled.value) {
+        if (vehicle.metadata.enabled) {
             append("Current vehicle")
         }
     }
@@ -90,19 +90,19 @@ private fun PostMetadata(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
-    vehicle: MutableState<Vehicle>,
+    vehicle: Vehicle,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
     ListItem(
         modifier = modifier
-            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.value.id.toString())) {
+            .clickable {navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }   },
         icon = {
             Image(
-                painter = painterResource(vehicle.value.imageThumbId),
+                painter = painterResource(vehicle.imageThumbId),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -111,7 +111,7 @@ fun PostItem(
             )
         },
         text = {
-            TitleText(text = vehicle.value.name, alignment = TextAlign.Start)
+            TitleText(text = vehicle.name, alignment = TextAlign.Start)
         },
         secondaryText = {
             PostMetadata(vehicle)

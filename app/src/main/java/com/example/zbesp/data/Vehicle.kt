@@ -14,7 +14,7 @@ data class Vehicle(
     val id: Long,
     val name: String,
     val route: String,
-    val metadata: MutableState<Metadata>,
+    val metadata: Metadata,
     @DrawableRes val imageId: Int,
     @DrawableRes val imageThumbId: Int,
 )
@@ -38,104 +38,105 @@ data class Metadata(
 
 //private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
 
-val vehicleNone: MutableState<Vehicle> = mutableStateOf(
+val vehicleNone: Vehicle =
     Vehicle(id = 1L,
     name = "Car1",
     route = "Car1",
-    metadata = mutableStateOf(Metadata(
+    metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.None,
         stickerColor = Color.Gray,
         enabled = mutableStateOf(true)
-    )),
+    ),
     imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,)
+    imageThumbId = R.drawable.vehicle,
+    )
 
-)
-
-private val vehicleB: MutableState<Vehicle> = mutableStateOf(Vehicle(
+private val vehicleB: Vehicle = Vehicle(
     id = 2L,
     name = "Car2",
     route = "Car2",
-    metadata = mutableStateOf(Metadata(
+    metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.B,
         stickerColor = Color.Yellow,
         enabled = mutableStateOf(false)
-    )),
+    ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-))
+)
 
-private val vehicleC: MutableState<Vehicle> = mutableStateOf(Vehicle(
+
+private val vehicleC: Vehicle = Vehicle(
     id = 3L,
     name = "Car3",
     route = "Car3",
-    metadata = mutableStateOf(Metadata(
+    metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.C,
         stickerColor = Color.Green,
         enabled = mutableStateOf(false)
-    )),
+    ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-))
+)
 
-private val vehicleECO: MutableState<Vehicle> = mutableStateOf(Vehicle(
+private val vehicleECO: Vehicle = Vehicle(
     id = 4L,
     name = "Car4",
     route = "Car4",
-    metadata = mutableStateOf(Metadata(
+    metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.ECO,
         stickerColor = Turquoise,
         enabled = mutableStateOf(false)
-    )),
+    ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-))
+)
 
-private val vehicleZero: MutableState<Vehicle> = mutableStateOf(Vehicle(
+private val vehicleZero: Vehicle = Vehicle(
     id = 5L,
     name = "Car5",
     route = "Car5",
-    metadata = mutableStateOf(Metadata(
+    metadata = Metadata(
         country = "Spain",
         type = VehicleType.PrivateCar,
         registrationYear = "2001",
         environmentalSticker = EnvironmentalSticker.Zero,
         stickerColor = Blue,
         enabled = mutableStateOf(false)
-    )),
+    ),
     imageId = R.drawable.vehicle,
     imageThumbId = R.drawable.vehicle,
-))
+)
 
 object VehiclesRepo {
-    fun getVehicles(): MutableState<List<MutableState<Vehicle>>> = vehicles
+    fun getVehicles(): List<Vehicle> = vehicles
 }
 
 fun noEnabledVehicle(){
-    vehicles.value.forEach {
-        vehicle -> vehicle.value.metadata.value.enabled = mutableStateOf(false)
+    vehicles.forEach {
+        vehicle -> vehicle.metadata.enabled = mutableStateOf(false)
     }
 }
 
-var vehicles: MutableState<List<MutableState<Vehicle>>> = mutableStateOf(
+var vehicles: List<Vehicle> =
     listOf(vehicleNone,
         vehicleB,
         vehicleC,
         vehicleECO,
-        vehicleZero,)
+        vehicleZero,
 )
+
 
 enum class VehicleType (type: String) {
     PrivateCar("Private Car"),
@@ -155,6 +156,6 @@ enum class EnvironmentalSticker (type: String) {
     None("None");
 }
 
-fun getVehicle(vehicleId: String): MutableState<Vehicle>{
-    return vehicles.value.first {it.value.id == vehicleId.toLong()}
+fun getVehicle(vehicleId: String): Vehicle{
+    return vehicles.first {it.id == vehicleId.toLong()}
 }

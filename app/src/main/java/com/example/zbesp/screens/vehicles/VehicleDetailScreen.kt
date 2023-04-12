@@ -1,5 +1,6 @@
 package com.example.zbesp.screens.vehicles
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,20 +40,23 @@ import com.example.zbesp.ui.theme.*
 
 
 @Composable
-fun VehicleDetailScreen(vehicle: MutableState<Vehicle>) {
+fun VehicleDetailScreen(vehicle: Vehicle) {
 
+    //val mutableState = remember { mutableStateOf(vehicle) }
+    Log.i("VehicleDetailScreen", "out")
     Column {
         Header(text = "Vehicle")
-        if(vehicle.value.metadata.value.enabled.value)
+        if(vehicle.metadata.enabled.value)
         {
+            Log.i("VehicleDetailScreen", "in")
             AddEnabledInfoRow()
             Divider(startIndent = 20.dp)
         }
-        AddTextRow(title = "Name", subtitle = vehicle.value.name)
-        AddTextRow(title = "Country", subtitle = vehicle.value.metadata.value.country)
-        AddTextRow(title = "Registration Year", subtitle = vehicle.value.metadata.value.registrationYear)
-        AddTextRow(title = "Type", subtitle = vehicle.value.metadata.value.type.toString())
-        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.value.metadata.value.environmentalSticker.toString())
+        //AddTextRow(title = "Name", subtitle = vehicle.value.name)
+        //AddTextRow(title = "Country", subtitle = vehicle.value.metadata.value.country)
+        //AddTextRow(title = "Registration Year", subtitle = vehicle.value.metadata.value.registrationYear)
+        //AddTextRow(title = "Type", subtitle = vehicle.value.metadata.value.type.toString())
+        //AddTextRow(title = "Environmental Sticker", subtitle = vehicle.value.metadata.value.environmentalSticker.toString())
         Spacer(modifier = Modifier.padding(50.dp))
         Button(
             onClick = {
@@ -60,11 +64,12 @@ fun VehicleDetailScreen(vehicle: MutableState<Vehicle>) {
                 noEnabledVehicle()
                 // TODO al pulsar el botón, debe aparecer automaticamente el texto que indica q el
                 //  vehiculo esta habilitado
-                vehicle.value.metadata.value.enabled = mutableStateOf(true)
-                vehicles.value = vehicles.value + vehicleNone
+                vehicle.metadata.enabled.value = !vehicle.metadata.enabled.value
             },
             colors = getButtonColorsReversed(),
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
         ) {
             TitleTextWhite("Mark as current vehicle", TextAlign.Start)
         }

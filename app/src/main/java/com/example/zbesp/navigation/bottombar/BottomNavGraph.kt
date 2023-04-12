@@ -11,7 +11,7 @@ import com.example.zbesp.navigation.vehicles.VehiclesNavGraph
 import java.io.InputStream
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, inputStream: InputStream) {
+fun BottomNavGraph(navController: NavHostController, context: Context) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Map.route
@@ -21,7 +21,7 @@ fun BottomNavGraph(navController: NavHostController, inputStream: InputStream) {
         }
 
         composable(route = BottomBarScreen.Map.route) {
-            MapScreen(inputStream)
+            MapScreen(context)
         }
 
         composable(route = BottomBarScreen.Settings.route) {

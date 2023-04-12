@@ -23,13 +23,13 @@ import java.io.InputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(inputStream: InputStream) {
+fun MainScreen(context: Context) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
         content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
             Box(modifier = Modifier.padding(padding)) {
-                BottomNavGraph(navController = navController, inputStream)
+                BottomNavGraph(navController = navController, context)
             }
         }
     )

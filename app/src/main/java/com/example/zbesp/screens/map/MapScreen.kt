@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,8 +57,7 @@ class KmlLoader: AppCompatActivity() {
     }
 }*/
 @Composable
-fun MapScreen(inputStream: InputStream) {
-    currentInputStream = inputStream
+fun MapScreen(context: Context) {
     AndroidView(factory = {
         View.inflate(it, R.layout.map_activity, null)
     },
@@ -66,7 +66,7 @@ fun MapScreen(inputStream: InputStream) {
             map = it.findViewById(R.id.mapView)
             map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
             initializeMap()
-            loadKml()
+            loadKml(context)
             //val kmlLoader = KmlLoader()
             //kmlLoader.load()
         }
@@ -101,11 +101,10 @@ fun CurrentLocationFloatingActionButton() {
         }
     }
 }
-
-fun loadKml() {
+fun loadKml(context: Context) {
     val kmlDocument = KmlDocument()
 //        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
-    kmlDocument.parseKMLStream(currentInputStream, null)
+    kmlDocument.parseKMLStream(context.resources.openRawResource(R.raw.lleida), null)
     val s = Style()
     s.mLineStyle = LineStyle(Color.Blue.value.toInt(), 8.0f)
     kmlDocument.addStyle(s)
