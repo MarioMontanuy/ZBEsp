@@ -151,52 +151,52 @@ fun AddEnabledInfoRow(){
 //        )
 //        Spacer(modifier = Modifier.height(15.dp))
 //    }
-
-@Composable
-fun VehicleCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        elevation = 4.dp,
-        backgroundColor = SapphireBlue.copy(0.2f)
-    ) {
-        Row(modifier = Modifier) {
-            ProfilePictureComposable()
-            ProfileContentComposable()
-        }
-        Row(modifier = Modifier) {
-            ProfilePictureComposable()
-            ProfileContentComposable()
-        }
-    }
-}
-@Composable
-fun ProfilePictureComposable() {
-    Card(
-        modifier = Modifier.size(48.dp),
-        backgroundColor = SapphireBlue.copy(0.2f)
-//        elevation = 4.dp
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.vehicle),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(48.dp),
-            contentDescription = "Profile picture holder"
-        )
-    }
-}
-@Composable
-fun ProfileContentComposable() {
-    Column(
-        modifier = Modifier
-            .padding(start = 8.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.aligned(Alignment.CenterVertically)
-    ) {
-        Text("Catalin Ghita", fontWeight = FontWeight.Bold)
-        Text(
-            text = "Active now",
-            style = MaterialTheme.typography.body2
-        )
-    }
-}
+//
+//@Composable
+//fun VehicleCard() {
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth(),
+//        elevation = 4.dp,
+//        backgroundColor = SapphireBlue.copy(0.2f)
+//    ) {
+//        Row(modifier = Modifier) {
+//            ProfilePictureComposable()
+//            ProfileContentComposable()
+//        }
+//        Row(modifier = Modifier) {
+//            ProfilePictureComposable()
+//            ProfileContentComposable()
+//        }
+//    }
+//}
+//@Composable
+//fun ProfilePictureComposable() {
+//    Card(
+//        modifier = Modifier.size(48.dp),
+//        backgroundColor = SapphireBlue.copy(0.2f)
+////        elevation = 4.dp
+//    ) {
+//        Image(
+//            painter = painterResource(id = R.drawable.private_car),
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier.size(48.dp),
+//            contentDescription = "Profile picture holder"
+//        )
+//    }
+//}
+//@Composable
+//fun ProfileContentComposable() {
+//    Column(
+//        modifier = Modifier
+//            .padding(start = 8.dp)
+//            .fillMaxWidth(),
+//        verticalArrangement = Arrangement.aligned(Alignment.CenterVertically)
+//    ) {
+//        Text("Catalin Ghita", fontWeight = FontWeight.Bold)
+//        Text(
+//            text = "Active now",
+//            style = MaterialTheme.typography.body2
+//        )
+//    }
+//}

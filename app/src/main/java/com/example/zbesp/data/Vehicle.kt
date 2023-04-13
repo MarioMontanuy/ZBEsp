@@ -27,32 +27,32 @@ data class Vehicle(
 
     fun setImage(vehicle: Vehicle, type: VehicleType){
         if (type.type == VehicleTypeEnum.PrivateCar) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.private_car
+            vehicle.imageThumbId = R.drawable.private_car
         }
         if (type.type == VehicleTypeEnum.MotorHome) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.motor_home
+            vehicle.imageThumbId = R.drawable.motor_home
         }
         if (type.type == VehicleTypeEnum.Truck) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.truck
+            vehicle.imageThumbId = R.drawable.truck
         }
         if (type.type == VehicleTypeEnum.MotorBike) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.motor_bike
+            vehicle.imageThumbId = R.drawable.motor_bike
         }
         if (type.type == VehicleTypeEnum.Bus) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.bus
+            vehicle.imageThumbId = R.drawable.bus
         }
         if (type.type == VehicleTypeEnum.Van) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.van
+            vehicle.imageThumbId = R.drawable.van
         }
         if (type.type == VehicleTypeEnum.Tractor) {
-            vehicle.imageId = R.drawable.vehicle
-            vehicle.imageThumbId = R.drawable.vehicle
+            vehicle.imageId = R.drawable.tractor
+            vehicle.imageThumbId = R.drawable.tractor
         }
     }
 }
@@ -91,8 +91,8 @@ val vehicleNone: Vehicle =
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
     enabled = true,
-    imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageId = R.drawable.private_car,
+    imageThumbId = R.drawable.private_car,
     )
 
 private val vehicleB: Vehicle = Vehicle(
@@ -103,8 +103,8 @@ private val vehicleB: Vehicle = Vehicle(
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
     enabled = false,
-    imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageId = R.drawable.private_car,
+    imageThumbId = R.drawable.private_car,
 )
 
 
@@ -116,8 +116,8 @@ private val vehicleC: Vehicle = Vehicle(
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C),
     enabled = false,
-    imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageId = R.drawable.private_car,
+    imageThumbId = R.drawable.private_car,
 )
 
 private val vehicleECO: Vehicle = Vehicle(
@@ -128,8 +128,8 @@ private val vehicleECO: Vehicle = Vehicle(
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
     enabled = false,
-    imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageId = R.drawable.private_car,
+    imageThumbId = R.drawable.private_car,
 )
 
 private val vehicleZero: Vehicle = Vehicle(
@@ -140,8 +140,8 @@ private val vehicleZero: Vehicle = Vehicle(
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
     enabled = false,
-    imageId = R.drawable.vehicle,
-    imageThumbId = R.drawable.vehicle,
+    imageId = R.drawable.private_car,
+    imageThumbId = R.drawable.private_car,
 )
 
 object VehiclesRepo {

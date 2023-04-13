@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ import androidx.navigation.NavController
 import ch.benlu.composeform.FieldState
 import ch.benlu.composeform.Form
 import ch.benlu.composeform.FormField
+import ch.benlu.composeform.Validator
 import ch.benlu.composeform.fields.*
 import ch.benlu.composeform.formatters.dateShort
 import ch.benlu.composeform.validators.DateValidator
@@ -25,9 +27,12 @@ import ch.benlu.composeform.validators.MinLengthValidator
 import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
 import com.example.zbesp.data.*
+import com.example.zbesp.ui.theme.TitleTextRed
 import com.example.zbesp.ui.theme.TitleTextWhite
 import com.example.zbesp.ui.theme.getButtonColorsReversed
 import java.text.DateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class FormScreen: Form() {
@@ -39,10 +44,19 @@ class FormScreen: Form() {
         return username.isValid.value!! && country.isValid.value!! && vehicleType.isValid.value!!
                 && environmentalSticker.isValid.value!! && registrationYear.isValid.value!!
     }
+
+    fun showError(){
+
+        if (!username.isValid.value!!) {
+            username.errorText
+        }
+
+    }
     @FormField
     val username = FieldState(
         state = mutableStateOf<String?>(null),
-        validators = mutableListOf(NotEmptyValidator())
+        validators = mutableListOf(NotEmptyValidator(), MinLengthValidator(4,
+            "The name must be at least 4 characters") )
     )
 
     @FormField
@@ -94,7 +108,7 @@ class FormScreen: Form() {
     @FormField
     val registrationYear = FieldState(
         state = mutableStateOf<Date?>(null),
-        validators = mutableListOf(NotEmptyValidator())
+        validators = mutableListOf(NotEmptyValidator(), PreviousDateValidator({ Calendar.getInstance().time.time},"Date should not be in the future"))
     )
 
     @FormField
@@ -103,6 +117,13 @@ class FormScreen: Form() {
     )
 
 }
+// TODO Move to another folder
+class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) : Validator<Date?>(
+    validate = {
+        (it?.time ?: -1) < minDateTime()
+    },
+    errorText = errorText ?: "This field is not valid."
+)
 
 class MainViewModel : ViewModel() {
     var form = FormScreen()
@@ -110,6 +131,8 @@ class MainViewModel : ViewModel() {
 
 @Composable
 fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
+    // TODO Marcar los fields obligatorios
+    val error = remember { mutableStateOf(false) }
     Header(text = "New Vehicle")
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp, vertical = 80.dp),
         verticalArrangement = Arrangement.Top,
@@ -158,6 +181,10 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                     if (viewModel.form.enableVehicle.state.value!!) {
                         noEnabledVehicle()
                     }
+                    if (vehicles.isEmpty()) {
+                        viewModel.form.enableVehicle.state.value = true
+                    }
+
                     val newVehicle = Vehicle(
                         currentId,
                         viewModel.form.username.state.value!!,
@@ -166,21 +193,16 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                         viewModel.form.registrationYear.state.value!!,
                         viewModel.form.environmentalSticker.state.value!!,
                         viewModel.form.enableVehicle.state.value!!,
-                        R.drawable.vehicle,
-                        R.drawable.vehicle,
+                        R.drawable.private_car,
+                        R.drawable.private_car,
                     )
                     currentId += 1L
                     newVehicle.setImage(newVehicle, viewModel.form.vehicleType.state.value!!)
                     vehicles = vehicles + newVehicle
                     navController.popBackStack()
                 } else {
-                    Log.i("FormScreen", "Error fields must not be empty")
-//                    Toast.makeText(
-//                            ,
-//                            "Error fields must not be empty",
-//                            Toast.LENGTH_SHORT
-//                        )
-//                            .show()
+                    // TODO show error in the field
+                    error.value = true
                 }
             },
             colors = getButtonColorsReversed(),
@@ -189,6 +211,9 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                 .padding(20.dp),
         ) {
             TitleTextWhite("Create vehicle", TextAlign.Start)
+        }
+        if (error.value) {
+            TitleTextRed("Fields should not be empty", TextAlign.Start)
         }
     }
 }
