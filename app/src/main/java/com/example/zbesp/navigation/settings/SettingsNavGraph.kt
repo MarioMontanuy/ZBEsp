@@ -1,6 +1,5 @@
 package com.example.zbesp.navigation.settings
 
-import com.example.zbesp.screens.vehicles.NewVehicleDetailScreen
 import com.example.zbesp.screens.vehicles.VehiclesScreen
 
 import androidx.compose.runtime.Composable

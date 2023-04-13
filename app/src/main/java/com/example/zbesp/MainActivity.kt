@@ -20,8 +20,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import com.example.zbesp.screens.MainScreen
-import com.example.zbesp.ui.theme.BottomNavigationBarTheme
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
 import org.osmdroid.bonuspack.kml.KmlDocument
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         setContent {
-            BottomNavigationBarTheme {
+            ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
                 val darkTheme = isSystemInDarkTheme()
                 SideEffect {

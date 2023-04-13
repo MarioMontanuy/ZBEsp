@@ -37,12 +37,13 @@ import com.example.zbesp.data.noEnabledVehicle
 import com.example.zbesp.data.vehicleNone
 import com.example.zbesp.data.vehicles
 import com.example.zbesp.ui.theme.*
+import java.text.DateFormat
 
 
 @Composable
 fun VehicleDetailScreen(vehicle: Vehicle) {
 
-    val vehicleEnabled = remember { mutableStateOf(vehicle.metadata.enabled) }
+    val vehicleEnabled = remember { mutableStateOf(vehicle.enabled) }
     Log.i("VehicleDetailScreen", "out")
     Column {
         Header(text = "Vehicle")
@@ -53,10 +54,10 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
             Divider(startIndent = 20.dp)
         }
         AddTextRow(title = "Name", subtitle = vehicle.name)
-        AddTextRow(title = "Country", subtitle = vehicle.metadata.country)
-        AddTextRow(title = "Registration Year", subtitle = vehicle.metadata.registrationYear)
-        AddTextRow(title = "Type", subtitle = vehicle.metadata.type.toString())
-        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.metadata.environmentalSticker.toString())
+        AddTextRow(title = "Country", subtitle = vehicle.country.type!!.name)
+        AddTextRow(title = "Registration Year", subtitle = DateFormat.getDateInstance().format(vehicle.registrationYear))
+        AddTextRow(title = "Type", subtitle = vehicle.type.type!!.name)
+        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.environmentalSticker.type!!.name)
         Spacer(modifier = Modifier.padding(50.dp))
         if (!vehicleEnabled.value) {
             Button(
@@ -66,7 +67,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                     // TODO al pulsar el botón, debe aparecer automaticamente el texto que indica q el
                     //  vehiculo esta habilitado
                     vehicleEnabled.value = !vehicleEnabled.value
-                    vehicle.metadata.enabled = !vehicle.metadata.enabled
+                    vehicle.enabled = !vehicle.enabled
                 },
                 colors = getButtonColorsReversed(),
                 modifier = Modifier

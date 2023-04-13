@@ -33,6 +33,7 @@ import com.example.zbesp.data.vehicles
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -69,24 +70,6 @@ fun Header(
         )
     }
 }
-@Composable
-private fun PostMetadata(
-    vehicle: Vehicle,
-    modifier: Modifier = Modifier
-) {
-    val text = buildAnnotatedString {
-        if (vehicle.metadata.enabled) {
-            append("Current vehicle")
-        }
-    }
-    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-        androidx.compose.material.Text(
-            text = text,
-            style = MaterialTheme.typography.body2,
-            modifier = modifier
-        )
-    }
-}
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostItem(
@@ -114,7 +97,9 @@ fun PostItem(
             TitleText(text = vehicle.name, alignment = TextAlign.Start)
         },
         secondaryText = {
-            PostMetadata(vehicle)
+            if (vehicle.enabled) {
+                SubtitleText("Current Vehicle", TextAlign.Start)
+            }
         }
     )
 }
