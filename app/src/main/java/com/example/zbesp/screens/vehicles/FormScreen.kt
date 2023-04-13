@@ -1,10 +1,13 @@
 package com.example.zbesp.screens.vehicles
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +30,7 @@ import ch.benlu.composeform.validators.MinLengthValidator
 import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
 import com.example.zbesp.data.*
+import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.TitleTextRed
 import com.example.zbesp.ui.theme.TitleTextWhite
 import com.example.zbesp.ui.theme.getButtonColorsReversed
@@ -129,91 +133,108 @@ class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
     // TODO Marcar los fields obligatorios
     val error = remember { mutableStateOf(false) }
-    Header(text = "New Vehicle")
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp, vertical = 80.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        TextField(
-            label = "Vehicle name",
-            form = viewModel.form,
-            fieldState = viewModel.form.username,
-        ).Field()
-
-        DateField(
-            label = "Registration Year",
-            form = viewModel.form,
-            fieldState = viewModel.form.registrationYear,
-            formatter = ::dateShort
-        ).Field()
-
-        PickerField(
-            label = "Country",
-            form = viewModel.form,
-            fieldState = viewModel.form.country
-        ).Field()
-
-        PickerField(
-            label = "Vehicle Type",
-            form = viewModel.form,
-            fieldState = viewModel.form.vehicleType
-        ).Field()
-
-        PickerField(
-            label = "Environmental Sticker",
-            form = viewModel.form,
-            fieldState = viewModel.form.environmentalSticker
-        ).Field()
-
-        CheckboxField(
-            fieldState = viewModel.form.enableVehicle,
-            label = "Mark as current vehicle",
-            form = viewModel.form
-        ).Field()
-        Button(
-            onClick = {
-                if (viewModel.form.checkFields()){
-                    val image = "R.drawable.vehicle"/*+viewModel.form.vehicleType.state.value!!.type*/
-                    Log.i("FormScreen", "image:$image")
-                    if (viewModel.form.enableVehicle.state.value!!) {
-                        noEnabledVehicle()
-                    }
-                    if (vehicles.isEmpty()) {
-                        viewModel.form.enableVehicle.state.value = true
-                    }
-
-                    val newVehicle = Vehicle(
-                        currentId,
-                        viewModel.form.username.state.value!!,
-                        viewModel.form.country.state.value!!,
-                        viewModel.form.vehicleType.state.value!!,
-                        viewModel.form.registrationYear.state.value!!,
-                        viewModel.form.environmentalSticker.state.value!!,
-                        viewModel.form.enableVehicle.state.value!!,
-                        R.drawable.private_car,
-                        R.drawable.private_car,
-                    )
-                    currentId += 1L
-                    newVehicle.setImage(newVehicle, viewModel.form.vehicleType.state.value!!)
-                    vehicles = vehicles + newVehicle
-                    navController.popBackStack()
-                } else {
-                    // TODO show error in the field
-                    error.value = true
-                }
-            },
-            colors = getButtonColorsReversed(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
+    Scaffold(topBar = { ZBEspTopBar("New Vehicle") }) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp, vertical = 80.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleTextWhite("Create vehicle", TextAlign.Start)
-        }
-        if (error.value) {
-            TitleTextRed("Fields should not be empty", TextAlign.Start)
+            item {
+                TextField(
+                    label = "Vehicle name",
+                    form = viewModel.form,
+                    fieldState = viewModel.form.username,
+                ).Field()
+            }
+            item {
+                DateField(
+                    label = "Registration Year",
+                    form = viewModel.form,
+                    fieldState = viewModel.form.registrationYear,
+                    formatter = ::dateShort
+                ).Field()
+            }
+            item {
+                PickerField(
+                    label = "Country",
+                    form = viewModel.form,
+                    fieldState = viewModel.form.country
+                ).Field()
+            }
+            item {
+                PickerField(
+                    label = "Vehicle Type",
+                    form = viewModel.form,
+                    fieldState = viewModel.form.vehicleType
+                ).Field()
+            }
+            item {
+                PickerField(
+                    label = "Environmental Sticker",
+                    form = viewModel.form,
+                    fieldState = viewModel.form.environmentalSticker
+                ).Field()
+            }
+            item {
+                CheckboxField(
+                    fieldState = viewModel.form.enableVehicle,
+                    label = "Mark as current vehicle",
+                    form = viewModel.form
+                ).Field()
+            }
+            item {
+                Button(
+                    onClick = {
+                        if (viewModel.form.checkFields()) {
+                            val image =
+                                "R.drawable.vehicle"/*+viewModel.form.vehicleType.state.value!!.type*/
+                            Log.i("FormScreen", "image:$image")
+                            if (viewModel.form.enableVehicle.state.value!!) {
+                                noEnabledVehicle()
+                            }
+                            if (vehicles.isEmpty()) {
+                                viewModel.form.enableVehicle.state.value = true
+                            }
+
+                            val newVehicle = Vehicle(
+                                currentId,
+                                viewModel.form.username.state.value!!,
+                                viewModel.form.country.state.value!!,
+                                viewModel.form.vehicleType.state.value!!,
+                                viewModel.form.registrationYear.state.value!!,
+                                viewModel.form.environmentalSticker.state.value!!,
+                                viewModel.form.enableVehicle.state.value!!,
+                            )
+                            currentId += 1L
+                            newVehicle.setImage(
+                                newVehicle,
+                                viewModel.form.vehicleType.state.value!!
+                            )
+                            vehicles = vehicles + newVehicle
+                            navController.popBackStack()
+                        } else {
+                            // TODO show error in the field
+                            error.value = true
+                        }
+                    },
+                    colors = getButtonColorsReversed(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                ) {
+                    TitleTextWhite("Create vehicle", TextAlign.Start)
+                }
+            }
+            item {
+                if (error.value) {
+                    TitleTextRed("Fields should not be empty", TextAlign.Start)
+                }
+            }
         }
     }
 }

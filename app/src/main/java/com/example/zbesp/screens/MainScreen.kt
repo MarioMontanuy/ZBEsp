@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.TitleTextWhite
 import java.io.InputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -84,7 +86,14 @@ fun RowScope.AddItem(
     )
 }
 
-
+@Composable
+fun ZBEspTopBar(title: String) {
+    TopAppBar(
+        title = {
+            TitleTextWhite(text = title, alignment = TextAlign.Start)
+        }
+    )
+}
 
 
 //

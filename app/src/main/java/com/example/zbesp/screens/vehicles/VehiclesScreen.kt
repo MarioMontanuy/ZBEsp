@@ -31,6 +31,7 @@ import com.example.zbesp.data.VehiclesRepo
 import com.example.zbesp.data.vehicleNone
 import com.example.zbesp.data.vehicles
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.screens.ZBEspTopBar
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
@@ -40,16 +41,16 @@ import com.example.zbesp.ui.theme.TitleText
 @Composable
 fun VehiclesScreen(navController: NavController) {
     val vehicles = remember { VehiclesRepo.getVehicles() }
-    LazyColumn {
-        item {
-            Header("My Vehicles")
+    Scaffold(topBar = { ZBEspTopBar("Vehicles") }) {
+        LazyColumn {
+            items(vehicles) { vehicle ->
+                PostItem(vehicle = vehicle, navController = navController)
+                Divider(startIndent = 50.dp)
+            }
         }
-        items(vehicles) { vehicle ->
-            PostItem(vehicle = vehicle, navController = navController)
-            Divider(startIndent = 50.dp)
-        }
+        VehiclesFloatingActionButton(navController = navController)
     }
-    VehiclesFloatingActionButton(navController = navController)
+
 }
 @Composable
 fun Header(
@@ -85,7 +86,7 @@ fun PostItem(
             }   },
         icon = {
             Image(
-                painter = painterResource(vehicle.imageThumbId),
+                painter = painterResource(vehicle.imageId),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

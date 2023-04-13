@@ -1,10 +1,12 @@
 package com.example.zbesp.screens.vehicles
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,48 +38,60 @@ import com.example.zbesp.R
 import com.example.zbesp.data.noEnabledVehicle
 import com.example.zbesp.data.vehicleNone
 import com.example.zbesp.data.vehicles
+import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehicleDetailScreen(vehicle: Vehicle) {
-
     val vehicleEnabled = remember { mutableStateOf(vehicle.enabled) }
-    Log.i("VehicleDetailScreen", "out")
-    Column {
-        Header(text = "Vehicle")
-        if(vehicleEnabled.value)
-        {
-            Log.i("VehicleDetailScreen", "in")
-            AddEnabledInfoRow()
-            Divider(startIndent = 20.dp)
-        }
-        AddTextRow(title = "Name", subtitle = vehicle.name)
-        AddTextRow(title = "Country", subtitle = vehicle.country.type!!.name)
-        AddTextRow(title = "Registration Year", subtitle = DateFormat.getDateInstance().format(vehicle.registrationYear))
-        AddTextRow(title = "Type", subtitle = vehicle.type.type!!.name)
-        AddTextRow(title = "Environmental Sticker", subtitle = vehicle.environmentalSticker.type!!.name)
-        Spacer(modifier = Modifier.padding(50.dp))
-        if (!vehicleEnabled.value) {
-            Button(
-                onClick = {
-                    // TODO hacer esto más eficiente
-                    noEnabledVehicle()
-                    // TODO al pulsar el botón, debe aparecer automaticamente el texto que indica q el
-                    //  vehiculo esta habilitado
-                    vehicleEnabled.value = !vehicleEnabled.value
-                    vehicle.enabled = !vehicle.enabled
-                },
-                colors = getButtonColorsReversed(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-            ) {
-                TitleTextWhite("Mark as current vehicle", TextAlign.Start)
+    Scaffold(topBar = { ZBEspTopBar("Vehicle Information") }) {
+        LazyColumn {
+            item{
+                if(vehicleEnabled.value)
+                {
+                    AddEnabledInfoRow()
+                    Divider(startIndent = 20.dp)
+                }
+            }
+            item {
+                AddTextRow(title = "Name", subtitle = vehicle.name)
+            }
+            item {
+                AddTextRow(title = "Country", subtitle = vehicle.country.type!!.name)
+            }
+            item {
+                AddTextRow(title = "Registration Year", subtitle = DateFormat.getDateInstance().format(vehicle.registrationYear))
+            }
+            item {
+                AddTextRow(title = "Type", subtitle = vehicle.type.type!!.name)
+            }
+            item {
+                AddTextRow(title = "Environmental Sticker", subtitle = vehicle.environmentalSticker.type!!.name)
+                Spacer(modifier = Modifier.padding(50.dp))
+            }
+            item {
+                if (!vehicleEnabled.value) {
+                    Button(
+                        onClick = {
+                            noEnabledVehicle()
+                            vehicleEnabled.value = !vehicleEnabled.value
+                            vehicle.enabled = !vehicle.enabled
+                        },
+                        colors = getButtonColorsReversed(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                    ) {
+                        TitleTextWhite("Mark as current vehicle", TextAlign.Start)
+                    }
+                }
             }
         }
     }
+
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

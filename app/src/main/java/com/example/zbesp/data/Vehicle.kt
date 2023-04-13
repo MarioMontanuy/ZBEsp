@@ -21,38 +21,31 @@ data class Vehicle(
     val registrationYear: Date,
     val environmentalSticker: EnvironmentalSticker,
     var enabled: Boolean,
-    @DrawableRes var imageId: Int,
-    @DrawableRes var imageThumbId: Int,
+    @DrawableRes var imageId: Int = R.drawable.private_car,
 ) {
+
 
     fun setImage(vehicle: Vehicle, type: VehicleType){
         if (type.type == VehicleTypeEnum.PrivateCar) {
             vehicle.imageId = R.drawable.private_car
-            vehicle.imageThumbId = R.drawable.private_car
         }
         if (type.type == VehicleTypeEnum.MotorHome) {
             vehicle.imageId = R.drawable.motor_home
-            vehicle.imageThumbId = R.drawable.motor_home
         }
         if (type.type == VehicleTypeEnum.Truck) {
             vehicle.imageId = R.drawable.truck
-            vehicle.imageThumbId = R.drawable.truck
         }
         if (type.type == VehicleTypeEnum.MotorBike) {
             vehicle.imageId = R.drawable.motor_bike
-            vehicle.imageThumbId = R.drawable.motor_bike
         }
         if (type.type == VehicleTypeEnum.Bus) {
             vehicle.imageId = R.drawable.bus
-            vehicle.imageThumbId = R.drawable.bus
         }
         if (type.type == VehicleTypeEnum.Van) {
             vehicle.imageId = R.drawable.van
-            vehicle.imageThumbId = R.drawable.van
         }
         if (type.type == VehicleTypeEnum.Tractor) {
             vehicle.imageId = R.drawable.tractor
-            vehicle.imageThumbId = R.drawable.tractor
         }
     }
 }
@@ -92,7 +85,6 @@ val vehicleNone: Vehicle =
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
     enabled = true,
     imageId = R.drawable.private_car,
-    imageThumbId = R.drawable.private_car,
     )
 
 private val vehicleB: Vehicle = Vehicle(
@@ -104,7 +96,6 @@ private val vehicleB: Vehicle = Vehicle(
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
     enabled = false,
     imageId = R.drawable.private_car,
-    imageThumbId = R.drawable.private_car,
 )
 
 
@@ -117,7 +108,6 @@ private val vehicleC: Vehicle = Vehicle(
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C),
     enabled = false,
     imageId = R.drawable.private_car,
-    imageThumbId = R.drawable.private_car,
 )
 
 private val vehicleECO: Vehicle = Vehicle(
@@ -129,7 +119,6 @@ private val vehicleECO: Vehicle = Vehicle(
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
     enabled = false,
     imageId = R.drawable.private_car,
-    imageThumbId = R.drawable.private_car,
 )
 
 private val vehicleZero: Vehicle = Vehicle(
@@ -141,7 +130,6 @@ private val vehicleZero: Vehicle = Vehicle(
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
     enabled = false,
     imageId = R.drawable.private_car,
-    imageThumbId = R.drawable.private_car,
 )
 
 object VehiclesRepo {

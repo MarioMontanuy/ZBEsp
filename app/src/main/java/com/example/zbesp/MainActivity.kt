@@ -1,5 +1,6 @@
 package com.example.zbesp
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -19,6 +20,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
@@ -29,6 +33,8 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import java.io.InputStream
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
     private lateinit var map: MapView
@@ -44,6 +50,7 @@ class MainActivity : ComponentActivity() {
         Log.i("MainActivity1", "raw2:$res")
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
