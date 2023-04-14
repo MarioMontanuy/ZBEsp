@@ -191,6 +191,9 @@ private fun showSnackbar(
                         || permissions.getOrDefault(
                     android.Manifest.permission.ACCESS_COARSE_LOCATION, false)
                         ) -> {
+                    if (checkBackgroundPermission()) {
+                        showBackgroundPermissionSettingsSnackbar()
+                    }
                 }
                 else -> {
                     showSnackbar(
@@ -221,11 +224,42 @@ private fun showSnackbar(
             this,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
         )
-
+//        val permissionNotificationState = ActivityCompat.checkSelfPermission(
+//            this,
+//            android.Manifest.permission.POST_NOTIFICATIONS
+//        )
+        val permissionBackgroundLocationState = ActivityCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
         return (((permissionFineState == PackageManager.PERMISSION_GRANTED) ||
-                (permissionCoarseState == PackageManager.PERMISSION_GRANTED)))
+                (permissionCoarseState == PackageManager.PERMISSION_GRANTED)) &&
+                (permissionBackgroundLocationState == PackageManager.PERMISSION_GRANTED)/* &&
+                (permissionNotificationState == PackageManager.PERMISSION_GRANTED)*/)
     }
-
+    private fun checkBackgroundPermission(): Boolean {
+        return ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+    }
+// TODO check background permission request functionality
+    private fun showBackgroundPermissionSettingsSnackbar() {
+        showSnackbar(
+            R.string.background_permission_explanation,
+            R.string.settings
+        ) {
+            val intentBackground = Intent()
+            intentBackground.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            val uri = Uri.fromParts(
+                "package",
+                packageName, null
+            )
+            intentBackground.data = uri
+            intentBackground.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intentBackground)
+        }
+    }
 //    class KmlLoader(stream: InputStream): AsyncTask<Void, Void, Void>() {
 //        //    private var progressDialog: ProgressDialog = ProgressDialog(MainActivity().applicationContext)
 //        private lateinit var kmlDocument: KmlDocument
