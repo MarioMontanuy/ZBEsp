@@ -28,6 +28,7 @@ import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.map
 import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.config.Configuration
 import org.osmdroid.views.MapView
@@ -50,7 +51,6 @@ class MainActivity : ComponentActivity() {
         Log.i("MainActivity1", "raw2:$res")
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
-
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()

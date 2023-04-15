@@ -25,7 +25,7 @@ fun BottomNavGraph(navController: NavHostController, context: Context) {
         }
 
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsNavGraph()
+            SettingsNavGraph(context = context)
         }
     }
 }

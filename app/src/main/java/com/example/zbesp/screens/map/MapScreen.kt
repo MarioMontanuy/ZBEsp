@@ -3,6 +3,7 @@ package com.example.zbesp.screens.map
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
@@ -20,16 +21,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.MainActivity
 import com.example.zbesp.R
+import com.example.zbesp.dataStore
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.screens.vehicles.VehiclesFloatingActionButton
 import com.example.zbesp.ui.theme.SapphireBlue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.bonuspack.kml.LineStyle
 import org.osmdroid.bonuspack.kml.Style
@@ -65,7 +73,7 @@ fun MapScreen(context: Context) {
         update = {
             map = it.findViewById(R.id.mapView)
             map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
-            initializeMap()
+            initializeMap(context)
             loadKml(context)
             //val kmlLoader = KmlLoader()
             //kmlLoader.load()
@@ -74,7 +82,7 @@ fun MapScreen(context: Context) {
     CurrentLocationFloatingActionButton()
 }
 
-private fun initializeMap() {
+private fun initializeMap(context: Context) {
     map.setBuiltInZoomControls(true)
     map.setMultiTouchControls(true)
     myLocationOverlay = MyLocationNewOverlay(map)
@@ -82,7 +90,14 @@ private fun initializeMap() {
     myLocationOverlay.enableFollowLocation()
     map.overlays.add(myLocationOverlay)
     val mapController = map.controller
-    mapController.setZoom(16.0)
+    val value: Flow<Float> = context.dataStore.data
+        .map { preferences ->
+            preferences[floatPreferencesKey("sp3")] ?: 0f
+        }
+    runBlocking(Dispatchers.IO) {
+        mapController.setZoom(value.first().toInt())
+        Log.i("SettingsScreen", "value:${value.first()}")
+    }
     map.onResume()
 }
 

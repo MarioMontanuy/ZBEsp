@@ -1,30 +1,40 @@
 package com.example.zbesp.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.example.zbesp.SliderPreference
 import com.example.zbesp.dataStore
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.TitleText
-import com.example.zbesp.ui.theme.TitleTextWhite
 import com.example.zbesp.ui.theme.getButtonColors
 import com.jamal.composeprefs.ui.PrefsScreen
-import com.jamal.composeprefs.ui.prefs.TextPref
+import com.jamal.composeprefs.ui.prefs.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(context: Context) {
     Scaffold(topBar = { ZBEspTopBar("Settings") }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("Title") {
@@ -35,6 +45,26 @@ fun SettingsScreen() {
                         enabled = true,
                         leadingIcon = { Icon(Icons.Filled.Info, "Info") },
                         onClick = { Log.i("SettingsScreen", "Just some text") }
+                    )
+                }
+                prefsItem {
+                    DropDownPref(
+                        key = "dd1",
+                        title = "Dropdown with currently selected item as summary",
+                        useSelectedAsSummary = true,
+                        entries = mapOf(
+                            "0" to "Entry 1",
+                            "1" to "Entry 2",
+                            "2" to "Entry 3"
+                        )
+                    )
+                }
+                prefsItem {
+                    SliderPref(
+                        key = "sp3",
+                        title = "Select map Zoom",
+                        valueRange = 10f..20f,
+                        showValue = true
                     )
                 }
             }
@@ -48,11 +78,6 @@ fun SettingsScreen() {
 }
 
 
-@Preview
-@Composable
-fun SettingsScreensPreview() {
-    SettingsScreen()
-}
 @Composable
 fun CommonButton(navController: NavController, route: String){
     Button(
