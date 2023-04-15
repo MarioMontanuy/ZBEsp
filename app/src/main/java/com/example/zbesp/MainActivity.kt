@@ -154,7 +154,11 @@ private fun showSnackbar(
             this,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
         )
-        if (locationPermissions) {
+        val notificationPermission = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        )
+        if (locationPermissions || notificationPermission) {
             showSnackbar(
                 R.string.permission_denied_explanation,
                 android.R.string.ok
@@ -162,7 +166,8 @@ private fun showSnackbar(
                 locationPermissionLauncher.launch(
                     arrayOf(
                         android.Manifest.permission.ACCESS_FINE_LOCATION,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        android.Manifest.permission.POST_NOTIFICATIONS
                     )
                 )
             }
@@ -171,7 +176,8 @@ private fun showSnackbar(
             locationPermissionLauncher.launch(
                 arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.POST_NOTIFICATIONS
                 )
             )
         }
@@ -190,7 +196,10 @@ private fun showSnackbar(
                 )
                         || permissions.getOrDefault(
                     android.Manifest.permission.ACCESS_COARSE_LOCATION, false)
-                        ) -> {
+                        ) && permissions.getOrDefault(
+                    android.Manifest.permission.POST_NOTIFICATIONS,
+                    false
+                )-> {
                     if (checkBackgroundPermission()) {
                         showBackgroundPermissionSettingsSnackbar()
                     }
@@ -224,18 +233,18 @@ private fun showSnackbar(
             this,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
         )
-//        val permissionNotificationState = ActivityCompat.checkSelfPermission(
-//            this,
-//            android.Manifest.permission.POST_NOTIFICATIONS
-//        )
+        val permissionNotificationState = ActivityCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        )
         val permissionBackgroundLocationState = ActivityCompat.checkSelfPermission(
             this,
             android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
         )
         return (((permissionFineState == PackageManager.PERMISSION_GRANTED) ||
                 (permissionCoarseState == PackageManager.PERMISSION_GRANTED)) &&
-                (permissionBackgroundLocationState == PackageManager.PERMISSION_GRANTED)/* &&
-                (permissionNotificationState == PackageManager.PERMISSION_GRANTED)*/)
+                (permissionBackgroundLocationState == PackageManager.PERMISSION_GRANTED) &&
+                (permissionNotificationState == PackageManager.PERMISSION_GRANTED))
     }
     private fun checkBackgroundPermission(): Boolean {
         return ActivityCompat.shouldShowRequestPermissionRationale(
