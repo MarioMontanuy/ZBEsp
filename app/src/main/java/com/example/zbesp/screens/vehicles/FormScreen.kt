@@ -32,7 +32,7 @@ import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.TitleTextRed
-import com.example.zbesp.ui.theme.TitleTextWhite
+import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.ui.theme.getButtonColorsReversed
 import java.text.DateFormat
 import java.time.LocalDate
@@ -132,7 +132,7 @@ class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) 
 class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
-
+// TODO change color in some fields in dark mode
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
@@ -227,7 +227,7 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                         .fillMaxWidth()
                         .padding(20.dp),
                 ) {
-                    TitleTextWhite("Create vehicle", TextAlign.Start)
+                    TopBarTittle("Create vehicle", TextAlign.Start)
                 }
             }
             item {

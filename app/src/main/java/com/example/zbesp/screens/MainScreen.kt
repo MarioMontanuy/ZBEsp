@@ -20,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.SapphireBlue
-import com.example.zbesp.ui.theme.TitleTextWhite
+import com.example.zbesp.ui.theme.TopBarTittle
 import java.io.InputStream
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -46,7 +46,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation (backgroundColor = SapphireBlue, contentColor = Color.White) {
+    BottomNavigation {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -65,12 +65,13 @@ fun RowScope.AddItem(
 ) {
     BottomNavigationItem(
         label = {
-            Text(text = screen.title)
+            Text(text = screen.title, color = Color.White)
         },
         icon = {
             Icon(
                 imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
+                contentDescription = "Navigation Icon",
+                tint = Color.White
             )
         },
         selected = currentDestination?.hierarchy?.any {
@@ -90,7 +91,7 @@ fun RowScope.AddItem(
 fun ZBEspTopBar(title: String) {
     TopAppBar(
         title = {
-            TitleTextWhite(text = title, alignment = TextAlign.Start)
+            TopBarTittle(text = title, alignment = TextAlign.Start)
         }
     )
 }

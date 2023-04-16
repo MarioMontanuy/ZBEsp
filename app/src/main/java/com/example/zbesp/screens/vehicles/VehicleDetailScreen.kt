@@ -85,7 +85,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                             .fillMaxWidth()
                             .padding(20.dp),
                     ) {
-                        TitleTextWhite("Mark as current vehicle", TextAlign.Start)
+                        TopBarTittle("Mark as current vehicle", TextAlign.Start)
                     }
                 }
             }

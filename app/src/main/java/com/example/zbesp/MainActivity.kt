@@ -24,6 +24,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.zbesp.screens.MainScreen
+import com.example.zbesp.ui.theme.RoyalBlue
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -57,14 +58,9 @@ class MainActivity : ComponentActivity() {
                 val darkTheme = isSystemInDarkTheme()
                 SideEffect {
                     systemUiController.setSystemBarsColor(
-                        color = if (darkTheme) Color.LightGray else SapphireBlue
+                        color = SapphireBlue
                     )
-//                    systemUiController.setNavigationBarColor(
-//                        color = if (darkTheme) Color.Black else RoyalBlue
-//                    )
                 }
-                //TODO evitar pasar el inputStream desde aqui (la primera vez se muestra en el mapa,
-                // pero en el resto el input stream esta cerrado y no se muestra la zbe en el mapa)
                 MainScreen(applicationContext)
             }
         }

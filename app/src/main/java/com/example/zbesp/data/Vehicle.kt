@@ -1,7 +1,9 @@
 package com.example.zbesp.data
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -24,29 +26,53 @@ data class Vehicle(
     @DrawableRes var imageId: Int = R.drawable.private_car,
 ) {
 
-
     fun setImage(vehicle: Vehicle, type: VehicleType){
         if (type.type == VehicleTypeEnum.PrivateCar) {
-            vehicle.imageId = R.drawable.private_car
+                vehicle.imageId = R.drawable.private_car
         }
         if (type.type == VehicleTypeEnum.MotorHome) {
-            vehicle.imageId = R.drawable.motor_home
+                vehicle.imageId = R.drawable.motor_home
         }
         if (type.type == VehicleTypeEnum.Truck) {
-            vehicle.imageId = R.drawable.truck
+                vehicle.imageId = R.drawable.truck
         }
         if (type.type == VehicleTypeEnum.MotorBike) {
-            vehicle.imageId = R.drawable.motor_bike
+                vehicle.imageId = R.drawable.motor_bike
         }
         if (type.type == VehicleTypeEnum.Bus) {
-            vehicle.imageId = R.drawable.bus
+                vehicle.imageId = R.drawable.bus
         }
         if (type.type == VehicleTypeEnum.Van) {
-            vehicle.imageId = R.drawable.van
+                vehicle.imageId = R.drawable.van
         }
         if (type.type == VehicleTypeEnum.Tractor) {
-            vehicle.imageId = R.drawable.tractor
+                vehicle.imageId = R.drawable.tractor
         }
+    }
+
+    fun changeToWhite(type: VehicleType): Int {
+        if (type.type == VehicleTypeEnum.PrivateCar) {
+            return R.drawable.private_car_white
+        }
+        if (type.type == VehicleTypeEnum.MotorHome) {
+            return R.drawable.motor_home_white
+        }
+        if (type.type == VehicleTypeEnum.Truck) {
+            return R.drawable.truck_white
+        }
+        if (type.type == VehicleTypeEnum.MotorBike) {
+            return R.drawable.motor_bike_white
+        }
+        if (type.type == VehicleTypeEnum.Bus) {
+            return R.drawable.bus_white
+        }
+        if (type.type == VehicleTypeEnum.Van) {
+            return R.drawable.van_white
+        }
+        if (type.type == VehicleTypeEnum.Tractor) {
+            return R.drawable.tractor_white
+        }
+        return 0
     }
 }
 
@@ -95,7 +121,7 @@ private val vehicleB: Vehicle = Vehicle(
     registrationYear = Date(101,5,5) ,
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
     enabled = false,
-    imageId = R.drawable.private_car,
+    imageId = R.drawable.private_car
 )
 
 

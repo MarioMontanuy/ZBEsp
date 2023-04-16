@@ -8,28 +8,17 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.datastore.dataStore
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.example.zbesp.SliderPreference
 import com.example.zbesp.dataStore
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.ui.theme.getButtonColors
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -37,7 +26,7 @@ import kotlinx.coroutines.runBlocking
 fun SettingsScreen(context: Context) {
     Scaffold(topBar = { ZBEspTopBar("Settings") }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
-            prefsGroup("Title") {
+            prefsGroup("TITLE") {
                 prefsItem {
                     TextPref(
                         title = "Just some text",

@@ -12,7 +12,7 @@ private val DarkColorScheme = darkColors(
     surface = SapphireBlue,
     primary = SapphireBlue,
     primaryVariant = SapphireBlue,
-    secondary = Color.White
+    secondary = SapphireBlue
 )
 
 private val LightColorScheme = lightColors(

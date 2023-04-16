@@ -86,7 +86,7 @@ fun PostItem(
             }   },
         icon = {
             Image(
-                painter = painterResource(vehicle.imageId),
+                painter = if (isSystemInDarkTheme()) painterResource(vehicle.changeToWhite(vehicle.type)) else painterResource(vehicle.imageId),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

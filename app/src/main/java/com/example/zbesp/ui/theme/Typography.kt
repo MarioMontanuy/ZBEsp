@@ -1,6 +1,7 @@
 package com.example.zbesp.ui.theme
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.Typography
@@ -34,17 +35,27 @@ import java.awt.font.TextAttribute
 
 @Composable
 fun TitleText(text: String, alignment: TextAlign){
-    Text(
-        text = text,
-        color = SapphireBlue,
-        fontWeight = FontWeight.Bold,
-        style = MaterialTheme.typography.body1,
-        textAlign = alignment
-    )
+    if (isSystemInDarkTheme()) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.body1,
+            textAlign = alignment
+        )
+    } else {
+        Text(
+            text = text,
+            color = SapphireBlue,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.body1,
+            textAlign = alignment
+        )
+    }
 }
 
 @Composable
-fun TitleTextWhite(text: String, alignment: TextAlign){
+fun TopBarTittle(text: String, alignment: TextAlign){
     Text(
         text = text,
         color = Color.White,
@@ -73,6 +84,7 @@ fun SubtitleText(text: String, alignment: TextAlign){
         textAlign = alignment
     )
 }
+
 
 @Composable
 fun CommonText(){
