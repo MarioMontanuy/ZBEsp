@@ -1,5 +1,7 @@
 package com.example.zbesp
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,10 +26,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.zbesp.screens.MainScreen
+import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
 import com.example.zbesp.ui.theme.RoyalBlue
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.map
 import org.osmdroid.bonuspack.kml.KmlDocument
@@ -42,6 +46,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var map: MapView
     private var settings = false
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

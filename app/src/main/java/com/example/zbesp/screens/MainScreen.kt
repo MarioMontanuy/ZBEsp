@@ -1,7 +1,10 @@
 package com.example.zbesp.screens
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -23,6 +26,7 @@ import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.TopBarTittle
 import java.io.InputStream
 
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(context: Context) {

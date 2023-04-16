@@ -1,38 +1,46 @@
 package com.example.zbesp.screens.map
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.app.PendingIntent
 import android.content.Context
-import android.os.AsyncTask
+import android.content.pm.PackageManager
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Point
+import android.os.Build
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.zbesp.MainActivity
 import com.example.zbesp.R
+import com.example.zbesp.data.GeofenceItem
+import com.example.zbesp.data.geofences
 import com.example.zbesp.dataStore
-import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
-import com.example.zbesp.screens.vehicles.VehiclesFloatingActionButton
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -42,13 +50,16 @@ import org.osmdroid.bonuspack.kml.KmlDocument
 import org.osmdroid.bonuspack.kml.LineStyle
 import org.osmdroid.bonuspack.kml.Style
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import java.io.InputStream
+import kotlin.math.pow
+
 
 lateinit var map: MapView
-@SuppressLint("StaticFieldLeak")
-private lateinit var currentInputStream: InputStream
+private lateinit var geofencingClient: GeofencingClient
+private lateinit var geofenceHelper: GeofenceHelper
 /*
 class KmlLoader: AppCompatActivity() {
     fun load() {
@@ -64,6 +75,7 @@ class KmlLoader: AppCompatActivity() {
         // KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 }*/
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun MapScreen(context: Context) {
     AndroidView(factory = {
@@ -75,6 +87,7 @@ fun MapScreen(context: Context) {
             map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
             initializeMap(context)
             loadKml(context)
+            createGeofence(context)
             //val kmlLoader = KmlLoader()
             //kmlLoader.load()
         }
@@ -99,6 +112,54 @@ private fun initializeMap(context: Context) {
         Log.i("SettingsScreen", "value:${value.first()}")
     }
     map.onResume()
+}
+@RequiresApi(Build.VERSION_CODES.S)
+private fun createGeofence(context: Context) {
+    geofencingClient = LocationServices.getGeofencingClient(context)
+    geofenceHelper = GeofenceHelper(context)
+    geofences.forEach { it ->
+        addGeofence(it, context)
+        Log.i("createGeofence", "createGeofence")
+    }
+
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+private fun addGeofence(geofenceItem: GeofenceItem, context: Context) {
+    val geofence: Geofence = geofenceHelper.getGeofence(
+        geofenceItem.id.toString(),
+        LatLng(geofenceItem.center.latitude, geofenceItem.center.longitude),
+        geofenceItem.radius,
+        Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_DWELL or Geofence.GEOFENCE_TRANSITION_EXIT
+    )
+    val geofencingRequest: GeofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+    val pendingIntent: PendingIntent = geofenceHelper.getPendingIntent()!!
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        // TODO: Consider calling
+        //    ActivityCompat#requestPermissions
+        // here to request the missing permissions, and then overriding
+        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+        //                                          int[] grantResults)
+        // to handle the case where the user grants the permission. See the documentation
+        // for ActivityCompat#requestPermissions for more details.
+        Log.i("addGeofence", "Consider calling ActivityCompat#requestPermissions")
+        return
+    }
+    geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+        .addOnSuccessListener(OnSuccessListener<Void?> {
+            Log.d(
+                "MapScreen",
+                "onSuccess: Geofence Added..."
+            )
+        })
+        .addOnFailureListener(OnFailureListener { e ->
+            val errorMessage: String = geofenceHelper.getErrorString(e)
+            Log.d("MapScreen", "onFailure: $errorMessage")
+        })
 }
 
 @Composable
@@ -125,8 +186,22 @@ fun loadKml(context: Context) {
     kmlDocument.addStyle(s)
     val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
     map.overlays.add(kmlOverlay)
+    val boundingBox = kmlDocument.mKmlRoot.boundingBox
+    if (geofenceNotAdded(R.raw.lleida)) {
+        val radius: Float = boundingBox.diagonalLengthInMeters.toFloat().div(2) - 336f
+        geofences = geofences + GeofenceItem(R.raw.lleida, boundingBox.center, radius)
+    }
     map.invalidate()
     // KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+}
+
+private fun geofenceNotAdded(kml: Int): Boolean{
+    geofences.forEach { it ->
+        if (it.id == kml) {
+            return false
+        }
+    }
+    return true
 }
 
 object MyLocationOverlay {
