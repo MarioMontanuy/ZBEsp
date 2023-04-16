@@ -109,7 +109,6 @@ private fun initializeMap(context: Context) {
         }
     runBlocking(Dispatchers.IO) {
         mapController.setZoom(value.first().toInt())
-        Log.i("SettingsScreen", "value:${value.first()}")
     }
     map.onResume()
 }

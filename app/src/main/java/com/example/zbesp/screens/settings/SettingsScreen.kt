@@ -6,7 +6,9 @@ import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +28,7 @@ import com.jamal.composeprefs.ui.prefs.*
 fun SettingsScreen(context: Context) {
     Scaffold(topBar = { ZBEspTopBar("Settings") }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
-            prefsGroup("TITLE") {
+            prefsGroup("MAP") {
                 prefsItem {
                     TextPref(
                         title = "Just some text",
@@ -54,6 +56,17 @@ fun SettingsScreen(context: Context) {
                         title = "Select map Zoom",
                         valueRange = 10f..20f,
                         showValue = true
+                    )
+                }
+
+            }
+            prefsGroup("NOTIFICATION") {
+                prefsItem {
+                    SwitchPref(
+                        key = "notification",
+                        title = "Enable notifications",
+                        summary = "Receive a notification when you enter a LEZ",
+                        leadingIcon = { Icon(Icons.Filled.Notifications, "Home") }
                     )
                 }
             }
