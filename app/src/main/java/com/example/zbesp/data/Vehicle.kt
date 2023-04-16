@@ -170,13 +170,13 @@ fun noEnabledVehicle(){
 
 var currentId: Long = 6L
 
-var vehicles: List<Vehicle> =
-    listOf(vehicleNone,
-        vehicleB,
-        vehicleC,
-        vehicleECO,
-        vehicleZero,
-)
+var vehicles: List<Vehicle> = listOf()
+//    listOf(vehicleNone,
+//        vehicleB,
+//        vehicleC,
+//        vehicleECO,
+//        vehicleZero,
+//)
 
 enum class CountryEnum (type: String) {
     Spain("Spain"),

@@ -42,34 +42,29 @@ import com.example.zbesp.ui.theme.TitleText
 fun VehiclesScreen(navController: NavController) {
     val vehicles = remember { VehiclesRepo.getVehicles() }
     Scaffold(topBar = { ZBEspTopBar("Vehicles") }) {
-        LazyColumn {
-            items(vehicles) { vehicle ->
-                PostItem(vehicle = vehicle, navController = navController)
-                Divider(startIndent = 50.dp)
+        LazyColumn (
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            if (vehicles.isEmpty()) {
+                item {
+                    Text(modifier = Modifier
+                        .fillMaxSize().padding(50.dp),
+                        text =  "You have not created a vehicle yet",
+                        textAlign = TextAlign.Center)
+                }
+            } else {
+                items(vehicles) { vehicle ->
+                    PostItem(vehicle = vehicle, navController = navController)
+                    Divider(startIndent = 50.dp)
+                }
             }
+
         }
         VehiclesFloatingActionButton(navController = navController)
     }
 
-}
-@Composable
-fun Header(
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        color = SapphireBlue,
-        contentColor = Color.White,
-        modifier = modifier.semantics { heading() }
-    ) {
-        androidx.compose.material.Text(
-            text = text,
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-    }
 }
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
