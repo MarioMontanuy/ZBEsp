@@ -47,14 +47,14 @@ fun ZoneDetailScreen(zone: GeofenceItem){
                 Spacer(modifier = Modifier.padding(vertical = 30.dp))
                 if (currentVehicle != null) {
                     if (zone.isStickerForbidden(currentVehicle.environmentalSticker.type)) {
-                        SubtitleText(text = stringResource(id = R.string.vehicle_named)
-                                + currentVehicle.name + stringResource(
+                        SubtitleText(text = stringResource(id = R.string.vehicle_named) + " "
+                                + currentVehicle.name + " " +stringResource(
                             id = R.string.not_meet_restrictions
                         ), alignment = TextAlign.Justify,
                             style = MaterialTheme.typography.body1)
                     } else {
                         SubtitleText(text = stringResource(id = R.string.vehicle_named)
-                                + currentVehicle.name + stringResource(
+                                + " " + currentVehicle.name+ " " + stringResource(
                             id = R.string.meet_restrictions
                         ), alignment = TextAlign.Justify,
                             style = MaterialTheme.typography.body1)
