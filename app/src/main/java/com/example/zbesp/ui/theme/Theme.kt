@@ -1,39 +1,38 @@
 package com.example.zbesp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
-
-private val DarkColorScheme = darkColorScheme(
-    surface = Blue,
-    onSurface = Navy,
-    primary = Navy,
-    onPrimary = Chartreuse
+private val DarkColorScheme = darkColors(
+    surface = SapphireBlue,
+    primary = SapphireBlue,
+    primaryVariant = SapphireBlue,
+    secondary = SapphireBlue
 )
 
-private val LightColorScheme = lightColorScheme(
-    surface = Blue,
-    onSurface = Color.White,
-    primary = LightBlue,
-    onPrimary = Navy
+private val LightColorScheme = lightColors(
+    primary = SapphireBlue,
+    primaryVariant = SapphireBlue,
+    secondary = SapphireBlue,
 )
 
 @Composable
-fun BottomNavigationBarTheme(
+fun ZBEspTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) {
+    val colors = if (darkTheme) {
         DarkColorScheme
     } else {
         LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+        colors = colors,
+        typography = MaterialTheme.typography,
         shapes = Shapes,
         content = content
     )

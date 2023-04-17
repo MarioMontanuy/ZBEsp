@@ -1,79 +1,173 @@
 package com.example.zbesp.data
 
-import android.os.Environment
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
+import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.R
+import java.util.*
 
 @Immutable
 data class Vehicle(
     val id: Long,
     val name: String,
-    val metadata: Metadata,
-    @DrawableRes val imageId: Int,
-    @DrawableRes val imageThumbId: Int,
-)
-
-@Immutable
-data class Metadata(
-    val country: String,
+    val country: Country,
     val type: VehicleType,
-    val registrationYear: String,
-    val environmentalSticker: EnvironmentalSticker
-)
+    val registrationYear: Date,
+    val environmentalSticker: EnvironmentalSticker,
+    var enabled: Boolean,
+    @DrawableRes var imageId: Int = R.drawable.private_car,
+) {
 
-//@Immutable
-//data class PostAuthor(
-//    val name: String,
-//    val url: String? = null
-//)
+    fun setImage(type: VehicleType) {
+        if (type.type == VehicleTypeEnum.PrivateCar) {
+            this.imageId = R.drawable.private_car
+        }
+        if (type.type == VehicleTypeEnum.MotorHome) {
+            this.imageId = R.drawable.motor_home
+        }
+        if (type.type == VehicleTypeEnum.Truck) {
+            this.imageId = R.drawable.truck
+        }
+        if (type.type == VehicleTypeEnum.MotorBike) {
+            this.imageId = R.drawable.motor_bike
+        }
+        if (type.type == VehicleTypeEnum.Bus) {
+            this.imageId = R.drawable.bus
+        }
+        if (type.type == VehicleTypeEnum.Van) {
+            this.imageId = R.drawable.van
+        }
+        if (type.type == VehicleTypeEnum.Tractor) {
+            this.imageId = R.drawable.tractor
+        }
+    }
 
-
-//private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
-
-private val vehicle1 = Vehicle(
-    id = 1L,
-    name = "Car1",
-    metadata = Metadata(
-        country = "Spain",
-        type = VehicleType.PrivateCar,
-        registrationYear = "2001",
-        environmentalSticker = EnvironmentalSticker.None
-    ),
-    imageId = R.drawable.ic_launcher_background,
-    imageThumbId = R.drawable.ic_launcher_background,
-)
-
-private val vehicle2 = Vehicle(
-    id = 1L,
-    name = "Car2",
-    metadata = Metadata(
-        country = "Spain",
-        type = VehicleType.PrivateCar,
-        registrationYear = "2001",
-        environmentalSticker = EnvironmentalSticker.None
-    ),
-    imageId = R.drawable.ic_launcher_background,
-    imageThumbId = R.drawable.ic_launcher_background,
-)
-object VehiclesRepo {
-    fun getVehicles(): List<Vehicle> = vehicles
-    fun getFeaturedPost(): Vehicle = vehicles.random()
+    fun changeToWhite(type: VehicleType): Int {
+        if (type.type == VehicleTypeEnum.PrivateCar) {
+            return R.drawable.private_car_white
+        }
+        if (type.type == VehicleTypeEnum.MotorHome) {
+            return R.drawable.motor_home_white
+        }
+        if (type.type == VehicleTypeEnum.Truck) {
+            return R.drawable.truck_white
+        }
+        if (type.type == VehicleTypeEnum.MotorBike) {
+            return R.drawable.motor_bike_white
+        }
+        if (type.type == VehicleTypeEnum.Bus) {
+            return R.drawable.bus_white
+        }
+        if (type.type == VehicleTypeEnum.Van) {
+            return R.drawable.van_white
+        }
+        if (type.type == VehicleTypeEnum.Tractor) {
+            return R.drawable.tractor_white
+        }
+        return 0
+    }
 }
 
-private val vehicles = listOf(
-    vehicle1,
-    vehicle2,
-    vehicle1.copy(id = 6L),
-    vehicle1.copy(id = 7L),
-    vehicle1.copy(id = 8L),
-    vehicle1.copy(id = 9L),
-    vehicle1.copy(id = 10L),
-    vehicle1.copy(id = 11L),
-    vehicle1.copy(id = 12L),
+data class VehicleType(val type: VehicleTypeEnum?) : PickerValue() {
+    override fun searchFilter(query: String): Boolean {
+        return this.type!!.name.startsWith(query)
+    }
+}
+
+data class EnvironmentalSticker(val type: EnvironmentalStickerEnum?) : PickerValue() {
+    override fun searchFilter(query: String): Boolean {
+        return this.type!!.name.startsWith(query)
+    }
+}
+
+data class Country(val type: CountryEnum?) : PickerValue() {
+    override fun searchFilter(query: String): Boolean {
+        return this.type!!.name.startsWith(query)
+    }
+}
+
+val vehicleNone: Vehicle =
+    Vehicle(
+        id = 1L,
+        name = "Car1",
+        country = Country(CountryEnum.Spain),
+        type = VehicleType(VehicleTypeEnum.PrivateCar),
+        registrationYear = Date(101, 5, 5),
+        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
+        enabled = true,
+        imageId = R.drawable.private_car,
+    )
+
+private val vehicleB: Vehicle = Vehicle(
+    id = 2L,
+    name = "Car2",
+    country = Country(CountryEnum.Spain),
+    type = VehicleType(VehicleTypeEnum.PrivateCar),
+    registrationYear = Date(101, 5, 5),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
+    enabled = false,
+    imageId = R.drawable.private_car
 )
 
-enum class VehicleType (type: String) {
+
+private val vehicleC: Vehicle = Vehicle(
+    id = 3L,
+    name = "Car3",
+    country = Country(CountryEnum.Spain),
+    type = VehicleType(VehicleTypeEnum.PrivateCar),
+    registrationYear = Date(101, 5, 5),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C),
+    enabled = false,
+    imageId = R.drawable.private_car,
+)
+
+private val vehicleECO: Vehicle = Vehicle(
+    id = 4L,
+    name = "Car4",
+    country = Country(CountryEnum.Spain),
+    type = VehicleType(VehicleTypeEnum.PrivateCar),
+    registrationYear = Date(101, 5, 5),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
+    enabled = false,
+    imageId = R.drawable.private_car,
+)
+
+private val vehicleZero: Vehicle = Vehicle(
+    id = 5L,
+    name = "Car5",
+    country = Country(CountryEnum.Spain),
+    type = VehicleType(VehicleTypeEnum.PrivateCar),
+    registrationYear = Date(101, 5, 5),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
+    enabled = false,
+    imageId = R.drawable.private_car,
+)
+
+object VehiclesRepo {
+    fun getVehicles(): List<Vehicle> = vehicles
+}
+
+fun noEnabledVehicle() {
+    vehicles.forEach { vehicle ->
+        vehicle.enabled = false
+    }
+}
+
+var currentId: Long = 6L
+
+var vehicles: List<Vehicle> = listOf()
+//    listOf(vehicleNone,
+//        vehicleB,
+//        vehicleC,
+//        vehicleECO,
+//        vehicleZero,
+//)
+
+enum class CountryEnum(type: String) {
+    Spain("Spain"),
+}
+
+enum class VehicleTypeEnum(type: String) {
     PrivateCar("Private Car"),
     MotorHome("Motor Home"),
     Truck("Truck"),
@@ -83,7 +177,7 @@ enum class VehicleType (type: String) {
     Tractor("Tractor");
 }
 
-enum class EnvironmentalSticker (type: String) {
+enum class EnvironmentalStickerEnum(type: String) {
     Zero("Zero"),
     ECO("ECO"),
     C("C"),
@@ -91,3 +185,13 @@ enum class EnvironmentalSticker (type: String) {
     None("None");
 }
 
+fun getVehicle(vehicleId: String): Vehicle {
+    return vehicles.first { it.id == vehicleId.toLong() }
+}
+
+fun getCurrentVehicle(): Vehicle? {
+    if (vehicles.isNotEmpty()) {
+        return vehicles.first { it.enabled }
+    }
+    return null
+}
