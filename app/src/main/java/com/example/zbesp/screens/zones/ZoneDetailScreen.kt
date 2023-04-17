@@ -32,7 +32,8 @@ fun ZoneDetailScreen(zone: GeofenceItem){
             .fillMaxSize()
             .padding(horizontal = 25.dp),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(vertical = 20.dp)
         ) {
             item {
                 BigTitleText(text = zone.name, alignment = TextAlign.Justify)
@@ -44,25 +45,23 @@ fun ZoneDetailScreen(zone: GeofenceItem){
                         .clip(shape = MaterialTheme.shapes.small)
                         .size(200.dp)
                 )
-            }
-
-            item {
-                Spacer(modifier = Modifier.padding(50.dp))
+                Spacer(modifier = Modifier.padding(vertical = 30.dp))
                 if (currentVehicle != null) {
                     if (zone.isStickerForbidden(currentVehicle.environmentalSticker.type)) {
-                        SubtitleText(text = "Your vehicle does not meet the restrictions of this" +
-                                " Low Emission Zone", alignment = TextAlign.Justify)
+                        SubtitleText(text = "Your vehicle named " + currentVehicle.name + " does not meet the restrictions of this" +
+                                " Low Emission Zone", alignment = TextAlign.Justify,
+                            style = MaterialTheme.typography.body1)
                     } else {
-                        SubtitleText(text = "Your vehicle is allowed to travel in this Low Emission" +
-                                " Zone", alignment = TextAlign.Justify)
+                        SubtitleText(text = "Your vehicle named " + currentVehicle.name + " is allowed to travel in this Low Emission" +
+                                " Zone", alignment = TextAlign.Justify,
+                            style = MaterialTheme.typography.body1)
                     }
                 } else {
                     SubtitleText(text = "You have to create a vehicle in order to know your" +
-                            " restrictions", alignment = TextAlign.Justify)
+                            " restrictions", alignment = TextAlign.Justify,
+                        style = MaterialTheme.typography.body1)
                 }
-
             }
         }
     }
-
 }

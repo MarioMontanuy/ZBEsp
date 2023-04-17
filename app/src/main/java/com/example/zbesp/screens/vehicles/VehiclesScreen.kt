@@ -52,7 +52,8 @@ fun VehiclesScreen(navController: NavController) {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
                         text =  "You have not created a vehicle yet",
-                        alignment = TextAlign.Center)
+                        alignment = TextAlign.Center,
+                        MaterialTheme.typography.body1)
                 }
             } else {
                 items(vehicles) { vehicle ->

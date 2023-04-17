@@ -115,7 +115,14 @@ fun TitleTextRed(text: String, alignment: TextAlign){
         textAlign = alignment
     )
 }
-
+@Composable
+fun SubtitleText(text: String, alignment: TextAlign, style: TextStyle){
+    Text(
+        text = text,
+        style = style,
+        textAlign = alignment
+    )
+}
 @Composable
 fun SubtitleText(text: String, alignment: TextAlign){
     Text(
