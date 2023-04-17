@@ -211,10 +211,7 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                                 viewModel.form.enableVehicle.state.value!!,
                             )
                             currentId += 1L
-                            newVehicle.setImage(
-                                newVehicle,
-                                viewModel.form.vehicleType.state.value!!
-                            )
+                            newVehicle.setImage(viewModel.form.vehicleType.state.value!!)
                             vehicles = vehicles + newVehicle
                             navController.popBackStack()
                         } else {

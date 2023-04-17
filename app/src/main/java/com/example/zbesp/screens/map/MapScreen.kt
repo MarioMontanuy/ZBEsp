@@ -29,6 +29,7 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import com.example.zbesp.R
 import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.geofences
+import com.example.zbesp.data.kmlZones
 import com.example.zbesp.dataStore
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.ui.theme.SapphireBlue
@@ -105,7 +106,7 @@ private fun initializeMap(context: Context) {
     val mapController = map.controller
     val value: Flow<Float> = context.dataStore.data
         .map { preferences ->
-            preferences[floatPreferencesKey("sp3")] ?: 0f
+            preferences[floatPreferencesKey("sp3")] ?: 15f
         }
     runBlocking(Dispatchers.IO) {
         mapController.setZoom(value.first().toInt())
@@ -138,14 +139,6 @@ private fun addGeofence(geofenceItem: GeofenceItem, context: Context) {
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        Log.i("addGeofence", "Consider calling ActivityCompat#requestPermissions")
         return
     }
     geofencingClient.addGeofences(geofencingRequest, pendingIntent)
@@ -177,21 +170,27 @@ fun CurrentLocationFloatingActionButton() {
     }
 }
 fun loadKml(context: Context) {
+    kmlZones.forEach {it ->
+        loadZone(context, it)
+    }
+}
+
+fun loadZone(context: Context, zone: Int){
     val kmlDocument = KmlDocument()
-//        kmlDocument.parseKMLStream(javaClass.getResourceAsStream("android.resource://com.example.zbesp/2131951616"), null)
-    kmlDocument.parseKMLStream(context.resources.openRawResource(R.raw.lleida), null)
+    kmlDocument.parseKMLStream(context.resources.openRawResource(zone), null)
     val s = Style()
     s.mLineStyle = LineStyle(Color.Blue.value.toInt(), 8.0f)
     kmlDocument.addStyle(s)
     val kmlOverlay = kmlDocument.mKmlRoot.buildOverlay(map, null, null, kmlDocument)
     map.overlays.add(kmlOverlay)
     val boundingBox = kmlDocument.mKmlRoot.boundingBox
-    if (geofenceNotAdded(R.raw.lleida)) {
+    if (geofenceNotAdded(zone)) {
         val radius: Float = boundingBox.diagonalLengthInMeters.toFloat().div(2) - 336f
-        geofences = geofences + GeofenceItem(R.raw.lleida, boundingBox.center, radius)
+        val currentGeofence = GeofenceItem(zone, boundingBox.center, radius)
+        currentGeofence.setNameAndImage()
+        geofences = geofences + currentGeofence
     }
     map.invalidate()
-    // KmlLoader(inputStream = currentInputStream).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 }
 
 private fun geofenceNotAdded(kml: Int): Boolean{

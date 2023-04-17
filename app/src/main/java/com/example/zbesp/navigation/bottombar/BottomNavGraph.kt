@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import com.example.zbesp.navigation.settings.SettingsNavGraph
 import com.example.zbesp.screens.map.MapScreen
 import com.example.zbesp.navigation.vehicles.VehiclesNavGraph
+import com.example.zbesp.navigation.zones.ZonesNavGraph
+import com.example.zbesp.screens.zones.ZonesScreen
 import java.io.InputStream
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -27,7 +29,9 @@ fun BottomNavGraph(navController: NavHostController, context: Context) {
         composable(route = BottomBarScreen.Map.route) {
             MapScreen(context)
         }
-
+        composable(route = BottomBarScreen.Zones.route) {
+            ZonesNavGraph()
+        }
         composable(route = BottomBarScreen.Settings.route) {
             SettingsNavGraph()
         }

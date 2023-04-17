@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.screens.settings.AboutUsScreen
 import com.example.zbesp.screens.settings.SettingsScreen
+import com.example.zbesp.screens.settings.SubscriptionScreen
+
 @Composable
 fun SettingsNavGraph(
     modifier: Modifier = Modifier,
@@ -25,8 +27,8 @@ fun SettingsNavGraph(
         composable(SettingsScreens.AboutUsScreen.route) {
             AboutUsScreen()
         }
-//        composable(SettingsScreens.SubscriptionScreen.route) {
-//            SubscriptionScreen()
-//        }
+        composable(SettingsScreens.SubscriptionScreen.route) {
+            SubscriptionScreen()
+        }
     }
 }

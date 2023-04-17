@@ -33,7 +33,8 @@ fun SettingsScreen(navController: NavController) {
                         key = "sp3",
                         title = "Select map Zoom",
                         valueRange = 10f..20f,
-                        showValue = true
+                        showValue = true,
+                        defaultValue = 15f
                     )
                 }
 
@@ -53,7 +54,12 @@ fun SettingsScreen(navController: NavController) {
                         summary = "Add functionalities by a subscription method",
                         enabled = true,
                         leadingIcon = { Icon(Icons.Filled.Subscriptions, "Info") },
-                        onClick = { }
+                        onClick = {
+                            navController.navigate(SettingsScreens.SubscriptionScreen.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        }
                     )
                 }
             }

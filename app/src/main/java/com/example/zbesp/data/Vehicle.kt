@@ -26,27 +26,27 @@ data class Vehicle(
     @DrawableRes var imageId: Int = R.drawable.private_car,
 ) {
 
-    fun setImage(vehicle: Vehicle, type: VehicleType){
+    fun setImage(type: VehicleType){
         if (type.type == VehicleTypeEnum.PrivateCar) {
-                vehicle.imageId = R.drawable.private_car
+            this.imageId = R.drawable.private_car
         }
         if (type.type == VehicleTypeEnum.MotorHome) {
-                vehicle.imageId = R.drawable.motor_home
+            this.imageId = R.drawable.motor_home
         }
         if (type.type == VehicleTypeEnum.Truck) {
-                vehicle.imageId = R.drawable.truck
+            this.imageId = R.drawable.truck
         }
         if (type.type == VehicleTypeEnum.MotorBike) {
-                vehicle.imageId = R.drawable.motor_bike
+            this.imageId = R.drawable.motor_bike
         }
         if (type.type == VehicleTypeEnum.Bus) {
-                vehicle.imageId = R.drawable.bus
+            this.imageId = R.drawable.bus
         }
         if (type.type == VehicleTypeEnum.Van) {
-                vehicle.imageId = R.drawable.van
+            this.imageId = R.drawable.van
         }
         if (type.type == VehicleTypeEnum.Tractor) {
-                vehicle.imageId = R.drawable.tractor
+            this.imageId = R.drawable.tractor
         }
     }
 
@@ -202,4 +202,10 @@ enum class EnvironmentalStickerEnum (type: String) {
 
 fun getVehicle(vehicleId: String): Vehicle{
     return vehicles.first {it.id == vehicleId.toLong()}
+}
+fun getCurrentVehicle() : Vehicle? {
+    if (vehicles.isNotEmpty()) {
+        return vehicles.first { it.enabled }
+    }
+    return null
 }
