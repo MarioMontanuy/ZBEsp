@@ -28,7 +28,7 @@ fun SubscriptionScreen(){
     Scaffold(topBar = { ZBEspTopBar("Subscription") }) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 25.dp, vertical = 80.dp),
+            .padding(horizontal = 25.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

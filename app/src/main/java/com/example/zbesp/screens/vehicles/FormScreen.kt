@@ -2,11 +2,13 @@ package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,9 +33,7 @@ import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
-import com.example.zbesp.ui.theme.TitleTextRed
-import com.example.zbesp.ui.theme.TopBarTittle
-import com.example.zbesp.ui.theme.getButtonColorsReversed
+import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -140,11 +140,19 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
     val error = remember { mutableStateOf(false) }
     Scaffold(topBar = { ZBEspTopBar("New Vehicle") }) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp, vertical = 80.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 25.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
+                Spacer(modifier = Modifier.padding(20.dp))
+                TitleText(text = "Create your vehicle", alignment = TextAlign.Justify,
+                    style = MaterialTheme.typography.h5)
+            }
+            item {
+                Spacer(modifier = Modifier.padding(20.dp))
                 TextField(
                     label = "Vehicle name",
                     form = viewModel.form,

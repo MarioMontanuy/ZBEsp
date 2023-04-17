@@ -30,7 +30,7 @@ fun ZoneDetailScreen(zone: GeofenceItem){
     Scaffold(topBar = { ZBEspTopBar("Zone Information") }) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(horizontal = 25.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -33,6 +33,26 @@ import java.awt.font.TextAttribute
 //)
 //)
 @Composable
+fun TitleText(text: String, alignment: TextAlign, style: TextStyle){
+    if (isSystemInDarkTheme()) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = style,
+            textAlign = alignment
+        )
+    } else {
+        Text(
+            text = text,
+            color = SapphireBlue,
+            fontWeight = FontWeight.Bold,
+            style = style,
+            textAlign = alignment
+        )
+    }
+}
+@Composable
 fun BigTitleText(text: String, alignment: TextAlign){
     if (isSystemInDarkTheme()) {
         Text(
