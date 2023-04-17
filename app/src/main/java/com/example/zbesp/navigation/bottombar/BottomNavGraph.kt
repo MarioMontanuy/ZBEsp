@@ -1,6 +1,5 @@
 package com.example.zbesp.navigation.bottombar
 
-import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,10 +11,8 @@ import com.example.zbesp.navigation.settings.SettingsNavGraph
 import com.example.zbesp.screens.map.MapScreen
 import com.example.zbesp.navigation.vehicles.VehiclesNavGraph
 import com.example.zbesp.navigation.zones.ZonesNavGraph
-import com.example.zbesp.screens.zones.ZonesScreen
-import java.io.InputStream
 
-@RequiresApi(Build.VERSION_CODES.S)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun BottomNavGraph(navController: NavHostController, context: Context) {
     NavHost(

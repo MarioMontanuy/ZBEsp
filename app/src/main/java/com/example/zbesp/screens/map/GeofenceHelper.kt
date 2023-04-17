@@ -1,12 +1,10 @@
 package com.example.zbesp.screens.map
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
@@ -29,14 +27,13 @@ class GeofenceHelper(base: Context?) : ContextWrapper(base) {
             .setCircularRegion(latLng.latitude, latLng.longitude, radius)
             .setRequestId(ID!!)
             .setTransitionTypes(transitionTypes)
-            .setLoiteringDelay(500)
+            .setLoiteringDelay(100)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun getPendingIntent(): PendingIntent? {
-        Log.i("getPendingIntent", "getPendingIntent")
         if (mPendingIntent != null) {
             return mPendingIntent
         }

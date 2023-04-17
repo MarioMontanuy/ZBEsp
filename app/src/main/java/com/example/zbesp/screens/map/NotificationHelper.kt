@@ -1,7 +1,6 @@
 package com.example.zbesp.screens.map
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -21,7 +20,7 @@ import java.util.*
 
 
 class NotificationHelper(base: Context?) : ContextWrapper(base) {
-    private val CHANNEL_NAME = "High priority channel"
+    private val CHANNEL_NAME = getString(R.string.channel_name)
     private val CHANNEL_ID = "com.example.notifications$CHANNEL_NAME"
 
     init {
@@ -33,7 +32,7 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
             NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.enableLights(true)
         notificationChannel.enableVibration(true)
-        notificationChannel.description = "this is the description of the channel."
+        notificationChannel.description = getString(R.string.channel_description)
         notificationChannel.lightColor = Color.RED
         notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -46,8 +45,7 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
         val pendingIntent =
             PendingIntent.getActivity(this, 267, intent, PendingIntent.FLAG_MUTABLE)
         val notification: Notification =
-            NotificationCompat.Builder(this, CHANNEL_ID) //                .setContentTitle(title)
-                //                .setContentText(body)
+            NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.zbeg)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setStyle(
@@ -62,13 +60,6 @@ class NotificationHelper(base: Context?) : ContextWrapper(base) {
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         NotificationManagerCompat.from(this).notify(Random().nextInt(), notification)

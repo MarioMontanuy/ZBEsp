@@ -9,11 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.zbesp.data.getGeofence
-import com.example.zbesp.data.getVehicle
-import com.example.zbesp.navigation.settings.SettingsScreens
-import com.example.zbesp.navigation.vehicles.VehiclesScreens
-import com.example.zbesp.screens.settings.SettingsScreen
-import com.example.zbesp.screens.vehicles.*
 import com.example.zbesp.screens.zones.ZoneDetailScreen
 import com.example.zbesp.screens.zones.ZonesScreen
 
@@ -39,7 +34,8 @@ fun ZonesNavGraph(
                     defaultValue = "Some Default"
                 }
             )
-        ) { entry -> ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!))
+        ) { entry ->
+            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!))
         }
     }
 }

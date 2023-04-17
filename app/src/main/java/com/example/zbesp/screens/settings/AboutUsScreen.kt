@@ -2,7 +2,6 @@ package com.example.zbesp.screens.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
@@ -14,20 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.zbesp.R
 import com.example.zbesp.screens.ZBEspTopBar
-import com.example.zbesp.ui.theme.TitleText
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AboutUsScreen(){
-    Scaffold(topBar = { ZBEspTopBar("About Us") }) {
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 25.dp),
+fun AboutUsScreen() {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.about_us_title)) }) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 25.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -42,11 +40,12 @@ fun AboutUsScreen(){
                 )
             }
             item {
-                Text(text = "This application gives information about Spanish LEZ.\n\n" +
-                        "You can add your own vehicles and check if Spanish LEZ are open for them",
-                    style = MaterialTheme.typography.body1)
+                Text(
+                    text = stringResource(id = R.string.about_us_text1) + "\n\n" +
+                            stringResource(id = R.string.about_us_text2),
+                    style = MaterialTheme.typography.body1
+                )
             }
         }
     }
-
 }

@@ -1,16 +1,8 @@
 package com.example.zbesp.data
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import ch.benlu.composeform.fields.PickerValue
-import com.example.zbesp.ui.theme.Turquoise
-import com.example.zbesp.ui.theme.Blue
 import com.example.zbesp.R
 import java.util.*
 
@@ -26,7 +18,7 @@ data class Vehicle(
     @DrawableRes var imageId: Int = R.drawable.private_car,
 ) {
 
-    fun setImage(type: VehicleType){
+    fun setImage(type: VehicleType) {
         if (type.type == VehicleTypeEnum.PrivateCar) {
             this.imageId = R.drawable.private_car
         }
@@ -76,12 +68,6 @@ data class Vehicle(
     }
 }
 
-//@Immutable
-//data class VehicleMetadata(
-//
-//)
-
-
 data class VehicleType(val type: VehicleTypeEnum?) : PickerValue() {
     override fun searchFilter(query: String): Boolean {
         return this.type!!.name.startsWith(query)
@@ -100,17 +86,16 @@ data class Country(val type: CountryEnum?) : PickerValue() {
     }
 }
 
-//private val pietro = PostAuthor("Pietro Maggi", "https://medium.com/@pmaggi")
-
 val vehicleNone: Vehicle =
-    Vehicle(id = 1L,
-    name = "Car1",
-    country = Country(CountryEnum.Spain),
-    type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101,5,5) ,
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
-    enabled = true,
-    imageId = R.drawable.private_car,
+    Vehicle(
+        id = 1L,
+        name = "Car1",
+        country = Country(CountryEnum.Spain),
+        type = VehicleType(VehicleTypeEnum.PrivateCar),
+        registrationYear = Date(101, 5, 5),
+        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
+        enabled = true,
+        imageId = R.drawable.private_car,
     )
 
 private val vehicleB: Vehicle = Vehicle(
@@ -118,7 +103,7 @@ private val vehicleB: Vehicle = Vehicle(
     name = "Car2",
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101,5,5) ,
+    registrationYear = Date(101, 5, 5),
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
     enabled = false,
     imageId = R.drawable.private_car
@@ -130,7 +115,7 @@ private val vehicleC: Vehicle = Vehicle(
     name = "Car3",
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101,5,5) ,
+    registrationYear = Date(101, 5, 5),
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C),
     enabled = false,
     imageId = R.drawable.private_car,
@@ -141,7 +126,7 @@ private val vehicleECO: Vehicle = Vehicle(
     name = "Car4",
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101,5,5) ,
+    registrationYear = Date(101, 5, 5),
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
     enabled = false,
     imageId = R.drawable.private_car,
@@ -152,7 +137,7 @@ private val vehicleZero: Vehicle = Vehicle(
     name = "Car5",
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101,5,5) ,
+    registrationYear = Date(101, 5, 5),
     environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
     enabled = false,
     imageId = R.drawable.private_car,
@@ -162,27 +147,27 @@ object VehiclesRepo {
     fun getVehicles(): List<Vehicle> = vehicles
 }
 
-fun noEnabledVehicle(){
-    vehicles.forEach {
-        vehicle -> vehicle.enabled = false
+fun noEnabledVehicle() {
+    vehicles.forEach { vehicle ->
+        vehicle.enabled = false
     }
 }
 
 var currentId: Long = 6L
 
-var vehicles: List<Vehicle> =
-    listOf(vehicleNone,
-        vehicleB,
-        vehicleC,
-        vehicleECO,
-        vehicleZero,
-)
+var vehicles: List<Vehicle> = listOf()
+//    listOf(vehicleNone,
+//        vehicleB,
+//        vehicleC,
+//        vehicleECO,
+//        vehicleZero,
+//)
 
-enum class CountryEnum (type: String) {
+enum class CountryEnum(type: String) {
     Spain("Spain"),
 }
 
-enum class VehicleTypeEnum (type: String) {
+enum class VehicleTypeEnum(type: String) {
     PrivateCar("Private Car"),
     MotorHome("Motor Home"),
     Truck("Truck"),
@@ -192,7 +177,7 @@ enum class VehicleTypeEnum (type: String) {
     Tractor("Tractor");
 }
 
-enum class EnvironmentalStickerEnum (type: String) {
+enum class EnvironmentalStickerEnum(type: String) {
     Zero("Zero"),
     ECO("ECO"),
     C("C"),
@@ -200,10 +185,11 @@ enum class EnvironmentalStickerEnum (type: String) {
     None("None");
 }
 
-fun getVehicle(vehicleId: String): Vehicle{
-    return vehicles.first {it.id == vehicleId.toLong()}
+fun getVehicle(vehicleId: String): Vehicle {
+    return vehicles.first { it.id == vehicleId.toLong() }
 }
-fun getCurrentVehicle() : Vehicle? {
+
+fun getCurrentVehicle(): Vehicle? {
     if (vehicles.isNotEmpty()) {
         return vehicles.first { it.enabled }
     }

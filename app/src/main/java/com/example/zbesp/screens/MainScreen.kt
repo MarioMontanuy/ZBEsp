@@ -1,7 +1,6 @@
 package com.example.zbesp.screens
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -13,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -22,11 +22,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
-import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.TopBarTittle
-import java.io.InputStream
+import com.example.zbesp.R
 
-@RequiresApi(Build.VERSION_CODES.S)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(context: Context) {
@@ -40,6 +39,7 @@ fun MainScreen(context: Context) {
         }
     )
 }
+
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
@@ -75,7 +75,7 @@ fun RowScope.AddItem(
         icon = {
             Icon(
                 imageVector = screen.icon,
-                contentDescription = "Navigation Icon",
+                contentDescription = stringResource(id = R.string.navigation_icon),
                 tint = Color.White
             )
         },
@@ -100,43 +100,3 @@ fun ZBEspTopBar(title: String) {
         }
     )
 }
-
-
-//
-//@Composable
-//fun BottomNavigationBar(navController: NavHostController) {
-//
-//    val screens = listOf(
-//        BottomBarScreen.Vehicles,
-//        BottomBarScreen.Map,
-//        BottomBarScreen.Settings,
-//    )
-//
-//    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentDestination = navBackStackEntry?.destination
-//
-//    NavigationBar (containerColor = RoyalBlue) {
-//        screens.forEach { screen ->
-//            NavigationBarItem(
-//                label = {
-//                    Text(text = screen.title)
-//                },
-//                icon = {
-//                    Icon(
-//                        imageVector = screen.icon,
-//                        contentDescription = "Navigation Icon"
-//                    )
-//                },
-//                selected = currentDestination?.hierarchy?.any {
-//                    it.route == screen.route
-//                } == true,
-//                onClick = {
-//                    navController.navigate(screen.route) {
-//                        popUpTo(navController.graph.findStartDestination().id)
-//                        launchSingleTop = true
-//                    }
-//                }
-//            )
-//        }
-//    }
-//}

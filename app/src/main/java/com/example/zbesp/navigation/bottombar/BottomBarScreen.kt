@@ -30,6 +30,7 @@ sealed class BottomBarScreen(
         title = "Zones",
         icon = Icons.Default.List
     )
+
     object Settings : BottomBarScreen(
         route = "settings",
         title = "Settings",

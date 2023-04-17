@@ -1,10 +1,6 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Space
-import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -15,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -26,51 +22,47 @@ import ch.benlu.composeform.FormField
 import ch.benlu.composeform.Validator
 import ch.benlu.composeform.fields.*
 import ch.benlu.composeform.formatters.dateShort
-import ch.benlu.composeform.validators.DateValidator
-import ch.benlu.composeform.validators.IsEqualValidator
 import ch.benlu.composeform.validators.MinLengthValidator
 import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.*
-import java.text.DateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
-class FormScreen: Form() {
+class FormScreen : Form() {
     override fun self(): Form {
         return this
     }
 
-    fun checkFields(): Boolean{
+    fun checkFields(): Boolean {
         return username.isValid.value!! && country.isValid.value!! && vehicleType.isValid.value!!
                 && environmentalSticker.isValid.value!! && registrationYear.isValid.value!!
     }
 
-    fun showError(){
-
+    fun showError() {
         if (!username.isValid.value!!) {
             username.errorText
         }
-
     }
+
     @FormField
     val username = FieldState(
         state = mutableStateOf<String?>(null),
-        validators = mutableListOf(NotEmptyValidator(), MinLengthValidator(4,
-            "The name must be at least 4 characters") )
+        validators = mutableListOf(
+            NotEmptyValidator(), MinLengthValidator(
+                4,
+                "The name must be at least 4 characters"
+            )
+        )
     )
 
     @FormField
     val country = FieldState(
         state = mutableStateOf<Country?>(null),
-        // define your selectable options (countries)
         options = mutableListOf(
             Country(CountryEnum.Spain)
         ),
-        // format each option with the following lambda function
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
     )
@@ -78,7 +70,6 @@ class FormScreen: Form() {
     @FormField
     val vehicleType = FieldState(
         state = mutableStateOf<VehicleType?>(null),
-        // define your selectable options (countries)
         options = mutableListOf(
             VehicleType(VehicleTypeEnum.PrivateCar),
             VehicleType(VehicleTypeEnum.MotorHome),
@@ -88,7 +79,6 @@ class FormScreen: Form() {
             VehicleType(VehicleTypeEnum.Van),
             VehicleType(VehicleTypeEnum.Tractor),
         ),
-        // format each option with the following lambda function
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
     )
@@ -96,7 +86,6 @@ class FormScreen: Form() {
     @FormField
     val environmentalSticker = FieldState(
         state = mutableStateOf<EnvironmentalSticker?>(null),
-        // define your selectable options (countries)
         options = mutableListOf(
             EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
             EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
@@ -104,7 +93,6 @@ class FormScreen: Form() {
             EnvironmentalSticker(EnvironmentalStickerEnum.B),
             EnvironmentalSticker(EnvironmentalStickerEnum.None),
         ),
-        // format each option with the following lambda function
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
     )
@@ -112,7 +100,13 @@ class FormScreen: Form() {
     @FormField
     val registrationYear = FieldState(
         state = mutableStateOf<Date?>(null),
-        validators = mutableListOf(NotEmptyValidator(), PreviousDateValidator({ Calendar.getInstance().time.time},"Date should not be in the future"))
+        validators = mutableListOf(
+            NotEmptyValidator(),
+            PreviousDateValidator(
+                { Calendar.getInstance().time.time },
+                "Date should not be in the future"
+            )
+        )
     )
 
     @FormField
@@ -121,6 +115,7 @@ class FormScreen: Form() {
     )
 
 }
+
 // TODO Move to another folder
 class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) : Validator<Date?>(
     validate = {
@@ -132,13 +127,14 @@ class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) 
 class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
+
 // TODO change color in some fields in dark mode
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
+fun FormScreen(viewModel: MainViewModel, navController: NavController) {
     // TODO Marcar los fields obligatorios
     val error = remember { mutableStateOf(false) }
-    Scaffold(topBar = { ZBEspTopBar("New Vehicle") }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title)) }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -148,20 +144,23 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
         ) {
             item {
                 Spacer(modifier = Modifier.padding(20.dp))
-                TitleText(text = "Create your vehicle", alignment = TextAlign.Justify,
-                    style = MaterialTheme.typography.h5)
+                TitleText(
+                    text = stringResource(id = R.string.create_your_vehicle),
+                    alignment = TextAlign.Justify,
+                    style = MaterialTheme.typography.h5
+                )
             }
             item {
                 Spacer(modifier = Modifier.padding(20.dp))
                 TextField(
-                    label = "Vehicle name",
+                    label = stringResource(id = R.string.vehicle_name),
                     form = viewModel.form,
                     fieldState = viewModel.form.username,
                 ).Field()
             }
             item {
                 DateField(
-                    label = "Registration Year",
+                    label = stringResource(id = R.string.registration_year),
                     form = viewModel.form,
                     fieldState = viewModel.form.registrationYear,
                     formatter = ::dateShort
@@ -169,21 +168,21 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
             }
             item {
                 PickerField(
-                    label = "Country",
+                    label = stringResource(id = R.string.country),
                     form = viewModel.form,
                     fieldState = viewModel.form.country
                 ).Field()
             }
             item {
                 PickerField(
-                    label = "Vehicle Type",
+                    label = stringResource(id = R.string.type),
                     form = viewModel.form,
                     fieldState = viewModel.form.vehicleType
                 ).Field()
             }
             item {
                 PickerField(
-                    label = "Environmental Sticker",
+                    label = stringResource(id = R.string.environmental_sticker),
                     form = viewModel.form,
                     fieldState = viewModel.form.environmentalSticker
                 ).Field()
@@ -191,7 +190,7 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
             item {
                 CheckboxField(
                     fieldState = viewModel.form.enableVehicle,
-                    label = "Mark as current vehicle",
+                    label = stringResource(id = R.string.mark_current_vehicle),
                     form = viewModel.form
                 ).Field()
             }
@@ -199,16 +198,12 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                 Button(
                     onClick = {
                         if (viewModel.form.checkFields()) {
-                            val image =
-                                "R.drawable.vehicle"/*+viewModel.form.vehicleType.state.value!!.type*/
-                            Log.i("FormScreen", "image:$image")
                             if (viewModel.form.enableVehicle.state.value!!) {
                                 noEnabledVehicle()
                             }
                             if (vehicles.isEmpty()) {
                                 viewModel.form.enableVehicle.state.value = true
                             }
-
                             val newVehicle = Vehicle(
                                 currentId,
                                 viewModel.form.username.state.value!!,
@@ -232,12 +227,12 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                         .fillMaxWidth()
                         .padding(20.dp),
                 ) {
-                    TopBarTittle("Create vehicle", TextAlign.Justify)
+                    TopBarTittle(stringResource(id = R.string.create_vehicle), TextAlign.Justify)
                 }
             }
             item {
                 if (error.value) {
-                    TitleTextRed("Fields should not be empty", TextAlign.Justify)
+                    TitleTextRed(stringResource(id = R.string.fields_not_empty), TextAlign.Justify)
                 }
             }
         }

@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
 import com.example.zbesp.MainActivity
 import com.example.zbesp.dataStore
 import com.google.android.gms.location.Geofence
@@ -23,8 +22,6 @@ import kotlinx.coroutines.runBlocking
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context, intent: Intent) {
-        // an Intent broadcast.
-//        Toast.makeText(context, "Geofence triggered...", Toast.LENGTH_SHORT).show();
         val notificationHelper = NotificationHelper(context)
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         if (geofencingEvent!!.hasError()) {
@@ -42,36 +39,38 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             }
         when (transitionType) {
 //            Geofence.GEOFENCE_TRANSITION_ENTER -> {
-//                Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, GEOFENCE_TRANSITION_ENTER, Toast.LENGTH_SHORT).show()
 //                runBlocking(Dispatchers.IO) {
 //                    if (value.first()!!)
 //                    notificationHelper.sendHighPriorityNotification(
-//                        "GEOFENCE_TRANSITION_ENTER", "",
+//                        GEOFENCE_TRANSITION_ENTER, "",
 //                        MainActivity::class.java
 //                    )
 //                    Log.i("notificationHelper", "value:${value.first()}")
 //                }
 //            }
             Geofence.GEOFENCE_TRANSITION_DWELL -> {
-                Toast.makeText(context, "GEOFENCE_TRANSITION_DWELL", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, GEOFENCE_TRANSITION_DWELL, Toast.LENGTH_SHORT).show()
                 runBlocking(Dispatchers.IO) {
-                    if (value.first()!!)
-                        notificationHelper.sendHighPriorityNotification(
-                            "GEOFENCE_TRANSITION_DWELL", "",
-                            MainActivity::class.java
-                        )
-                    Log.i("notificationHelper", "value:${value.first()}")
+                    if (value.first() != null) {
+                        if (value.first()!!)
+                            notificationHelper.sendHighPriorityNotification(
+                                GEOFENCE_TRANSITION_DWELL, "",
+                                MainActivity::class.java
+                            )
+                    }
                 }
             }
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
-                Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, GEOFENCE_TRANSITION_EXIT, Toast.LENGTH_SHORT).show()
                 runBlocking(Dispatchers.IO) {
-                    if (value.first()!!)
-                        notificationHelper.sendHighPriorityNotification(
-                            "GEOFENCE_TRANSITION_EXIT", "",
-                            MainActivity::class.java
-                        )
-                    Log.i("notificationHelper", "value:${value.first()}")
+                    if (value.first() != null) {
+                        if (value.first()!!)
+                            notificationHelper.sendHighPriorityNotification(
+                                GEOFENCE_TRANSITION_EXIT, "",
+                                MainActivity::class.java
+                            )
+                    }
                 }
             }
         }
@@ -79,5 +78,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "GeofenceBroadcastReceiv"
+        private const val GEOFENCE_TRANSITION_EXIT = "GEOFENCE_TRANSITION_EXIT"
+        private const val GEOFENCE_TRANSITION_DWELL = "GEOFENCE_TRANSITION_DWELL"
+        private const val GEOFENCE_TRANSITION_ENTER = "GEOFENCE_TRANSITION_ENTER"
     }
 }

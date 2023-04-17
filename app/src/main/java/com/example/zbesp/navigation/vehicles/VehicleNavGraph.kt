@@ -38,7 +38,7 @@ fun VehiclesNavGraph(
         }
         composable(VehiclesScreens.NewVehicle.route) {
             val viewModel = MainViewModel()
-            SingleTextField(viewModel, navController)
+            FormScreen(viewModel, navController)
         }
     }
 }
