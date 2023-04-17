@@ -99,6 +99,6 @@ fun CommonButton(navController: NavController, route: String){
         colors = getButtonColors(),
         modifier = Modifier.fillMaxWidth()
     ) {
-        TitleText(route, TextAlign.Start)
+        TitleText(route, TextAlign.Justify)
     }
 }

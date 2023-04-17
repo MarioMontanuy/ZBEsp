@@ -13,11 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.zbesp.R
 import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.getCurrentVehicle
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.ui.theme.BigTitleText
+import com.example.zbesp.ui.theme.SubtitleText
+import com.example.zbesp.ui.theme.TitleText
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -31,7 +35,7 @@ fun ZoneDetailScreen(zone: GeofenceItem){
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Text(text = zone.name, style = MaterialTheme.typography.h3)
+                BigTitleText(text = zone.name, alignment = TextAlign.Justify)
                 Image(
                     painter = painterResource(zone.imageId),
                     contentDescription = null,
@@ -46,12 +50,15 @@ fun ZoneDetailScreen(zone: GeofenceItem){
                 Spacer(modifier = Modifier.padding(50.dp))
                 if (currentVehicle != null) {
                     if (zone.isStickerForbidden(currentVehicle.environmentalSticker.type)) {
-                        Text(text = "Your vehicle does not meet the restrictions of this Low Emission Zone")
+                        SubtitleText(text = "Your vehicle does not meet the restrictions of this" +
+                                " Low Emission Zone", alignment = TextAlign.Justify)
                     } else {
-                        Text(text = "Your vehicle is allowed to travel in this Low Emission Zone")
+                        SubtitleText(text = "Your vehicle is allowed to travel in this Low Emission" +
+                                " Zone", alignment = TextAlign.Justify)
                     }
                 } else {
-                    Text(text = "You have to create a vehicle in order to know your restrictions")
+                    SubtitleText(text = "You have to create a vehicle in order to know your" +
+                            " restrictions", alignment = TextAlign.Justify)
                 }
 
             }

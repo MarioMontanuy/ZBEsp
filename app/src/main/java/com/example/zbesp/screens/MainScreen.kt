@@ -96,7 +96,7 @@ fun RowScope.AddItem(
 fun ZBEspTopBar(title: String) {
     TopAppBar(
         title = {
-            TopBarTittle(text = title, alignment = TextAlign.Start)
+            TopBarTittle(text = title, alignment = TextAlign.Justify)
         }
     )
 }

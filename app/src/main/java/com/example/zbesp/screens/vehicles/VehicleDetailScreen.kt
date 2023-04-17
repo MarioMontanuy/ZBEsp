@@ -85,7 +85,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                             .fillMaxWidth()
                             .padding(20.dp),
                     ) {
-                        TopBarTittle("Mark as current vehicle", TextAlign.Start)
+                        TopBarTittle("Mark as current vehicle", TextAlign.Justify)
                     }
                 }
             }
@@ -99,10 +99,10 @@ fun AddTextRow(title: String, subtitle: String){
     ListItem(
         Modifier.padding(5.dp),
         text = {
-            TitleText(text = title, TextAlign.Start)
+            TitleText(text = title, TextAlign.Justify)
         },
         secondaryText = {
-            SubtitleText(text = subtitle, TextAlign.Start)
+            SubtitleText(text = subtitle, TextAlign.Justify)
         },
     )
     Divider(startIndent = 20.dp)

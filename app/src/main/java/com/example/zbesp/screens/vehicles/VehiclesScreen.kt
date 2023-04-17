@@ -49,10 +49,10 @@ fun VehiclesScreen(navController: NavController) {
         ){
             if (vehicles.isEmpty()) {
                 item {
-                    Text(modifier = Modifier
-                        .fillMaxSize().padding(50.dp),
+                    Spacer(modifier = Modifier.padding(30.dp))
+                    SubtitleText(
                         text =  "You have not created a vehicle yet",
-                        textAlign = TextAlign.Center)
+                        alignment = TextAlign.Center)
                 }
             } else {
                 items(vehicles) { vehicle ->
@@ -90,11 +90,11 @@ fun PostItem(
             )
         },
         text = {
-            TitleText(text = vehicle.name, alignment = TextAlign.Start)
+            TitleText(text = vehicle.name, alignment = TextAlign.Justify)
         },
         secondaryText = {
             if (vehicle.enabled) {
-                SubtitleText("Current Vehicle", TextAlign.Start)
+                SubtitleText("Current Vehicle", TextAlign.Justify)
             }
         }
     )

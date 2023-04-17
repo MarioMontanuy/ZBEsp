@@ -59,7 +59,6 @@ fun ZonesScreen(navController: NavController) {
             }
 
         }
-        VehiclesFloatingActionButton(navController = navController)
     }
 }
 
@@ -87,10 +86,10 @@ fun PostGeofenceItem(
             )
         },
         text = {
-            TitleText(text = geofenceItem.name, alignment = TextAlign.Start)
+            TitleText(text = geofenceItem.name, alignment = TextAlign.Justify)
         },
         secondaryText = {
-            SubtitleText(geofenceItem.description, TextAlign.Start)
+            SubtitleText(geofenceItem.description, TextAlign.Justify)
 
         }
     )

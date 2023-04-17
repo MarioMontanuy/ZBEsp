@@ -224,12 +224,12 @@ fun SingleTextField(viewModel: MainViewModel, navController: NavController) {
                         .fillMaxWidth()
                         .padding(20.dp),
                 ) {
-                    TopBarTittle("Create vehicle", TextAlign.Start)
+                    TopBarTittle("Create vehicle", TextAlign.Justify)
                 }
             }
             item {
                 if (error.value) {
-                    TitleTextRed("Fields should not be empty", TextAlign.Start)
+                    TitleTextRed("Fields should not be empty", TextAlign.Justify)
                 }
             }
         }

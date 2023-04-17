@@ -32,6 +32,26 @@ import java.awt.font.TextAttribute
 //        lineHeight = 24.sp,
 //)
 //)
+@Composable
+fun BigTitleText(text: String, alignment: TextAlign){
+    if (isSystemInDarkTheme()) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.h3,
+            textAlign = alignment
+        )
+    } else {
+        Text(
+            text = text,
+            color = SapphireBlue,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.h3,
+            textAlign = alignment
+        )
+    }
+}
 
 @Composable
 fun TitleText(text: String, alignment: TextAlign){
