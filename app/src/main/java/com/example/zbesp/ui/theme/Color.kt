@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val SapphireBlue = Color(0xFF0F52BA)
-
+val errorColor = Color.Red
 @Composable
 fun getButtonColors(): ButtonColors {
     return ButtonDefaults.buttonColors(

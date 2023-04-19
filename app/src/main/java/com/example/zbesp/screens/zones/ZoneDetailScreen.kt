@@ -21,7 +21,7 @@ import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.R
-
+// TODO add info about what stickers can access each zone and more info
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ZoneDetailScreen(zone: GeofenceItem){
@@ -45,6 +45,8 @@ fun ZoneDetailScreen(zone: GeofenceItem){
                         .size(200.dp)
                 )
                 Spacer(modifier = Modifier.padding(vertical = 30.dp))
+
+                // Shows available stickers of the zone
                 if (currentVehicle != null) {
                     if (zone.isStickerForbidden(currentVehicle.environmentalSticker.type)) {
                         SubtitleText(text = stringResource(id = R.string.vehicle_named) + " "
