@@ -24,7 +24,7 @@ import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
-
+// TODO add info about what stickers can access each zone and more info
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
