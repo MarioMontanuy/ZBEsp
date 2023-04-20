@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -21,11 +27,15 @@ import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.R
+import com.example.zbesp.retrofit.getImage
+import retrofit2.Retrofit
+
 // TODO add info about what stickers can access each zone and more info
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ZoneDetailScreen(zone: GeofenceItem){
     val currentVehicle = getCurrentVehicle()
+    val image = getImage(zone.name)
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.zone_detail_screen_title)) }) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
@@ -37,7 +47,7 @@ fun ZoneDetailScreen(zone: GeofenceItem){
             item {
                 BigTitleText(text = zone.name, alignment = TextAlign.Justify)
                 Image(
-                    painter = painterResource(zone.imageId),
+                    bitmap = image?.asImageBitmap() ?: ImageBitmap.imageResource(id = R.drawable.noimage),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
@@ -70,3 +80,4 @@ fun ZoneDetailScreen(zone: GeofenceItem){
         }
     }
 }
+

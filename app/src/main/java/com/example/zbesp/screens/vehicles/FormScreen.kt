@@ -3,9 +3,9 @@ package com.example.zbesp.screens.vehicles
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,26 +28,23 @@ import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.*
-import com.maxkeppeker.sheets.core.models.base.UseCaseState
-import com.maxkeppeler.sheets.calendar.CalendarDialog
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import java.util.*
+
 class FormScreen : Form() {
     override fun self(): Form {
         return this
     }
 
     fun checkFields(): Boolean {
-
-        return username.hasError() && country.hasError() && vehicleType.hasError()
-                && environmentalSticker.hasError() && registrationYear.hasError()
+        return username.isValid.value!! && country.isValid.value!! && vehicleType.isValid.value!!
+                && environmentalSticker.isValid.value!! && registrationYear.isValid.value!!
     }
 
     @FormField
     val username = FieldState(
         state = mutableStateOf<String?>(null),
         validators = mutableListOf(
-            NotEmptyValidator("This field must be fulfilled"), MinLengthValidator(
+            NotEmptyValidator(), MinLengthValidator(
                 4,
                 "The name must be at least 4 characters"
             )
@@ -61,7 +58,7 @@ class FormScreen : Form() {
             Country(CountryEnum.Spain)
         ),
         optionItemFormatter = { "${it?.type}" },
-        validators = mutableListOf(NotEmptyValidator("This field must be fulfilled"))
+        validators = mutableListOf(NotEmptyValidator())
     )
 
     @FormField
@@ -77,7 +74,7 @@ class FormScreen : Form() {
             VehicleType(VehicleTypeEnum.Tractor),
         ),
         optionItemFormatter = { "${it?.type}" },
-        validators = mutableListOf(NotEmptyValidator("This field must be fulfilled"))
+        validators = mutableListOf(NotEmptyValidator())
     )
 
     @FormField
@@ -91,14 +88,14 @@ class FormScreen : Form() {
             EnvironmentalSticker(EnvironmentalStickerEnum.None),
         ),
         optionItemFormatter = { "${it?.type}" },
-        validators = mutableListOf(NotEmptyValidator("This field must be fulfilled"))
+        validators = mutableListOf(NotEmptyValidator())
     )
 
     @FormField
     val registrationYear = FieldState(
         state = mutableStateOf<Date?>(null),
         validators = mutableListOf(
-            NotEmptyValidator("This field must be fulfilled"),
+            NotEmptyValidator(),
             PreviousDateValidator(
                 { Calendar.getInstance().time.time },
                 "Date should not be in the future"
@@ -121,13 +118,6 @@ class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) 
     errorText = errorText ?: "This field is not valid."
 )
 
-class NotEmptyValidator<T>(errorText: String? = null) : Validator<T>(
-    validate = {
-        it != null
-    },
-    errorText = errorText ?: "This field should not be empty"
-)
-
 class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
@@ -137,8 +127,7 @@ class MainViewModel : ViewModel() {
 @Composable
 fun FormScreen(viewModel: MainViewModel, navController: NavController) {
     // TODO Marcar los fields obligatorios
-    val nameError = remember { mutableStateOf(false) }
-    val name = remember { mutableStateOf("") }
+    val error = remember { mutableStateOf(false) }
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title)) }) {
         LazyColumn(
             modifier = Modifier
@@ -147,7 +136,6 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             item {
                 Spacer(modifier = Modifier.padding(20.dp))
                 TitleText(
@@ -163,21 +151,6 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
                     form = viewModel.form,
                     fieldState = viewModel.form.username,
                 ).Field()
-            }
-            item {
-                // TODO Change error color tone and save this value
-                OutlinedTextField(
-                    value = name.value,
-                    onValueChange = { name.value = it; nameError.value = false},
-                    label = { Text(stringResource(id = R.string.search_location)) },
-                    isError = nameError.value,
-                    trailingIcon =  {
-                        if (nameError.value)
-                            Icon(Icons.Filled.Error,"error", tint = errorColor)
-                    },
-                    placeholder = { Text(stringResource(id = R.string.location_name)) },
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
             item {
                 DateField(
@@ -218,9 +191,7 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
             item {
                 Button(
                     onClick = {
-                        viewModel.form.validate()
-
-                        if (viewModel.form.isValid) {
+                        if (viewModel.form.checkFields()) {
                             if (viewModel.form.enableVehicle.state.value!!) {
                                 noEnabledVehicle()
                             }
@@ -241,8 +212,7 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
                             vehicles = vehicles + newVehicle
                             navController.popBackStack()
                         } else {
-                            nameError.value = true
-                            viewModel.form.validate()
+                            error.value = true
                         }
                     },
                     colors = getButtonColorsReversed(),
@@ -251,6 +221,11 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
                         .padding(20.dp),
                 ) {
                     TopBarTittle(stringResource(id = R.string.create_vehicle), TextAlign.Justify)
+                }
+            }
+            item {
+                if (error.value) {
+                    TitleTextRed(stringResource(id = R.string.fields_not_empty), TextAlign.Justify)
                 }
             }
         }

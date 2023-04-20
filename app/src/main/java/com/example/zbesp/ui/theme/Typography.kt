@@ -88,7 +88,7 @@ fun TopBarTittle(text: String, alignment: TextAlign) {
 fun TitleTextRed(text: String, alignment: TextAlign) {
     Text(
         text = text,
-        color = Color.Red,
+        color = errorColor,
         fontWeight = FontWeight.Bold,
         style = MaterialTheme.typography.body1,
         textAlign = alignment
