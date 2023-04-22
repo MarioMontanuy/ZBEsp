@@ -27,7 +27,7 @@ fun BottomNavGraph(navController: NavHostController, context: Context) {
             MapScreen(context)
         }
         composable(route = BottomBarScreen.Zones.route) {
-            ZonesNavGraph()
+            ZonesNavGraph(context = context)
         }
         composable(route = BottomBarScreen.Settings.route) {
             SettingsNavGraph()

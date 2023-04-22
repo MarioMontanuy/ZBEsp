@@ -1,5 +1,6 @@
 package com.example.zbesp.navigation.zones
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -16,7 +17,8 @@ import com.example.zbesp.screens.zones.ZonesScreen
 fun ZonesNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ZonesScreens.ZoneList.route
+    startDestination: String = ZonesScreens.ZoneList.route,
+    context: Context
 ) {
     NavHost(
         modifier = modifier,
@@ -35,7 +37,7 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!))
+            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context)
         }
     }
 }
