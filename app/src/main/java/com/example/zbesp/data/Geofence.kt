@@ -12,6 +12,7 @@ data class GeofenceItem(
     val radius: Float,
     var description: String = "",
     var forbiddenStickers: List<EnvironmentalStickerEnum> = listOf(),
+    var url: String = "",
     @DrawableRes var imageId: Int = R.drawable.lleida_zbe,
     var name: String = ""
 ) {
@@ -21,6 +22,7 @@ data class GeofenceItem(
             this.description = "Lleida, Catalonia, Spain"
             this.forbiddenStickers = listOf(EnvironmentalStickerEnum.None)
             this.imageId = R.drawable.lleida_zbe
+            this.url = "https://cdn01.segre.com/uploads/imagenes/bajacalidad/2022/03/30/_zbe_9f1868be.jpg?d3d6b208763767ca650f5301abad64fd"
         }
         if (this.id == R.raw.zaragoza) {
             this.name = "Zaragoza LEZ"
@@ -30,6 +32,9 @@ data class GeofenceItem(
                 EnvironmentalStickerEnum.B
             )
             this.imageId = R.drawable.zaragoza_zbe
+            this.url = "https://cadenaser.com/resizer/yBbl0kHU7T6DCDMyuWwa7f9PYKo=/736x414/filters" +
+                    ":format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com" +
+                    "/prisaradio/L3XSZE73HRGR3EE6KTTIQNHLRE.jpg"
         }
         if (this.id == R.raw.madrid) {
             this.name = "Madrid LEZ"
@@ -40,6 +45,7 @@ data class GeofenceItem(
                 EnvironmentalStickerEnum.B
             )
             this.imageId = R.drawable.madrid_zbe
+            this.url = "https://pre.madrid360.es/wp-content/uploads/2021/12/Portada-Madrid-ZBE-2.png"
         }
         if (this.id == R.raw.barcelona) {
             this.name = "Barcelona LEZ"
@@ -50,6 +56,9 @@ data class GeofenceItem(
                 EnvironmentalStickerEnum.B
             )
             this.imageId = R.drawable.barcelona_zbe
+            this.url = "https://www.ocu.org/-/media/ocu/images/home/coches/coches/mapa%20zona" +
+                    "%20bajas%20emisiones%20barcelona.jpg?rev=f8af675e-a912-4ee2-9b03-137ed935ac" +
+                    "36&hash=904A7F9E2663EDCD8E54DC306CE0E793"
         }
     }
 
