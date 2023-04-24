@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,12 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.geofences
 import com.example.zbesp.navigation.zones.ZonesScreens
@@ -75,13 +79,25 @@ fun PostGeofenceItem(
                 }
             },
         icon = {
-            Image(
-                painter = painterResource(geofenceItem.imageId),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .clip(shape = MaterialTheme.shapes.small)
-                    .size(45.dp)
+//            Image(
+//                painter = painterResource(geofenceItem.imageId),
+//                contentDescription = null,
+//                contentScale = ContentScale.Fit,
+//                modifier = Modifier
+//                    .clip(shape = MaterialTheme.shapes.small)
+//                    .size(45.dp)
+//            )
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(geofenceItem.url)
+                    .crossfade(true)
+                    .build(),
+                loading = {
+                    CircularProgressIndicator()
+                },
+                contentDescription = geofenceItem.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clip(MaterialTheme.shapes.small).size(45.dp)
             )
         },
         text = {

@@ -1,7 +1,9 @@
 package com.example.zbesp.data
 
+import android.provider.Settings.Global.getString
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.res.stringResource
 import com.example.zbesp.R
 import org.osmdroid.util.GeoPoint
 
@@ -11,7 +13,7 @@ data class GeofenceItem(
     val center: GeoPoint,
     val radius: Float,
     var description: String = "",
-    var forbiddenStickers: List<EnvironmentalStickerEnum> = listOf(),
+    var forbiddenStickers: List<EnvironmentalSticker> = listOf(),
     var url: String = "",
     @DrawableRes var imageId: Int = R.drawable.lleida_zbe,
     var name: String = ""
@@ -20,7 +22,7 @@ data class GeofenceItem(
         if (this.id == R.raw.lleida) {
             this.name = "Lleida LEZ"
             this.description = "Lleida, Catalonia, Spain"
-            this.forbiddenStickers = listOf(EnvironmentalStickerEnum.None)
+            this.forbiddenStickers = listOf(EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone))
             this.imageId = R.drawable.lleida_zbe
             this.url = "https://cdn01.segre.com/uploads/imagenes/bajacalidad/2022/03/30/_zbe_9f1868be.jpg?d3d6b208763767ca650f5301abad64fd"
         }
@@ -28,8 +30,8 @@ data class GeofenceItem(
             this.name = "Zaragoza LEZ"
             this.description = "Zaragoza, Aragon, Spain"
             this.forbiddenStickers = listOf(
-                EnvironmentalStickerEnum.None,
-                EnvironmentalStickerEnum.B
+                EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
+                EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.zaragoza_zbe
             this.url = "https://cadenaser.com/resizer/yBbl0kHU7T6DCDMyuWwa7f9PYKo=/736x414/filters" +
@@ -40,9 +42,9 @@ data class GeofenceItem(
             this.name = "Madrid LEZ"
             this.description = "Madrid, Madrid, Spain"
             this.forbiddenStickers = listOf(
-                EnvironmentalStickerEnum.None,
-                EnvironmentalStickerEnum.C,
-                EnvironmentalStickerEnum.B
+                EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
+                EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
+                EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.madrid_zbe
             this.url = "https://pre.madrid360.es/wp-content/uploads/2021/12/Portada-Madrid-ZBE-2.png"
@@ -51,9 +53,9 @@ data class GeofenceItem(
             this.name = "Barcelona LEZ"
             this.description = "Barcelona, Catalonia, Spain"
             this.forbiddenStickers = listOf(
-                EnvironmentalStickerEnum.None,
-                EnvironmentalStickerEnum.C,
-                EnvironmentalStickerEnum.B
+                EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
+                EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
+                EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.barcelona_zbe
             this.url = "https://www.ocu.org/-/media/ocu/images/home/coches/coches/mapa%20zona" +
@@ -62,7 +64,7 @@ data class GeofenceItem(
         }
     }
 
-    fun isStickerForbidden(sticker: EnvironmentalStickerEnum?): Boolean {
+    fun isStickerForbidden(sticker: EnvironmentalSticker?): Boolean {
         this.forbiddenStickers.forEach { it ->
             if (it == sticker) {
                 return true

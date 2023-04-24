@@ -2,6 +2,7 @@ package com.example.zbesp.data
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.painter.Painter
 import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.R
 import java.util.*
@@ -74,7 +75,7 @@ data class VehicleType(val type: VehicleTypeEnum?) : PickerValue() {
     }
 }
 
-data class EnvironmentalSticker(val type: EnvironmentalStickerEnum?) : PickerValue() {
+data class EnvironmentalSticker(val type: EnvironmentalStickerEnum?, val stickerImage: Int) : PickerValue() {
     override fun searchFilter(query: String): Boolean {
         return this.type!!.name.startsWith(query)
     }
@@ -93,7 +94,7 @@ val vehicleNone: Vehicle =
         country = Country(CountryEnum.Spain),
         type = VehicleType(VehicleTypeEnum.PrivateCar),
         registrationYear = Date(101, 5, 5),
-        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None),
+        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
         enabled = true,
         imageId = R.drawable.private_car,
     )
@@ -104,7 +105,7 @@ private val vehicleB: Vehicle = Vehicle(
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
     registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
     enabled = false,
     imageId = R.drawable.private_car
 )
@@ -116,7 +117,7 @@ private val vehicleC: Vehicle = Vehicle(
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
     registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
     enabled = false,
     imageId = R.drawable.private_car,
 )
@@ -127,7 +128,7 @@ private val vehicleECO: Vehicle = Vehicle(
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
     registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
     enabled = false,
     imageId = R.drawable.private_car,
 )
@@ -138,7 +139,7 @@ private val vehicleZero: Vehicle = Vehicle(
     country = Country(CountryEnum.Spain),
     type = VehicleType(VehicleTypeEnum.PrivateCar),
     registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
+    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
     enabled = false,
     imageId = R.drawable.private_car,
 )

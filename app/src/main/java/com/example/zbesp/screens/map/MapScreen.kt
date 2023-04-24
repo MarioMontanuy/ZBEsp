@@ -14,7 +14,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +37,7 @@ import com.example.zbesp.data.kmlZones
 import com.example.zbesp.dataStore
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.ui.theme.SapphireBlue
+import com.example.zbesp.ui.theme.SapphireBlueTransparent
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
@@ -206,13 +210,31 @@ private fun CreateSearchBar(context: Context) {
             onValueChange = { searchQuery.value = it },
             label = { Text(stringResource(id = R.string.search_location)) },
             placeholder = { Text(stringResource(id = R.string.location_name)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                placeholderColor = Color.White,
+                backgroundColor = SapphireBlueTransparent,
+                trailingIconColor = Color.White,
+                cursorColor = Color.White
+            ),
+            trailingIcon = {
+                if (searchQuery.value.isEmpty()) {
+                    Icon(Icons.Default.Search, contentDescription = "Search" )
+                } else {
+                    IconButton(
+                        onClick = { searchQuery.value = "" }
+                    ) {
+                        Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                    }
+                } }
         )
         Button(
             onClick = { searchLocation(searchQuery.value, geocoder, searchResults) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(id = R.string.search_location))
+            Text(stringResource(id = R.string.search_location), color = Color.White)
         }
     }
 }

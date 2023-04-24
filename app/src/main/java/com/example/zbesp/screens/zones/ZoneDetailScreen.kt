@@ -7,12 +7,15 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +36,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
@@ -44,10 +48,16 @@ import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.R
+import com.example.zbesp.data.EnvironmentalSticker
+import com.example.zbesp.data.EnvironmentalStickerEnum
+import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.retrofit.ImageAPI
 import com.example.zbesp.retrofit.ImageAPIService
 import com.example.zbesp.retrofit.MarsPhoto
 import com.example.zbesp.retrofit.ZoneViewModel
+import com.example.zbesp.screens.vehicles.PostItem
+import com.example.zbesp.ui.theme.SapphireBlueTransparent
+import com.example.zbesp.ui.theme.TitleText
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -94,7 +104,7 @@ fun ZoneDetailScreen(zone: GeofenceItem, context: Context){
                     loading = {
                         CircularProgressIndicator()
                     },
-                    contentDescription = "ZBE",
+                    contentDescription = zone.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.clip(CircleShape)
                 )
@@ -104,33 +114,61 @@ fun ZoneDetailScreen(zone: GeofenceItem, context: Context){
 //                    modifier = Modifier.size(128.dp)
 //                )
                 Spacer(modifier = Modifier.padding(vertical = 30.dp))
-
-                // Shows available stickers of the zone
-                if (currentVehicle != null) {
-                    if (zone.isStickerForbidden(currentVehicle.environmentalSticker.type)) {
-                        SubtitleText(text = stringResource(id = R.string.vehicle_named) + " "
-                                + currentVehicle.name + " " +stringResource(
-                            id = R.string.not_meet_restrictions
-                        ), alignment = TextAlign.Justify,
-                            style = MaterialTheme.typography.body1)
+            }
+            item {
+                    if (currentVehicle != null) {
+                        if (zone.isStickerForbidden(currentVehicle.environmentalSticker)) {
+                            SubtitleText(text = stringResource(id = R.string.vehicle_named) + " "
+                                    + currentVehicle.name + " " +stringResource(
+                                id = R.string.not_meet_restrictions
+                            ), alignment = TextAlign.Justify,
+                                style = MaterialTheme.typography.body1)
+                        } else {
+                            SubtitleText(text = stringResource(id = R.string.vehicle_named)
+                                    + " " + currentVehicle.name+ " " + stringResource(
+                                id = R.string.meet_restrictions
+                            ), alignment = TextAlign.Justify,
+                                style = MaterialTheme.typography.body1)
+                        }
                     } else {
-                        SubtitleText(text = stringResource(id = R.string.vehicle_named)
-                                + " " + currentVehicle.name+ " " + stringResource(
-                            id = R.string.meet_restrictions
-                        ), alignment = TextAlign.Justify,
+                        SubtitleText(text = stringResource(id = R.string.create_vehicle_restrictions),
+                            alignment = TextAlign.Justify,
                             style = MaterialTheme.typography.body1)
                     }
-                } else {
-                    SubtitleText(text = stringResource(id = R.string.create_vehicle_restrictions),
-                        alignment = TextAlign.Justify,
+                    Spacer(modifier = Modifier.padding(20.dp))
+                    SubtitleText(text = "Restrictions for Stickers:", alignment = TextAlign.Justify,
                         style = MaterialTheme.typography.body1)
+                    LazyRow(horizontalArrangement = Arrangement.Center) {
+                        items(zone.forbiddenStickers) { sticker ->
+                            PostSticker(sticker = sticker)
+                            Divider(startIndent = 20.dp)
+                        }
+                    }
                 }
             }
+                // Shows available stickers of the zone
         }
-    }
-
     ImageRequest.Builder(context = context)
 }
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun PostSticker(sticker: EnvironmentalSticker) {
+    ListItem(
+        modifier = Modifier,
+        icon = {
+            Image(
+                painter = painterResource(id = sticker.stickerImage),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .clip(shape = MaterialTheme.shapes.small)
+                    .size(45.dp)
+            )
+        },
+        text = {
+            TitleText(text = "", alignment = TextAlign.Justify)
+        },
 
-
+    )
+}
 

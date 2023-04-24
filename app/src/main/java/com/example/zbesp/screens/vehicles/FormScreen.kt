@@ -81,11 +81,11 @@ class FormScreen : Form() {
     val environmentalSticker = FieldState(
         state = mutableStateOf<EnvironmentalSticker?>(null),
         options = mutableListOf(
-            EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
-            EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
-            EnvironmentalSticker(EnvironmentalStickerEnum.C),
-            EnvironmentalSticker(EnvironmentalStickerEnum.B),
-            EnvironmentalSticker(EnvironmentalStickerEnum.None),
+            EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
+            EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
+            EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
+            EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
+            EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
         ),
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
