@@ -1,13 +1,18 @@
 package com.example.zbesp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 
 
 @Composable
@@ -47,6 +52,29 @@ fun BigTitleText(text: String, alignment: TextAlign) {
             color = SapphireBlue,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.h3,
+            textAlign = alignment
+        )
+    }
+}
+
+@Composable
+fun MediumTitleText(text: String, alignment: TextAlign) {
+    if (isSystemInDarkTheme()) {
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.h4,
+            textAlign = alignment
+        )
+    } else {
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            text = text,
+            color = SapphireBlue,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.h4,
             textAlign = alignment
         )
     }

@@ -58,4 +58,11 @@
     <string name="search_location">Search location</string>
     <string name="location_name">Enter location name</string>
     <string name="geofence_transition_exit">GEOFENCE_TRANSITION_EXIT</string>
+    <string name="email">Email</string>
+    <string name="enter_email">Enter your Email</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter your Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="register">Register now</string>
 </resources>
