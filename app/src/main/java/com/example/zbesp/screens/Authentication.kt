@@ -137,12 +137,18 @@ fun RegisterScreen(navController: NavController) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
+    val rePassword = remember { mutableStateOf("") }
+    val rePasswordVisibility = remember { mutableStateOf(false) }
 
     val passwordIcon = if (passwordVisibility.value)
         Icons.Default.Visibility
     else
         Icons.Default.VisibilityOff
 
+    val rePasswordIcon = if (rePasswordVisibility.value)
+        Icons.Default.Visibility
+    else
+        Icons.Default.VisibilityOff
     Column (modifier = Modifier
         .fillMaxSize()
         .padding(horizontal = 30.dp, vertical = 60.dp), horizontalAlignment = Alignment.CenterHorizontally,
@@ -177,8 +183,8 @@ fun RegisterScreen(navController: NavController) {
         OutlinedTextField(
             value = password.value,
             onValueChange = { password.value = it },
-            label = { Text(stringResource(id = R.string.password)) },
-            placeholder = { Text(stringResource(id = R.string.enter_password)) },
+            label = { Text(stringResource(id = R.string.new_password)) },
+            placeholder = { Text(stringResource(id = R.string.enter_new_password)) },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 IconButton(
@@ -188,6 +194,22 @@ fun RegisterScreen(navController: NavController) {
                 }
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+            else PasswordVisualTransformation()
+        )
+        OutlinedTextField(
+            value = rePassword.value,
+            onValueChange = { rePassword.value = it },
+            label = { Text(stringResource(id = R.string.new_password)) },
+            placeholder = { Text(stringResource(id = R.string.enter_new_password)) },
+            modifier = Modifier.fillMaxWidth(),
+            trailingIcon = {
+                IconButton(
+                    onClick = { rePasswordVisibility.value = !rePasswordVisibility.value }
+                ) {
+                    Icon(rePasswordIcon, "Visibility")
+                }
+            },
+            visualTransformation = if (rePasswordVisibility.value) VisualTransformation.None
             else PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.padding(5.dp))
