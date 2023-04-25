@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
@@ -109,7 +108,6 @@ private fun createGeofence(context: Context) {
     geofences.forEach { it ->
         addGeofence(it, context)
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
