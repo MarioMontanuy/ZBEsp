@@ -1,6 +1,9 @@
 package com.example.zbesp.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,17 +12,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.dataStore
 import com.example.zbesp.navigation.settings.SettingsScreens
 import com.example.zbesp.screens.ZBEspTopBar
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
 import com.example.zbesp.R
-
+import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
+import com.example.zbesp.screens.goToLogIn
+import com.google.firebase.auth.FirebaseAuth
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navController: NavController, context: Context) {
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.settings_screen_title)) }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("MAP") {
@@ -89,6 +96,25 @@ fun SettingsScreen(navController: NavController) {
                         }
                     )
                 }
+            }
+            prefsGroup("USER") {
+                prefsItem {
+                    TextPref(
+                        title = "Log out",
+                        enabled = true,
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.PowerOff,
+                                stringResource(id = R.string.info)
+                            )
+                        },
+                        onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            goToLogIn(navController)
+                        }
+                    )
+                }
+
             }
         }
     }

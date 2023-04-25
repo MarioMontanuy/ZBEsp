@@ -2,6 +2,8 @@ package com.example.zbesp.screens
 
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -50,10 +53,13 @@ import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
 import com.example.zbesp.ui.theme.TitleText
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun LogInScreen(navController: NavController) {
+fun LogInScreen(navController: NavController, context: Context) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
@@ -63,18 +69,21 @@ fun LogInScreen(navController: NavController) {
     else
         Icons.Default.VisibilityOff
 
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 30.dp, vertical = 60.dp), horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 30.dp, vertical = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         Image(
-                painter = painterResource(id = R.drawable.zbeg),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .clip(shape = MaterialTheme.shapes.small)
-                    .size(200.dp)
-            )
+            painter = painterResource(id = R.drawable.zbeg),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .clip(shape = MaterialTheme.shapes.small)
+                .size(200.dp)
+        )
         TitleText("Login to your account", TextAlign.Center)
         OutlinedTextField(
             value = username.value,
@@ -84,14 +93,15 @@ fun LogInScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (username.value.isEmpty()) {
-                    Icon(Icons.Default.Person, contentDescription = "Person" )
+                    Icon(Icons.Default.Person, contentDescription = "Person")
                 } else {
                     IconButton(
                         onClick = { username.value = "" }
                     ) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                        Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
-                } },
+                }
+            },
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
@@ -113,9 +123,18 @@ fun LogInScreen(navController: NavController) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = { /* TODO */
-                navController.navigate(AuthenticationScreens.MainScreen.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                    username.value,
+                    password.value
+                ).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.i("Register", "Successful")
+                        goToLogIn(navController)
+                    } else {
+                        Log.i("Register", "Error")
+                        showDialog(context)
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -126,14 +145,15 @@ fun LogInScreen(navController: NavController) {
             navController.navigate(AuthenticationScreens.RegisterScreen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
-            }}) {
+            }
+        }) {
             TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
         }
     }
 }
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, context: Context) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
@@ -149,10 +169,13 @@ fun RegisterScreen(navController: NavController) {
         Icons.Default.Visibility
     else
         Icons.Default.VisibilityOff
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 30.dp, vertical = 60.dp), horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top ){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 30.dp, vertical = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         Image(
             painter = painterResource(id = R.drawable.zbeg),
             contentDescription = null,
@@ -170,14 +193,15 @@ fun RegisterScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (username.value.isEmpty()) {
-                    Icon(Icons.Default.Person, contentDescription = "Person" )
+                    Icon(Icons.Default.Person, contentDescription = "Person")
                 } else {
                     IconButton(
                         onClick = { username.value = "" }
                     ) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                        Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
-                } }
+                }
+            }
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
@@ -214,15 +238,41 @@ fun RegisterScreen(navController: NavController) {
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
-            onClick = { /* TODO */
-                navController.navigate(AuthenticationScreens.LogInScreen.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }},
+            onClick = {
+                val analytics : FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+                val bundle = Bundle()
+                bundle.putString("message", "Test")
+                analytics.logEvent("Test", bundle)
+//                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+//                    username.value,
+//                    password.value
+//                ).addOnCompleteListener {
+//                    if (it.isSuccessful) {
+//                        Log.i("TestRegister", "Successful")
+//                        goToLogIn(navController)
+//                    } else {
+//                        Log.i("TestRegister", "Error")
+//                        showDialog(context)
+//                    }
+//                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(id = R.string.sign_up))
         }
     }
 }
+private fun showDialog(context: Context) {
+    MaterialAlertDialogBuilder(context)
+        .setTitle("Alert")
+        .setMessage("An error has occurred during registration. Try again")
+        .setPositiveButton("Accept", null)
+        .show()
+}
 
+fun goToLogIn(navController: NavController) {
+    navController.navigate(AuthenticationScreens.LogInScreen.route) {
+        popUpTo(navController.graph.findStartDestination().id)
+        launchSingleTop = true
+    }
+}

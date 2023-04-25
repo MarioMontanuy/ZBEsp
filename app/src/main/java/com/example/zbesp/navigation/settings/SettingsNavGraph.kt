@@ -1,5 +1,6 @@
 package com.example.zbesp.navigation.settings
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,7 +15,8 @@ import com.example.zbesp.screens.settings.SubscriptionScreen
 fun SettingsNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = SettingsScreens.SettingScreen.route
+    startDestination: String = SettingsScreens.SettingScreen.route,
+    context: Context
 ) {
     NavHost(
         modifier = modifier,
@@ -22,7 +24,7 @@ fun SettingsNavGraph(
         startDestination = startDestination
     ) {
         composable(SettingsScreens.SettingScreen.route) {
-            SettingsScreen(navController)
+            SettingsScreen(navController, context)
         }
         composable(SettingsScreens.AboutUsScreen.route) {
             AboutUsScreen()

@@ -32,10 +32,10 @@ fun AuthenticationNavGraph(
         startDestination = startDestination
     ) {
         composable(AuthenticationScreens.LogInScreen.route) {
-            LogInScreen(navController)
+            LogInScreen(navController, context)
         }
         composable(AuthenticationScreens.RegisterScreen.route) {
-            RegisterScreen(navController)
+            RegisterScreen(navController, context)
         }
         composable(AuthenticationScreens.MainScreen.route) {
             MainScreen(context)

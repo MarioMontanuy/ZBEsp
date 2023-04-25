@@ -30,7 +30,7 @@ fun BottomNavGraph(navController: NavHostController, context: Context) {
             ZonesNavGraph(context = context)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsNavGraph()
+            SettingsNavGraph(context = context)
         }
     }
 }
