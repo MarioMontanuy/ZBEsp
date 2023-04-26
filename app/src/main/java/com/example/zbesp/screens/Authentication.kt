@@ -26,16 +26,19 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,14 +54,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.resolveDefaults
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.FloatingWindow
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
+import com.example.zbesp.ui.theme.SapphireBlueTransparent
 import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.ui.theme.errorColor
+import com.example.zbesp.ui.theme.getOutlinedTextFieldColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -68,6 +74,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun LogInScreen(navController: NavController, context: Context) {
@@ -97,7 +104,6 @@ fun LogInScreen(navController: NavController, context: Context) {
                 .clip(shape = MaterialTheme.shapes.small)
                 .size(200.dp)
         )
-        //TitleText("Login to your account", TextAlign.Center)
         OutlinedTextField(
             value = email.value,
             onValueChange = { email.value = it ; emailError.value = false },
@@ -118,6 +124,16 @@ fun LogInScreen(navController: NavController, context: Context) {
                     }
                 }
             },
+            supportingText = {
+                if (emailError.value) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Incorrect credentials",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
@@ -144,12 +160,22 @@ fun LogInScreen(navController: NavController, context: Context) {
 
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-            else PasswordVisualTransformation()
+            else PasswordVisualTransformation(),
+            supportingText = {
+                if (passwordError.value) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Incorrect credentials",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                emailError.value = !email.value.contains("@")
+                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 passwordError.value = (password.value.length < 6)
                 if (!emailError.value && !passwordError.value) {
                     val auth: FirebaseAuth = Firebase.auth
@@ -185,6 +211,7 @@ fun LogInScreen(navController: NavController, context: Context) {
             TitleText(text = "Sign in as Anonymous", TextAlign.Center)
         }
         TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
+            goToResetPassword(navController)
         }) {
             TitleText(text = "Forgot password?", TextAlign.Start)
         }
@@ -204,7 +231,7 @@ fun LogInScreen(navController: NavController, context: Context) {
     }
 }
 // TODO integrar restaurar contraseña
-// TODO min size 6 for password and check email
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, context: Context) {
     val email = remember { mutableStateOf("") }
@@ -240,7 +267,6 @@ fun RegisterScreen(navController: NavController, context: Context) {
                 .clip(shape = MaterialTheme.shapes.small)
                 .size(200.dp)
         )
-        //TitleText("Create your account", TextAlign.Center)
         OutlinedTextField(
             value = email.value,
             onValueChange = { email.value = it ; emailError.value = false },
@@ -261,6 +287,16 @@ fun RegisterScreen(navController: NavController, context: Context) {
                     }
                 }
             },
+            supportingText = {
+                if (emailError.value) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Invalid email",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
@@ -287,13 +323,29 @@ fun RegisterScreen(navController: NavController, context: Context) {
 
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-            else PasswordVisualTransformation()
+            else PasswordVisualTransformation(),
+            supportingText = {
+                if (passwordError.value && password.value.length < 6) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Invalid password, at least 6 characters",
+                        color = MaterialTheme.colors.error
+                    )
+                } else if (passwordError.value && password.value != rePassword.value){
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Passwords mismatch",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = rePassword.value,
             onValueChange = { rePassword.value = it ; rePasswordError.value = false},
-            label = { Text(stringResource(id = R.string.password)) },
+            label = { Text(stringResource(id = R.string.confirm_password)) },
             placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
             isError = rePasswordError.value,
@@ -314,21 +366,37 @@ fun RegisterScreen(navController: NavController, context: Context) {
 
             },
             visualTransformation = if (rePasswordVisibility.value) VisualTransformation.None
-            else PasswordVisualTransformation()
+            else PasswordVisualTransformation(),
+            supportingText = {
+                if (rePasswordError.value && rePassword.value.length < 6) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Invalid password, at least 6 characters",
+                        color = MaterialTheme.colors.error
+                    )
+                } else if (passwordError.value && password.value != rePassword.value){
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Passwords mismatch",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                emailError.value = !email.value.contains("@")
-                passwordError.value = (password.value.length < 6)
-                rePasswordError.value = (rePassword.value.length < 6)
+                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+                passwordError.value = password.value.length < 6
+                rePasswordError.value = rePassword.value.length < 6
                 if (password.value != rePassword.value) {
                     passwordError.value = true
                     rePasswordError.value = true
                 }
                 if (!emailError.value && !passwordError.value && !rePasswordError.value) {
                     val auth: FirebaseAuth = Firebase.auth
-                    auth.signInWithEmailAndPassword(
+                    auth.createUserWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
@@ -348,6 +416,75 @@ fun RegisterScreen(navController: NavController, context: Context) {
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ResetPassword(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 30.dp, vertical = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        val email = remember { mutableStateOf("") }
+        val emailError = remember { mutableStateOf(false) }
+        Text("Enter your email address to change your password")
+        Spacer(modifier = Modifier.padding(5.dp))
+        OutlinedTextField(
+            value = email.value,
+            onValueChange = { email.value = it ; emailError.value = false },
+            label = { Text(stringResource(id = R.string.email)) },
+            placeholder = { Text(stringResource(id = R.string.enter_email)) },
+            modifier = Modifier.fillMaxWidth(),
+            isError = emailError.value,
+            trailingIcon = {
+                if (email.value.isEmpty()) {
+                    Icon(Icons.Default.Person, contentDescription = "Person")
+                } else if (emailError.value) {
+                    Icon(Icons.Default.Error, contentDescription = "Error", tint = errorColor)
+                } else {
+                    IconButton(
+                        onClick = { email.value = "" }
+                    ) {
+                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                    }
+                }
+            },
+            supportingText = {
+                if (emailError.value) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Invalid email",
+                        color = MaterialTheme.colors.error
+                    )
+                }
+            },
+            colors = getOutlinedTextFieldColors()
+        )
+        Spacer(modifier = Modifier.padding(5.dp))
+        Button(
+            onClick = {
+                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+                if (!emailError.value) {
+                    val auth: FirebaseAuth = Firebase.auth
+                    auth.sendPasswordResetEmail(email.value)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                goToLogIn(navController)
+                            } else {
+                                emailError.value = true
+                            }
+                        }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(id = R.string.send))
+        }
+    }
+}
+
 private fun showDialog(context: Context, text: String) {
     MaterialAlertDialogBuilder(context)
         .setTitle("Alert")
@@ -365,6 +502,13 @@ fun goToLogIn(navController: NavController) {
 
 fun goToApp(navController: NavController) {
     navController.navigate(AuthenticationScreens.MainScreen.route) {
+        popUpTo(navController.graph.findStartDestination().id)
+        launchSingleTop = true
+    }
+}
+
+fun goToResetPassword(navController: NavController) {
+    navController.navigate(AuthenticationScreens.ResetPassword.route) {
         popUpTo(navController.graph.findStartDestination().id)
         launchSingleTop = true
     }

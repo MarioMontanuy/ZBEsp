@@ -14,6 +14,7 @@ import com.example.zbesp.navigation.settings.SettingsScreens
 import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.screens.RegisterScreen
+import com.example.zbesp.screens.ResetPassword
 import com.example.zbesp.screens.settings.AboutUsScreen
 import com.example.zbesp.screens.settings.SettingsScreen
 import com.example.zbesp.screens.settings.SubscriptionScreen
@@ -39,6 +40,9 @@ fun AuthenticationNavGraph(
         }
         composable(AuthenticationScreens.MainScreen.route) {
             MainScreen(context)
+        }
+        composable(AuthenticationScreens.ResetPassword.route) {
+            ResetPassword(navController)
         }
     }
 }
