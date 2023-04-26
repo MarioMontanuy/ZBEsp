@@ -55,7 +55,10 @@ import com.example.zbesp.ui.theme.MediumTitleText
 import com.example.zbesp.ui.theme.TitleText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -122,17 +125,17 @@ fun LogInScreen(navController: NavController, context: Context) {
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
-            onClick = { /* TODO */
-
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+            onClick = {
+                val auth: FirebaseAuth = Firebase.auth
+                auth.signInWithEmailAndPassword(
                     username.value,
                     password.value
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        Log.i("Register", "Successful")
-                        goToLogIn(navController)
+                        Log.i("TestSignIn", "Successful")
+                        goToApp(navController)
                     } else {
-                        Log.i("Register", "Error")
+                        Log.i("TestSignIn", "Error")
                         showDialog(context)
                     }
                 }
@@ -141,7 +144,7 @@ fun LogInScreen(navController: NavController, context: Context) {
         ) {
             Text(stringResource(id = R.string.sign_in))
         }
-        TextButton(onClick = { /*TODO*/
+        TextButton(onClick = {
             navController.navigate(AuthenticationScreens.RegisterScreen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
@@ -149,9 +152,24 @@ fun LogInScreen(navController: NavController, context: Context) {
         }) {
             TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
         }
+        TextButton(onClick = {
+            val auth: FirebaseAuth = Firebase.auth
+            auth.signInAnonymously().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.i("TestSignIn", "Successful")
+                    goToApp(navController)
+                } else {
+                    Log.i("TestSignIn", "Error")
+                    showDialog(context)
+                }
+            }
+        }) {
+            TitleText(text = "Sign in as Anonymous", TextAlign.Center)
+        }
     }
 }
-
+// TODO integrar restaurar contraseña
+// TODO min size 6 for password and check email
 @Composable
 fun RegisterScreen(navController: NavController, context: Context) {
     val username = remember { mutableStateOf("") }
@@ -239,22 +257,17 @@ fun RegisterScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                val analytics : FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
-                val bundle = Bundle()
-                bundle.putString("message", "Test")
-                analytics.logEvent("Test", bundle)
-//                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-//                    username.value,
-//                    password.value
-//                ).addOnCompleteListener {
-//                    if (it.isSuccessful) {
-//                        Log.i("TestRegister", "Successful")
-//                        goToLogIn(navController)
-//                    } else {
-//                        Log.i("TestRegister", "Error")
-//                        showDialog(context)
-//                    }
-//                }
+                val auth: FirebaseAuth = Firebase.auth
+                auth.createUserWithEmailAndPassword(username.value, password.value)
+                    .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.i("TestRegister", "Successful")
+                        goToLogIn(navController)
+                    } else {
+                        Log.i("TestRegister", "Error")
+                        showDialog(context)
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -272,6 +285,13 @@ private fun showDialog(context: Context) {
 
 fun goToLogIn(navController: NavController) {
     navController.navigate(AuthenticationScreens.LogInScreen.route) {
+        popUpTo(navController.graph.findStartDestination().id)
+        launchSingleTop = true
+    }
+}
+
+fun goToApp(navController: NavController) {
+    navController.navigate(AuthenticationScreens.MainScreen.route) {
         popUpTo(navController.graph.findStartDestination().id)
         launchSingleTop = true
     }
