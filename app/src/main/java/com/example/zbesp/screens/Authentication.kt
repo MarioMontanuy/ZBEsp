@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -53,20 +58,24 @@ import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
 import com.example.zbesp.ui.theme.TitleText
+import com.example.zbesp.ui.theme.errorColor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun LogInScreen(navController: NavController, context: Context) {
-    val username = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
-
+    val emailError = remember { mutableStateOf(false) }
+    val passwordError = remember { mutableStateOf(false) }
     val passwordIcon = if (passwordVisibility.value)
         Icons.Default.Visibility
     else
@@ -75,10 +84,11 @@ fun LogInScreen(navController: NavController, context: Context) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 30.dp, vertical = 60.dp),
+            .padding(horizontal = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        Spacer(modifier = Modifier.padding(40.dp))
         Image(
             painter = painterResource(id = R.drawable.zbeg),
             contentDescription = null,
@@ -87,19 +97,22 @@ fun LogInScreen(navController: NavController, context: Context) {
                 .clip(shape = MaterialTheme.shapes.small)
                 .size(200.dp)
         )
-        TitleText("Login to your account", TextAlign.Center)
+        //TitleText("Login to your account", TextAlign.Center)
         OutlinedTextField(
-            value = username.value,
-            onValueChange = { username.value = it },
+            value = email.value,
+            onValueChange = { email.value = it ; emailError.value = false },
             label = { Text(stringResource(id = R.string.email)) },
             placeholder = { Text(stringResource(id = R.string.enter_email)) },
             modifier = Modifier.fillMaxWidth(),
+            isError = emailError.value,
             trailingIcon = {
-                if (username.value.isEmpty()) {
+                if (email.value.isEmpty()) {
                     Icon(Icons.Default.Person, contentDescription = "Person")
+                } else if (emailError.value) {
+                    Icon(Icons.Default.Error, contentDescription = "Error", tint = errorColor)
                 } else {
                     IconButton(
-                        onClick = { username.value = "" }
+                        onClick = { email.value = "" }
                     ) {
                         Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
@@ -109,16 +122,26 @@ fun LogInScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = password.value,
-            onValueChange = { password.value = it },
+            onValueChange = { password.value = it ; passwordError.value = false},
             label = { Text(stringResource(id = R.string.password)) },
             placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
+            isError = passwordError.value,
             trailingIcon = {
-                IconButton(
-                    onClick = { passwordVisibility.value = !passwordVisibility.value }
-                ) {
-                    Icon(passwordIcon, "Visibility")
+                if (passwordError.value) {
+                    IconButton(
+                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                    ) {
+                        Icon(passwordIcon, "Visibility", tint = errorColor)
+                    }
+                } else {
+                    IconButton(
+                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                    ) {
+                        Icon(passwordIcon, "Visibility")
+                    }
                 }
+
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
             else PasswordVisualTransformation()
@@ -126,17 +149,20 @@ fun LogInScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                val auth: FirebaseAuth = Firebase.auth
-                auth.signInWithEmailAndPassword(
-                    username.value,
-                    password.value
-                ).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.i("TestSignIn", "Successful")
-                        goToApp(navController)
-                    } else {
-                        Log.i("TestSignIn", "Error")
-                        showDialog(context)
+                emailError.value = !email.value.contains("@")
+                passwordError.value = (password.value.length < 6)
+                if (!emailError.value && !passwordError.value) {
+                    val auth: FirebaseAuth = Firebase.auth
+                    auth.signInWithEmailAndPassword(
+                        email.value,
+                        password.value
+                    ).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            goToApp(navController)
+                        } else {
+                            emailError.value = true
+                            passwordError.value = true
+                        }
                     }
                 }
             },
@@ -144,15 +170,7 @@ fun LogInScreen(navController: NavController, context: Context) {
         ) {
             Text(stringResource(id = R.string.sign_in))
         }
-        TextButton(onClick = {
-            navController.navigate(AuthenticationScreens.RegisterScreen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        }) {
-            TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
-        }
-        TextButton(onClick = {
+        TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
             val auth: FirebaseAuth = Firebase.auth
             auth.signInAnonymously().addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -160,20 +178,40 @@ fun LogInScreen(navController: NavController, context: Context) {
                     goToApp(navController)
                 } else {
                     Log.i("TestSignIn", "Error")
-                    showDialog(context)
+                    showDialog(context, "Anonymous user cannot be registered")
                 }
             }
         }) {
             TitleText(text = "Sign in as Anonymous", TextAlign.Center)
         }
+        TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
+        }) {
+            TitleText(text = "Forgot password?", TextAlign.Start)
+        }
+        Spacer(modifier = Modifier.padding(65.dp))
+        Row {
+            Text(modifier = Modifier.padding(vertical = 13.dp),text = "Don't have an account?", textAlign = TextAlign.Center)
+            TextButton(interactionSource = NoRippleInteractionSource(),onClick = {
+                navController.navigate(AuthenticationScreens.RegisterScreen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                }
+            }) {
+                TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
+            }
+        }
+        
     }
 }
 // TODO integrar restaurar contraseña
 // TODO min size 6 for password and check email
 @Composable
 fun RegisterScreen(navController: NavController, context: Context) {
-    val username = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val emailError = remember { mutableStateOf(false) }
+    val passwordError = remember { mutableStateOf(false) }
+    val rePasswordError = remember { mutableStateOf(false) }
     val passwordVisibility = remember { mutableStateOf(false) }
     val rePassword = remember { mutableStateOf("") }
     val rePasswordVisibility = remember { mutableStateOf(false) }
@@ -202,54 +240,78 @@ fun RegisterScreen(navController: NavController, context: Context) {
                 .clip(shape = MaterialTheme.shapes.small)
                 .size(200.dp)
         )
-        TitleText("Create your account", TextAlign.Center)
+        //TitleText("Create your account", TextAlign.Center)
         OutlinedTextField(
-            value = username.value,
-            onValueChange = { username.value = it },
+            value = email.value,
+            onValueChange = { email.value = it ; emailError.value = false },
             label = { Text(stringResource(id = R.string.email)) },
             placeholder = { Text(stringResource(id = R.string.enter_email)) },
             modifier = Modifier.fillMaxWidth(),
+            isError = emailError.value,
             trailingIcon = {
-                if (username.value.isEmpty()) {
+                if (email.value.isEmpty()) {
                     Icon(Icons.Default.Person, contentDescription = "Person")
+                } else if (emailError.value) {
+                    Icon(Icons.Default.Error, contentDescription = "Error", tint = errorColor)
                 } else {
                     IconButton(
-                        onClick = { username.value = "" }
+                        onClick = { email.value = "" }
                     ) {
                         Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
                 }
-            }
+            },
         )
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = password.value,
-            onValueChange = { password.value = it },
-            label = { Text(stringResource(id = R.string.new_password)) },
-            placeholder = { Text(stringResource(id = R.string.enter_new_password)) },
+            onValueChange = { password.value = it ; passwordError.value = false},
+            label = { Text(stringResource(id = R.string.password)) },
+            placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
+            isError = passwordError.value,
             trailingIcon = {
-                IconButton(
-                    onClick = { passwordVisibility.value = !passwordVisibility.value }
-                ) {
-                    Icon(passwordIcon, "Visibility")
+                if (passwordError.value) {
+                    IconButton(
+                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                    ) {
+                        Icon(passwordIcon, "Visibility", tint = errorColor)
+                    }
+                } else {
+                    IconButton(
+                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                    ) {
+                        Icon(passwordIcon, "Visibility")
+                    }
                 }
+
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
             else PasswordVisualTransformation()
         )
+        Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = rePassword.value,
-            onValueChange = { rePassword.value = it },
-            label = { Text(stringResource(id = R.string.new_password)) },
-            placeholder = { Text(stringResource(id = R.string.enter_new_password)) },
+            onValueChange = { rePassword.value = it ; rePasswordError.value = false},
+            label = { Text(stringResource(id = R.string.password)) },
+            placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
+            isError = rePasswordError.value,
             trailingIcon = {
-                IconButton(
-                    onClick = { rePasswordVisibility.value = !rePasswordVisibility.value }
-                ) {
-                    Icon(rePasswordIcon, "Visibility")
+                if (rePasswordError.value) {
+                    IconButton(
+                        onClick = { rePasswordVisibility.value = !rePasswordVisibility.value }
+                    ) {
+                        Icon(rePasswordIcon, "Visibility", tint = errorColor)
+                    }
+                } else {
+                    IconButton(
+                        onClick = { rePasswordVisibility.value = !rePasswordVisibility.value }
+                    ) {
+                        Icon(rePasswordIcon, "Visibility")
+                    }
                 }
+
             },
             visualTransformation = if (rePasswordVisibility.value) VisualTransformation.None
             else PasswordVisualTransformation()
@@ -257,15 +319,26 @@ fun RegisterScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                val auth: FirebaseAuth = Firebase.auth
-                auth.createUserWithEmailAndPassword(username.value, password.value)
-                    .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.i("TestRegister", "Successful")
-                        goToLogIn(navController)
-                    } else {
-                        Log.i("TestRegister", "Error")
-                        showDialog(context)
+                emailError.value = !email.value.contains("@")
+                passwordError.value = (password.value.length < 6)
+                rePasswordError.value = (rePassword.value.length < 6)
+                if (password.value != rePassword.value) {
+                    passwordError.value = true
+                    rePasswordError.value = true
+                }
+                if (!emailError.value && !passwordError.value && !rePasswordError.value) {
+                    val auth: FirebaseAuth = Firebase.auth
+                    auth.signInWithEmailAndPassword(
+                        email.value,
+                        password.value
+                    ).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            goToLogIn(navController)
+                        } else {
+                            emailError.value = true
+                            passwordError.value = true
+                            rePasswordError.value = true
+                        }
                     }
                 }
             },
@@ -275,11 +348,11 @@ fun RegisterScreen(navController: NavController, context: Context) {
         }
     }
 }
-private fun showDialog(context: Context) {
+private fun showDialog(context: Context, text: String) {
     MaterialAlertDialogBuilder(context)
         .setTitle("Alert")
-        .setMessage("An error has occurred during registration. Try again")
-        .setPositiveButton("Accept", null)
+        .setMessage(text)
+        .setPositiveButton("Try again", null)
         .show()
 }
 
@@ -295,4 +368,13 @@ fun goToApp(navController: NavController) {
         popUpTo(navController.graph.findStartDestination().id)
         launchSingleTop = true
     }
+}
+
+class NoRippleInteractionSource : MutableInteractionSource {
+
+    override val interactions: Flow<Interaction> = emptyFlow()
+
+    override suspend fun emit(interaction: Interaction) {}
+
+    override fun tryEmit(interaction: Interaction) = true
 }
