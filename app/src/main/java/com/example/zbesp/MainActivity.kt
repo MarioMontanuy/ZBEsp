@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen
@@ -26,6 +27,7 @@ import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.ValueEventListener
 import org.osmdroid.config.Configuration
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

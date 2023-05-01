@@ -419,7 +419,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPassword(navController: NavController) {
+fun ResetPassword(navController: NavController, context: Context) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -429,6 +429,14 @@ fun ResetPassword(navController: NavController) {
     ) {
         val email = remember { mutableStateOf("") }
         val emailError = remember { mutableStateOf(false) }
+        Image(
+            painter = painterResource(id = R.drawable.zbeg),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .clip(shape = MaterialTheme.shapes.small)
+                .size(200.dp)
+        )
         Text("Enter your email address to change your password")
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
@@ -474,6 +482,7 @@ fun ResetPassword(navController: NavController) {
                                 goToLogIn(navController)
                             } else {
                                 emailError.value = true
+                                showDialog(context, "Error sending email" )
                             }
                         }
                 }
@@ -485,11 +494,11 @@ fun ResetPassword(navController: NavController) {
     }
 }
 
-private fun showDialog(context: Context, text: String) {
+fun showDialog(context: Context, text: String) {
     MaterialAlertDialogBuilder(context)
         .setTitle("Alert")
         .setMessage(text)
-        .setPositiveButton("Try again", null)
+        .setPositiveButton("Accept", null)
         .show()
 }
 

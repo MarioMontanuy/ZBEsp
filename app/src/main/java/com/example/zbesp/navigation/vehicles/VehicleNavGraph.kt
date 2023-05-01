@@ -1,5 +1,6 @@
 package com.example.zbesp.navigation.vehicles
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -15,7 +16,8 @@ import com.example.zbesp.screens.vehicles.*
 fun VehiclesNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = VehiclesScreens.VehiclesList.route
+    startDestination: String = VehiclesScreens.VehiclesList.route,
+    context: Context
 ) {
     NavHost(
         modifier = modifier,
@@ -38,7 +40,7 @@ fun VehiclesNavGraph(
         }
         composable(VehiclesScreens.NewVehicle.route) {
             val viewModel = MainViewModel()
-            FormScreen(viewModel, navController)
+            FormScreen(viewModel, navController, context)
         }
     }
 }

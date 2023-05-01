@@ -42,7 +42,7 @@ fun AuthenticationNavGraph(
             MainScreen(context)
         }
         composable(AuthenticationScreens.ResetPassword.route) {
-            ResetPassword(navController)
+            ResetPassword(navController, context)
         }
     }
 }

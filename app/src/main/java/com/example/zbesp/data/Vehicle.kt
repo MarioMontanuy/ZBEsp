@@ -1,11 +1,63 @@
 package com.example.zbesp.data
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.painter.Painter
 import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.R
-import java.util.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import java.time.ZonedDateTime
+import java.util.Calendar
+import java.util.Date
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
+
+
+const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedatabase.app/"
+val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
+
+
+
+val postListener = object : ValueEventListener {
+    var currentVehicleList = listOf<Vehicle>()
+    override fun onDataChange(dataSnapshot: DataSnapshot) {
+        // Get Post object and use the values to update the UI
+        Log.i("onDataChange", "onDataChange" )
+        dataSnapshot.children.forEach { it ->
+            val countryMap : Map<String, Country> = it.child("country").value as Map<String, Country>
+            val currentCountry = Country(CountryEnum.valueOf(countryMap["type"].toString()))
+            val typeMap : Map<String, VehicleType> = it.child("type").value as Map<String, VehicleType>
+            val currentType = VehicleType(VehicleTypeEnum.valueOf(typeMap["type"].toString()))
+
+            Log.i("mapresult", typeMap["type"].toString())
+
+            val currentSticker = EnvironmentalSticker(
+                EnvironmentalStickerEnum.valueOf(it.child("environmentalSticker")
+                    .child("type").value as String), it.child("environmentalSticker")
+                    .child("stickerImage").value.toString().toInt())
+//            it.child("registrationYear").value as Date
+            val currentVehicle = Vehicle(it.child("id").value.toString().toLong(), it.child("name").value as String,
+                currentCountry, currentType,
+                Calendar.getInstance().time,
+                currentSticker,
+                it.child("enabled").value as Boolean)
+            currentVehicle.imageId = it.child("imageId").value.toString().toInt()
+            currentVehicleList  = currentVehicleList + currentVehicle
+
+        }
+        vehicles = currentVehicleList.reversed()
+        currentVehicleList = listOf()
+    }
+
+    override fun onCancelled(databaseError: DatabaseError) {
+        // Getting Post failed, log a message
+        Log.w("Vehicle", "loadPost:onCancelled", databaseError.toException())
+    }
+}
 
 @Immutable
 data class Vehicle(
@@ -87,74 +139,82 @@ data class Country(val type: CountryEnum?) : PickerValue() {
     }
 }
 
-val vehicleNone: Vehicle =
-    Vehicle(
-        id = 1L,
-        name = "Car1",
-        country = Country(CountryEnum.Spain),
-        type = VehicleType(VehicleTypeEnum.PrivateCar),
-        registrationYear = Date(101, 5, 5),
-        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
-        enabled = true,
-        imageId = R.drawable.private_car,
-    )
-
-private val vehicleB: Vehicle = Vehicle(
-    id = 2L,
-    name = "Car2",
-    country = Country(CountryEnum.Spain),
-    type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
-    enabled = false,
-    imageId = R.drawable.private_car
-)
-
-
-private val vehicleC: Vehicle = Vehicle(
-    id = 3L,
-    name = "Car3",
-    country = Country(CountryEnum.Spain),
-    type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
-    enabled = false,
-    imageId = R.drawable.private_car,
-)
-
-private val vehicleECO: Vehicle = Vehicle(
-    id = 4L,
-    name = "Car4",
-    country = Country(CountryEnum.Spain),
-    type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
-    enabled = false,
-    imageId = R.drawable.private_car,
-)
-
-private val vehicleZero: Vehicle = Vehicle(
-    id = 5L,
-    name = "Car5",
-    country = Country(CountryEnum.Spain),
-    type = VehicleType(VehicleTypeEnum.PrivateCar),
-    registrationYear = Date(101, 5, 5),
-    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
-    enabled = false,
-    imageId = R.drawable.private_car,
-)
-
-object VehiclesRepo {
-    fun getVehicles(): List<Vehicle> = vehicles
-}
+//
+//val vehicleNone: Vehicle =
+//    Vehicle(
+//        id = 1L,
+//        name = "Car1",
+//        country = Country(CountryEnum.Spain),
+//        type = VehicleType(VehicleTypeEnum.PrivateCar),
+//        registrationYear = Date(101, 5, 5),
+//        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
+//        enabled = true,
+//        imageId = R.drawable.private_car,
+//    )
+//
+//private val vehicleB: Vehicle = Vehicle(
+//    id = 2L,
+//    name = "Car2",
+//    country = Country(CountryEnum.Spain),
+//    type = VehicleType(VehicleTypeEnum.PrivateCar),
+//    registrationYear = Date(101, 5, 5),
+//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
+//    enabled = false,
+//    imageId = R.drawable.private_car
+//)
+//
+//
+//private val vehicleC: Vehicle = Vehicle(
+//    id = 3L,
+//    name = "Car3",
+//    country = Country(CountryEnum.Spain),
+//    type = VehicleType(VehicleTypeEnum.PrivateCar),
+//    registrationYear = Date(101, 5, 5),
+//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
+//    enabled = false,
+//    imageId = R.drawable.private_car,
+//)
+//
+//private val vehicleECO: Vehicle = Vehicle(
+//    id = 4L,
+//    name = "Car4",
+//    country = Country(CountryEnum.Spain),
+//    type = VehicleType(VehicleTypeEnum.PrivateCar),
+//    registrationYear = Date(101, 5, 5),
+//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
+//    enabled = false,
+//    imageId = R.drawable.private_car,
+//)
+//
+//private val vehicleZero: Vehicle = Vehicle(
+//    id = 5L,
+//    name = "Car5",
+//    country = Country(CountryEnum.Spain),
+//    type = VehicleType(VehicleTypeEnum.PrivateCar),
+//    registrationYear = Date(101, 5, 5),
+//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
+//    enabled = false,
+//    imageId = R.drawable.private_car,
+//)
+//
+//object VehiclesRepo {
+//    fun getVehicles(): List<Vehicle> = vehicles
+//}
 
 fun noEnabledVehicle() {
     vehicles.forEach { vehicle ->
         vehicle.enabled = false
     }
+    vehiclesDatabase.get().addOnCompleteListener {
+        if (it.isSuccessful) {
+            it.result.children.forEach { it ->
+                it.child("enabled").value
+            }
+        }
+    }
 }
 
-var currentId: Long = 6L
+var currentId: Long = 0L
 
 var vehicles: List<Vehicle> = listOf()
 //    listOf(vehicleNone,

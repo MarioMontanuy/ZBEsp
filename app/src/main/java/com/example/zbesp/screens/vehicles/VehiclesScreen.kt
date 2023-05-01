@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,19 +24,35 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
+import com.example.zbesp.data.Country
+import com.example.zbesp.data.EnvironmentalSticker
 import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.VehiclesRepo
+import com.example.zbesp.data.VehicleType
+import com.example.zbesp.data.postListener
+import com.example.zbesp.data.vehicles
+import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.ZBEspTopBar
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
-    val vehicles = remember { VehiclesRepo.getVehicles() }
+
+//    val vehicles = vehiclesDatabase.get().addOnSuccessListener {
+//        Log.i("firebase", "Got value ${it.value}")
+//    }.addOnFailureListener{
+//        Log.e("firebase", "Error getting data", it)
+//    }
+    vehiclesDatabase.addValueEventListener(postListener)
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title)) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

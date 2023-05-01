@@ -20,7 +20,7 @@ fun BottomNavGraph(navController: NavHostController, context: Context) {
         startDestination = BottomBarScreen.Map.route
     ) {
         composable(route = BottomBarScreen.Vehicles.route) {
-            VehiclesNavGraph()
+            VehiclesNavGraph(context = context)
         }
 
         composable(route = BottomBarScreen.Map.route) {

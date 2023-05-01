@@ -1,6 +1,8 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -27,7 +29,11 @@ import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.showDialog
 import com.example.zbesp.ui.theme.*
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class FormScreen : Form() {
@@ -125,8 +131,7 @@ class MainViewModel : ViewModel() {
 // TODO change color in some fields in dark mode
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun FormScreen(viewModel: MainViewModel, navController: NavController) {
-    // TODO Marcar los fields obligatorios
+fun FormScreen(viewModel: MainViewModel, navController: NavController, context: Context) {
     val error = remember { mutableStateOf(false) }
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title)) }) {
         LazyColumn(
@@ -209,8 +214,19 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
                             )
                             currentId += 1L
                             newVehicle.setImage(viewModel.form.vehicleType.state.value!!)
-                            vehicles = vehicles + newVehicle
+                            vehiclesDatabase.child(newVehicle.registrationYear.toString())
+                                .setValue(newVehicle)
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        Log.i("vehicleadded", "successful")
+                                    } else {
+                                        Log.i("vehicleadded", "error")
+                                        showDialog(context= context, "Vehicle cloud not be created")
+                                    }
+                                    Log.i("vehicleadded", "error2")
+                                }
                             navController.popBackStack()
+                            vehicles = vehicles + newVehicle
                         } else {
                             error.value = true
                         }
