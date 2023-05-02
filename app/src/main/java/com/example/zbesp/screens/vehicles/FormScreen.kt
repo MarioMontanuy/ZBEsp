@@ -30,9 +30,11 @@ import com.example.zbesp.R
 import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.showDialog
+import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
@@ -71,13 +73,13 @@ class FormScreen : Form() {
     val vehicleType = FieldState(
         state = mutableStateOf<VehicleType?>(null),
         options = mutableListOf(
-            VehicleType(VehicleTypeEnum.PrivateCar),
-            VehicleType(VehicleTypeEnum.MotorHome),
-            VehicleType(VehicleTypeEnum.Truck),
-            VehicleType(VehicleTypeEnum.MotorBike),
-            VehicleType(VehicleTypeEnum.Bus),
-            VehicleType(VehicleTypeEnum.Van),
-            VehicleType(VehicleTypeEnum.Tractor),
+            VehicleType(VehicleTypeEnum.PrivateCar, R.drawable.private_car, R.drawable.private_car_white),
+            VehicleType(VehicleTypeEnum.MotorHome, R.drawable.motor_home, R.drawable.motor_home_white),
+            VehicleType(VehicleTypeEnum.Truck, R.drawable.truck, R.drawable.truck_white),
+            VehicleType(VehicleTypeEnum.MotorBike, R.drawable.motor_bike, R.drawable.motor_bike_white),
+            VehicleType(VehicleTypeEnum.Bus, R.drawable.bus, R.drawable.bus_white),
+            VehicleType(VehicleTypeEnum.Van, R.drawable.van, R.drawable.van_white),
+            VehicleType(VehicleTypeEnum.Tractor, R.drawable.tractor, R.drawable.tractor_white),
         ),
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
@@ -203,20 +205,35 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
                             if (vehicles.isEmpty()) {
                                 viewModel.form.enableVehicle.state.value = true
                             }
+                            var currentId = getIdFromDatabase()
                             val newVehicle = Vehicle(
                                 currentId,
                                 viewModel.form.username.state.value!!,
-                                viewModel.form.country.state.value!!,
-                                viewModel.form.vehicleType.state.value!!,
+                                viewModel.form.country.state.value!!.type!!.name,
+                                viewModel.form.vehicleType.state.value!!.type!!.name,
                                 viewModel.form.registrationYear.state.value!!,
-                                viewModel.form.environmentalSticker.state.value!!,
+                                viewModel.form.environmentalSticker.state.value!!.type!!.name,
                                 viewModel.form.enableVehicle.state.value!!,
+                                viewModel.form.environmentalSticker.state.value!!.stickerImage,
+                                viewModel.form.vehicleType.state.value!!.typeImage,
+                                viewModel.form.vehicleType.state.value!!.typeImageWhite
                             )
                             currentId += 1L
-                            newVehicle.setImage(viewModel.form.vehicleType.state.value!!)
-                            vehiclesDatabase.child(newVehicle.registrationYear.toString())
-                                .setValue(newVehicle)
-                                .addOnCompleteListener {
+                            idDatabase.document(userEmail).set("id" to currentId)
+                            vehiclesDatabase.add(
+                                hashMapOf(
+                                    "id" to newVehicle.id,
+                                    "name" to newVehicle.name,
+                                    "country" to newVehicle.country,
+                                    "type" to newVehicle.type,
+                                    "registrationYear" to newVehicle.registrationYear,
+                                    "environmentalSticker" to newVehicle.environmentalSticker,
+                                    "enabled" to newVehicle.enabled,
+                                    "stickerImage" to newVehicle.stickerImage,
+                                    "typeImage" to newVehicle.typeImage,
+                                    "typeImageWhite" to newVehicle.typeImageWhite,
+                                )
+                            ).addOnCompleteListener {
                                     if (it.isSuccessful) {
                                         Log.i("vehicleadded", "successful")
                                     } else {
@@ -226,7 +243,6 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
                                     Log.i("vehicleadded", "error2")
                                 }
                             navController.popBackStack()
-                            vehicles = vehicles + newVehicle
                         } else {
                             error.value = true
                         }
@@ -247,3 +263,4 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
         }
     }
 }
+

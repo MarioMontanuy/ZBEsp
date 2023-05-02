@@ -36,7 +36,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.country),
-                    subtitle = vehicle.country.type!!.name
+                    subtitle = vehicle.country
                 )
             }
             item {
@@ -48,13 +48,13 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.type),
-                    subtitle = vehicle.type.type!!.name
+                    subtitle = vehicle.type
                 )
             }
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.environmental_sticker),
-                    subtitle = vehicle.environmentalSticker.type!!.name
+                    subtitle = vehicle.environmentalSticker
                 )
                 Spacer(modifier = Modifier.padding(50.dp))
             }

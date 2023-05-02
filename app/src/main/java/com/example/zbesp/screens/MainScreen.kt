@@ -3,6 +3,7 @@ package com.example.zbesp.screens
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
@@ -24,6 +25,9 @@ import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
+import com.example.zbesp.data.Vehicle
+import com.example.zbesp.data.vehicles
+import com.example.zbesp.data.vehiclesDatabase
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -84,6 +88,9 @@ fun RowScope.AddItem(
         } == true,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
+            if (screen.route == "vehicles") {
+                getVehiclesFromDatabase()
+            }
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
@@ -92,6 +99,38 @@ fun RowScope.AddItem(
     )
 }
 
+fun getVehiclesFromDatabase() {
+    vehiclesDatabase.get().addOnSuccessListener {
+        it.forEach {
+                value ->
+            Log.i("vehiclesDatabase", "vuelta")
+            val id = value.data["id"] as Long
+            val name = value.data["name"] as String
+            val country = value.data["country"] as String
+            val type = value.data["type"] as String
+            val registrationYear = value.data["registrationYear"] as com.google.firebase.Timestamp
+            val environmentalSticker = value.data["environmentalSticker"] as String
+            val enabled = value.data["enabled"] as Boolean
+            val stickerImage = value.data["stickerImage"] as Long
+            val typeImage = value.data["typeImage"] as Long
+            val typeImageWhite = value.data["typeImageWhite"] as Long
+            val currentVehicle = Vehicle(
+                id, name, country, type, registrationYear.toDate(), environmentalSticker,
+                enabled, stickerImage.toInt(), typeImage.toInt(), typeImageWhite.toInt())
+            addVehicleIfNotIn(currentVehicle)
+        }
+    }
+}
+
+fun addVehicleIfNotIn(currentVehicle: Vehicle) {
+    vehicles.forEach {
+        if (it.id == currentVehicle.id){
+            return
+        }
+    }
+    vehicles = vehicles + currentVehicle
+
+}
 @Composable
 fun ZBEspTopBar(title: String) {
     TopAppBar(

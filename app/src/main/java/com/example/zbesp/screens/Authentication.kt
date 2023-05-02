@@ -58,6 +58,7 @@ import androidx.navigation.FloatingWindow
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
+import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
@@ -74,6 +75,8 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
+
+var userEmail = ""
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -184,6 +187,7 @@ fun LogInScreen(navController: NavController, context: Context) {
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            userEmail = email.value
                             goToApp(navController)
                         } else {
                             emailError.value = true
@@ -401,6 +405,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            createIdOnDatabase(email.value)
                             goToLogIn(navController)
                         } else {
                             emailError.value = true

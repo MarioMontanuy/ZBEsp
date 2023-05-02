@@ -64,9 +64,9 @@ data class GeofenceItem(
         }
     }
 
-    fun isStickerForbidden(sticker: EnvironmentalSticker?): Boolean {
+    fun isStickerForbidden(sticker: String): Boolean {
         this.forbiddenStickers.forEach { it ->
-            if (it == sticker) {
+            if (it.type!!.name == sticker) {
                 return true
             }
         }

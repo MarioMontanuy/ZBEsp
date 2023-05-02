@@ -1,15 +1,18 @@
 package com.example.zbesp.data
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.R
+import com.example.zbesp.screens.userEmail
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.time.ZonedDateTime
 import java.util.Calendar
@@ -18,110 +21,112 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
 const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedatabase.app/"
-val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
+//val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
+val vehiclesDatabase = Firebase.firestore.collection(userEmail)
+val idDatabase = Firebase.firestore.collection("id")
 
-
-
-val postListener = object : ValueEventListener {
-    var currentVehicleList = listOf<Vehicle>()
-    override fun onDataChange(dataSnapshot: DataSnapshot) {
-        // Get Post object and use the values to update the UI
-        Log.i("onDataChange", "onDataChange" )
-        dataSnapshot.children.forEach { it ->
-            val countryMap : Map<String, Country> = it.child("country").value as Map<String, Country>
-            val currentCountry = Country(CountryEnum.valueOf(countryMap["type"].toString()))
-            val typeMap : Map<String, VehicleType> = it.child("type").value as Map<String, VehicleType>
-            val currentType = VehicleType(VehicleTypeEnum.valueOf(typeMap["type"].toString()))
-
-            Log.i("mapresult", typeMap["type"].toString())
-
-            val currentSticker = EnvironmentalSticker(
-                EnvironmentalStickerEnum.valueOf(it.child("environmentalSticker")
-                    .child("type").value as String), it.child("environmentalSticker")
-                    .child("stickerImage").value.toString().toInt())
-//            it.child("registrationYear").value as Date
-            val currentVehicle = Vehicle(it.child("id").value.toString().toLong(), it.child("name").value as String,
-                currentCountry, currentType,
-                Calendar.getInstance().time,
-                currentSticker,
-                it.child("enabled").value as Boolean)
-            currentVehicle.imageId = it.child("imageId").value.toString().toInt()
-            currentVehicleList  = currentVehicleList + currentVehicle
-
-        }
-        vehicles = currentVehicleList.reversed()
-        currentVehicleList = listOf()
-    }
-
-    override fun onCancelled(databaseError: DatabaseError) {
-        // Getting Post failed, log a message
-        Log.w("Vehicle", "loadPost:onCancelled", databaseError.toException())
-    }
-}
+//val postListener = object : ValueEventListener {
+//    var currentVehicleList = listOf<Vehicle>()
+//    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//        // Get Post object and use the values to update the UI
+//        Log.i("onDataChange", "onDataChange" )
+//        dataSnapshot.children.forEach { it ->
+//            val countryMap : Map<String, Country> = it.child("country").value as Map<String, Country>
+//            val currentCountry = Country(CountryEnum.valueOf(countryMap["type"].toString()))
+//            val typeMap : Map<String, VehicleType> = it.child("type").value as Map<String, VehicleType>
+//            val currentType = VehicleType(VehicleTypeEnum.valueOf(typeMap["type"].toString()))
+//
+//            Log.i("mapresult", typeMap["type"].toString())
+//
+//            val currentSticker = EnvironmentalSticker(
+//                EnvironmentalStickerEnum.valueOf(it.child("environmentalSticker")
+//                    .child("type").value as String), it.child("environmentalSticker")
+//                    .child("stickerImage").value.toString().toInt())
+////            it.child("registrationYear").value as Date
+//            val currentVehicle = Vehicle(it.child("id").value.toString().toLong(), it.child("name").value as String,
+//                currentCountry, currentType,
+//                Calendar.getInstance().time,
+//                currentSticker,
+//                it.child("enabled").value as Boolean)
+//            currentVehicle.imageId = it.child("imageId").value.toString().toInt()
+//            currentVehicleList  = currentVehicleList + currentVehicle
+//
+//        }
+//        vehicles = currentVehicleList.reversed()
+//        currentVehicleList = listOf()
+//    }
+//
+//    override fun onCancelled(databaseError: DatabaseError) {
+//        // Getting Post failed, log a message
+//        Log.w("Vehicle", "loadPost:onCancelled", databaseError.toException())
+//    }
+//}
 
 @Immutable
 data class Vehicle(
     val id: Long,
     val name: String,
-    val country: Country,
-    val type: VehicleType,
+    val country: String,
+    val type: String,
     val registrationYear: Date,
-    val environmentalSticker: EnvironmentalSticker,
+    val environmentalSticker: String,
     var enabled: Boolean,
-    @DrawableRes var imageId: Int = R.drawable.private_car,
+    var stickerImage: Int,
+    var typeImage: Int,
+    var typeImageWhite: Int,
 ) {
 
-    fun setImage(type: VehicleType) {
-        if (type.type == VehicleTypeEnum.PrivateCar) {
-            this.imageId = R.drawable.private_car
-        }
-        if (type.type == VehicleTypeEnum.MotorHome) {
-            this.imageId = R.drawable.motor_home
-        }
-        if (type.type == VehicleTypeEnum.Truck) {
-            this.imageId = R.drawable.truck
-        }
-        if (type.type == VehicleTypeEnum.MotorBike) {
-            this.imageId = R.drawable.motor_bike
-        }
-        if (type.type == VehicleTypeEnum.Bus) {
-            this.imageId = R.drawable.bus
-        }
-        if (type.type == VehicleTypeEnum.Van) {
-            this.imageId = R.drawable.van
-        }
-        if (type.type == VehicleTypeEnum.Tractor) {
-            this.imageId = R.drawable.tractor
-        }
-    }
-
-    fun changeToWhite(type: VehicleType): Int {
-        if (type.type == VehicleTypeEnum.PrivateCar) {
-            return R.drawable.private_car_white
-        }
-        if (type.type == VehicleTypeEnum.MotorHome) {
-            return R.drawable.motor_home_white
-        }
-        if (type.type == VehicleTypeEnum.Truck) {
-            return R.drawable.truck_white
-        }
-        if (type.type == VehicleTypeEnum.MotorBike) {
-            return R.drawable.motor_bike_white
-        }
-        if (type.type == VehicleTypeEnum.Bus) {
-            return R.drawable.bus_white
-        }
-        if (type.type == VehicleTypeEnum.Van) {
-            return R.drawable.van_white
-        }
-        if (type.type == VehicleTypeEnum.Tractor) {
-            return R.drawable.tractor_white
-        }
-        return 0
-    }
+//    fun setImage(type: VehicleType) {
+//        if (type.type == VehicleTypeEnum.PrivateCar) {
+//            this.imageId = R.drawable.private_car
+//        }
+//        if (type.type == VehicleTypeEnum.MotorHome) {
+//            this.imageId = R.drawable.motor_home
+//        }
+//        if (type.type == VehicleTypeEnum.Truck) {
+//            this.imageId = R.drawable.truck
+//        }
+//        if (type.type == VehicleTypeEnum.MotorBike) {
+//            this.imageId = R.drawable.motor_bike
+//        }
+//        if (type.type == VehicleTypeEnum.Bus) {
+//            this.imageId = R.drawable.bus
+//        }
+//        if (type.type == VehicleTypeEnum.Van) {
+//            this.imageId = R.drawable.van
+//        }
+//        if (type.type == VehicleTypeEnum.Tractor) {
+//            this.imageId = R.drawable.tractor
+//        }
+//    }
+//
+//    fun changeToWhite(type: VehicleType): Int {
+//        if (type.type == VehicleTypeEnum.PrivateCar) {
+//            return R.drawable.private_car_white
+//        }
+//        if (type.type == VehicleTypeEnum.MotorHome) {
+//            return R.drawable.motor_home_white
+//        }
+//        if (type.type == VehicleTypeEnum.Truck) {
+//            return R.drawable.truck_white
+//        }
+//        if (type.type == VehicleTypeEnum.MotorBike) {
+//            return R.drawable.motor_bike_white
+//        }
+//        if (type.type == VehicleTypeEnum.Bus) {
+//            return R.drawable.bus_white
+//        }
+//        if (type.type == VehicleTypeEnum.Van) {
+//            return R.drawable.van_white
+//        }
+//        if (type.type == VehicleTypeEnum.Tractor) {
+//            return R.drawable.tractor_white
+//        }
+//        return 0
+//    }
 }
 
-data class VehicleType(val type: VehicleTypeEnum?) : PickerValue() {
+data class VehicleType(val type: VehicleTypeEnum?, val typeImage: Int, val typeImageWhite: Int) : PickerValue() {
     override fun searchFilter(query: String): Boolean {
         return this.type!!.name.startsWith(query)
     }
@@ -205,16 +210,25 @@ fun noEnabledVehicle() {
     vehicles.forEach { vehicle ->
         vehicle.enabled = false
     }
-    vehiclesDatabase.get().addOnCompleteListener {
-        if (it.isSuccessful) {
-            it.result.children.forEach { it ->
-                it.child("enabled").value
-            }
-        }
-    }
+//    vehiclesDatabase.get().addOnCompleteListener {
+//        if (it.isSuccessful) {
+//            it.result.children.forEach { it ->
+//                it.child("enabled").value
+//            }
+//        }
+//    }
 }
+fun createIdOnDatabase(email: String) {
 
-var currentId: Long = 0L
+    idDatabase.document(email).set("id" to 0L)
+}
+fun getIdFromDatabase() : Long {
+    var id = 0L
+    idDatabase.document(userEmail).get().addOnSuccessListener {
+        id = it.get("id") as Long
+    }
+    return id
+}
 
 var vehicles: List<Vehicle> = listOf()
 //    listOf(vehicleNone,

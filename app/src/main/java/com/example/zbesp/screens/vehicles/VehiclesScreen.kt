@@ -28,11 +28,12 @@ import com.example.zbesp.data.Country
 import com.example.zbesp.data.EnvironmentalSticker
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehicleType
-import com.example.zbesp.data.postListener
+import com.example.zbesp.data.VehicleTypeEnum
 import com.example.zbesp.data.vehicles
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.userEmail
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
@@ -40,26 +41,28 @@ import com.example.zbesp.ui.theme.TitleText
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
-
+//    vehiclesDatabase.document(userEmail)
 //    val vehicles = vehiclesDatabase.get().addOnSuccessListener {
 //        Log.i("firebase", "Got value ${it.value}")
 //    }.addOnFailureListener{
 //        Log.e("firebase", "Error getting data", it)
 //    }
-    vehiclesDatabase.addValueEventListener(postListener)
+//    vehiclesDatabase.addValueEventListener(postListener)
+    val currentVehicles = remember { mutableStateOf(vehicles)}
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title)) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (vehicles.isEmpty()) {
+            if (currentVehicles.value.isEmpty()) {
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
@@ -69,7 +72,7 @@ fun VehiclesScreen(navController: NavController) {
                     )
                 }
             } else {
-                items(vehicles) { vehicle ->
+                items(currentVehicles.value) { vehicle ->
                     PostItem(vehicle = vehicle, navController = navController)
                     Divider(startIndent = 50.dp)
                 }
@@ -98,8 +101,8 @@ fun PostItem(
             },
         icon = {
             Image(
-                painter = if (isSystemInDarkTheme()) painterResource(vehicle.changeToWhite(vehicle.type)) else painterResource(
-                    vehicle.imageId
+                painter = if (isSystemInDarkTheme()) painterResource(vehicle.typeImageWhite) else painterResource(
+                    vehicle.stickerImage
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
