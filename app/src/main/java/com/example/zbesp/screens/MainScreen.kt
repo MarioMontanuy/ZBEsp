@@ -26,13 +26,17 @@ import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
+import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.data.vehicles
 import com.example.zbesp.data.vehiclesDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(context: Context) {
+    createIdOnDatabase()
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
@@ -103,7 +107,7 @@ fun getVehiclesFromDatabase() {
     vehiclesDatabase.get().addOnSuccessListener {
         it.forEach {
                 value ->
-            Log.i("vehiclesDatabase", "vuelta")
+            // Poner el value.toObject<Vehicle>()
             val id = value.data["id"] as Long
             val name = value.data["name"] as String
             val country = value.data["country"] as String

@@ -1,6 +1,8 @@
 package com.example.zbesp.navigation.settings
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -11,6 +13,7 @@ import com.example.zbesp.screens.settings.AboutUsScreen
 import com.example.zbesp.screens.settings.SettingsScreen
 import com.example.zbesp.screens.settings.SubscriptionScreen
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SettingsNavGraph(
     modifier: Modifier = Modifier,

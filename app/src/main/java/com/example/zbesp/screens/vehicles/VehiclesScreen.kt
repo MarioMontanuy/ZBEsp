@@ -102,7 +102,7 @@ fun PostItem(
         icon = {
             Image(
                 painter = if (isSystemInDarkTheme()) painterResource(vehicle.typeImageWhite) else painterResource(
-                    vehicle.stickerImage
+                    vehicle.typeImage
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,

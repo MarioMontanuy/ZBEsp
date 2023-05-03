@@ -405,7 +405,6 @@ fun RegisterScreen(navController: NavController, context: Context) {
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            createIdOnDatabase(email.value)
                             goToLogIn(navController)
                         } else {
                             emailError.value = true

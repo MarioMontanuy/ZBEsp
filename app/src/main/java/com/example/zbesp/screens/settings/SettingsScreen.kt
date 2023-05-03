@@ -110,7 +110,7 @@ fun SettingsScreen(navController: NavController, context: Context) {
                         },
                         onClick = {
                             FirebaseAuth.getInstance().signOut()
-                            goToLogIn(navController)
+                            // GoToLogin
                         }
                     )
                 }

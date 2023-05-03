@@ -218,17 +218,18 @@ fun noEnabledVehicle() {
 //        }
 //    }
 }
-fun createIdOnDatabase(email: String) {
-
-    idDatabase.document(email).set("id" to 0L)
-}
-fun getIdFromDatabase() : Long {
-    var id = 0L
+fun createIdOnDatabase() {
     idDatabase.document(userEmail).get().addOnSuccessListener {
-        id = it.get("id") as Long
+        if (it.data == null) {
+            idDatabase.document(userEmail).set(hashMapOf("id" to 0L))
+        }
     }
-    return id
 }
+/*fun getIdFromDatabase() : Long {
+
+
+    Log.i("getIdFromDatabase", "post $id")
+}*/
 
 var vehicles: List<Vehicle> = listOf()
 //    listOf(vehicleNone,

@@ -28,10 +28,11 @@ import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import org.osmdroid.config.Configuration
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 class MainActivity : ComponentActivity() {
     private var settings = false
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>

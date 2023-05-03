@@ -205,44 +205,19 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
                             if (vehicles.isEmpty()) {
                                 viewModel.form.enableVehicle.state.value = true
                             }
-                            var currentId = getIdFromDatabase()
-                            val newVehicle = Vehicle(
-                                currentId,
-                                viewModel.form.username.state.value!!,
-                                viewModel.form.country.state.value!!.type!!.name,
-                                viewModel.form.vehicleType.state.value!!.type!!.name,
-                                viewModel.form.registrationYear.state.value!!,
-                                viewModel.form.environmentalSticker.state.value!!.type!!.name,
-                                viewModel.form.enableVehicle.state.value!!,
-                                viewModel.form.environmentalSticker.state.value!!.stickerImage,
-                                viewModel.form.vehicleType.state.value!!.typeImage,
-                                viewModel.form.vehicleType.state.value!!.typeImageWhite
-                            )
-                            currentId += 1L
-                            idDatabase.document(userEmail).set("id" to currentId)
-                            vehiclesDatabase.add(
-                                hashMapOf(
-                                    "id" to newVehicle.id,
-                                    "name" to newVehicle.name,
-                                    "country" to newVehicle.country,
-                                    "type" to newVehicle.type,
-                                    "registrationYear" to newVehicle.registrationYear,
-                                    "environmentalSticker" to newVehicle.environmentalSticker,
-                                    "enabled" to newVehicle.enabled,
-                                    "stickerImage" to newVehicle.stickerImage,
-                                    "typeImage" to newVehicle.typeImage,
-                                    "typeImageWhite" to newVehicle.typeImageWhite,
-                                )
-                            ).addOnCompleteListener {
-                                    if (it.isSuccessful) {
-                                        Log.i("vehicleadded", "successful")
-                                    } else {
-                                        Log.i("vehicleadded", "error")
-                                        showDialog(context= context, "Vehicle cloud not be created")
-                                    }
-                                    Log.i("vehicleadded", "error2")
-                                }
-                            navController.popBackStack()
+                            var id = 0L
+                            Log.i("getIdFromDatabase", "pre")
+                            idDatabase.document(userEmail).get().addOnSuccessListener {
+                                id = it["id"] as Long
+                                id+=1L
+                                Log.i("getIdFromDatabase", "in $id")
+                                idDatabase.document(userEmail).set(hashMapOf("id" to id))
+                                addVehicleToDatabase(id, context, viewModel)
+                                navController.popBackStack()
+                            }
+                            //val currentId = getIdFromDatabase()
+                            //Log.i("currentId", currentId.toString())
+
                         } else {
                             error.value = true
                         }
@@ -261,6 +236,44 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
                 }
             }
         }
+    }
+}
+
+private fun addVehicleToDatabase(id: Long ,context: Context, viewModel: MainViewModel) {
+    val newVehicle = Vehicle(
+        id,
+        viewModel.form.username.state.value!!,
+        viewModel.form.country.state.value!!.type!!.name,
+        viewModel.form.vehicleType.state.value!!.type!!.name,
+        viewModel.form.registrationYear.state.value!!,
+        viewModel.form.environmentalSticker.state.value!!.type!!.name,
+        viewModel.form.enableVehicle.state.value!!,
+        viewModel.form.environmentalSticker.state.value!!.stickerImage,
+        viewModel.form.vehicleType.state.value!!.typeImage,
+        viewModel.form.vehicleType.state.value!!.typeImageWhite
+    )
+    Log.i("currentId", id.toString())
+    vehiclesDatabase.add(
+        hashMapOf(
+            "id" to newVehicle.id,
+            "name" to newVehicle.name,
+            "country" to newVehicle.country,
+            "type" to newVehicle.type,
+            "registrationYear" to newVehicle.registrationYear,
+            "environmentalSticker" to newVehicle.environmentalSticker,
+            "enabled" to newVehicle.enabled,
+            "stickerImage" to newVehicle.stickerImage,
+            "typeImage" to newVehicle.typeImage,
+            "typeImageWhite" to newVehicle.typeImageWhite,
+        )
+    ).addOnCompleteListener {
+        if (it.isSuccessful) {
+            Log.i("vehicleadded", "successful")
+        } else {
+            Log.i("vehicleadded", "error")
+            showDialog(context= context, "Vehicle cloud not be created")
+        }
+        Log.i("vehicleadded", "error2")
     }
 }
 
