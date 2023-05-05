@@ -58,7 +58,9 @@ import androidx.navigation.FloatingWindow
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
+import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
+import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
@@ -71,6 +73,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -188,6 +191,7 @@ fun LogInScreen(navController: NavController, context: Context) {
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             userEmail = email.value
+                            vehiclesDatabase = Firebase.firestore.collection(userEmail)
                             goToApp(navController)
                         } else {
                             emailError.value = true

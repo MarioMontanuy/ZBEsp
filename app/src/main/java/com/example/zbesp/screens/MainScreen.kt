@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,22 +28,23 @@ import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
-import com.example.zbesp.data.vehicles
-import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.screens.vehicles.vehicles
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(context: Context) {
+fun MainScreen(context: Context, authenticationNavController: NavController) {
     createIdOnDatabase()
+    createListenerOnDatabase()
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
         content = { padding -> // We have to pass the scaffold inner padding to our content. That's why we use Box.
             Box(modifier = Modifier.padding(padding)) {
-                BottomNavGraph(navController = navController, context)
+                BottomNavGraph(navController = navController, context, authenticationNavController)
             }
         }
     )
@@ -92,9 +94,9 @@ fun RowScope.AddItem(
         } == true,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
-            if (screen.route == "vehicles") {
-                getVehiclesFromDatabase()
-            }
+//            if (screen.route == "vehicles") {
+//                getVehiclesFromDatabase()
+//            }
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
@@ -103,38 +105,28 @@ fun RowScope.AddItem(
     )
 }
 
-fun getVehiclesFromDatabase() {
-    vehiclesDatabase.get().addOnSuccessListener {
-        it.forEach {
-                value ->
-            // Poner el value.toObject<Vehicle>()
-            val id = value.data["id"] as Long
-            val name = value.data["name"] as String
-            val country = value.data["country"] as String
-            val type = value.data["type"] as String
-            val registrationYear = value.data["registrationYear"] as com.google.firebase.Timestamp
-            val environmentalSticker = value.data["environmentalSticker"] as String
-            val enabled = value.data["enabled"] as Boolean
-            val stickerImage = value.data["stickerImage"] as Long
-            val typeImage = value.data["typeImage"] as Long
-            val typeImageWhite = value.data["typeImageWhite"] as Long
-            val currentVehicle = Vehicle(
-                id, name, country, type, registrationYear.toDate(), environmentalSticker,
-                enabled, stickerImage.toInt(), typeImage.toInt(), typeImageWhite.toInt())
-            addVehicleIfNotIn(currentVehicle)
-        }
-    }
-}
-
-fun addVehicleIfNotIn(currentVehicle: Vehicle) {
-    vehicles.forEach {
-        if (it.id == currentVehicle.id){
-            return
-        }
-    }
-    vehicles = vehicles + currentVehicle
-
-}
+//fun getVehiclesFromDatabase() {
+//    vehiclesDatabase.get().addOnSuccessListener {
+//        it.forEach {
+//                value ->
+//            // Poner el value.toObject<Vehicle>()
+//            val id = value.data["id"] as Long
+//            val name = value.data["name"] as String
+//            val country = value.data["country"] as String
+//            val type = value.data["type"] as String
+//            val registrationYear = value.data["registrationYear"] as com.google.firebase.Timestamp
+//            val environmentalSticker = value.data["environmentalSticker"] as String
+//            val enabled = value.data["enabled"] as Boolean
+//            val stickerImage = value.data["stickerImage"] as Long
+//            val typeImage = value.data["typeImage"] as Long
+//            val typeImageWhite = value.data["typeImageWhite"] as Long
+//            val currentVehicle = Vehicle(
+//                id, name, country, type, registrationYear.toDate(), environmentalSticker,
+//                enabled, stickerImage.toInt(), typeImage.toInt(), typeImageWhite.toInt())
+//            addVehicleIfNotIn(currentVehicle)
+//        }
+//    }
+//}
 @Composable
 fun ZBEspTopBar(title: String) {
     TopAppBar(
@@ -142,4 +134,25 @@ fun ZBEspTopBar(title: String) {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
         }
     )
+}
+
+fun createListenerOnDatabase() {
+    val docRef = Firebase.firestore.collection(userEmail)
+    docRef.addSnapshotListener { snapshot, e ->
+        if (e != null) {
+            Log.w("createListenerOnDatabase", "Listen failed.", e)
+            return@addSnapshotListener
+        }
+        if (snapshot != null && !snapshot.isEmpty) {
+            vehicles.value = listOf()
+            Log.d("createListenerOnDatabase", "Current data:")
+            snapshot.forEach { it ->
+                val currentVehicle = it.toObject<Vehicle>()
+                vehicles.value = vehicles.value + currentVehicle
+            }
+        } else {
+            Log.d("createListenerOnDatabase", "Current data: null")
+            vehicles.value = listOf()
+        }
+    }
 }

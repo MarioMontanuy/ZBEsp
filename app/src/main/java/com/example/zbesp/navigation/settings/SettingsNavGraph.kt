@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +20,8 @@ fun SettingsNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = SettingsScreens.SettingScreen.route,
-    context: Context
+    context: Context,
+    authenticationNavController: NavController
 ) {
     NavHost(
         modifier = modifier,
@@ -27,7 +29,7 @@ fun SettingsNavGraph(
         startDestination = startDestination
     ) {
         composable(SettingsScreens.SettingScreen.route) {
-            SettingsScreen(navController, context)
+            SettingsScreen(navController, context, authenticationNavController)
         }
         composable(SettingsScreens.AboutUsScreen.route) {
             AboutUsScreen()

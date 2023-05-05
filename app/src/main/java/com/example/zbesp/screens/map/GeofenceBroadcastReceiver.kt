@@ -78,8 +78,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "GeofenceBroadcastReceiv"
-        private const val GEOFENCE_TRANSITION_EXIT = "GEOFENCE_TRANSITION_EXIT"
-        private const val GEOFENCE_TRANSITION_DWELL = "GEOFENCE_TRANSITION_DWELL"
+        private const val GEOFENCE_TRANSITION_EXIT = "You have left the LEZ"
+        private const val GEOFENCE_TRANSITION_DWELL = "You are in the LEZ"
         private const val GEOFENCE_TRANSITION_ENTER = "GEOFENCE_TRANSITION_ENTER"
     }
 }

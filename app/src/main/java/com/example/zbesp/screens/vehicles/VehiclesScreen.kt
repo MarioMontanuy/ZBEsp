@@ -28,8 +28,6 @@ import com.example.zbesp.data.Country
 import com.example.zbesp.data.EnvironmentalSticker
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehicleType
-import com.example.zbesp.data.VehicleTypeEnum
-import com.example.zbesp.data.vehicles
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.ZBEspTopBar
@@ -44,7 +42,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-
+var vehicles = mutableStateOf<List<Vehicle>>(listOf<Vehicle>())
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
@@ -55,14 +53,13 @@ fun VehiclesScreen(navController: NavController) {
 //        Log.e("firebase", "Error getting data", it)
 //    }
 //    vehiclesDatabase.addValueEventListener(postListener)
-    val currentVehicles = remember { mutableStateOf(vehicles)}
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title)) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (currentVehicles.value.isEmpty()) {
+            if (vehicles.value.isEmpty()) {
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
@@ -72,7 +69,7 @@ fun VehiclesScreen(navController: NavController) {
                     )
                 }
             } else {
-                items(currentVehicles.value) { vehicle ->
+                items(vehicles.value) { vehicle ->
                     PostItem(vehicle = vehicle, navController = navController)
                     Divider(startIndent = 50.dp)
                 }

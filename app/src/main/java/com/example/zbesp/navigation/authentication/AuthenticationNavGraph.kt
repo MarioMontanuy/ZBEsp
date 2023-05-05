@@ -39,7 +39,7 @@ fun AuthenticationNavGraph(
             RegisterScreen(navController, context)
         }
         composable(AuthenticationScreens.MainScreen.route) {
-            MainScreen(context)
+            MainScreen(context, navController)
         }
         composable(AuthenticationScreens.ResetPassword.route) {
             ResetPassword(navController, context)

@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen

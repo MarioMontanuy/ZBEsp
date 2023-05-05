@@ -20,13 +20,15 @@ import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
 import com.example.zbesp.R
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
+import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.goToLogIn
 import com.google.firebase.auth.FirebaseAuth
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, context: Context) {
+fun SettingsScreen(navController: NavController, context: Context, authenticationNavController: NavController) {
+
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.settings_screen_title)) }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("MAP") {
@@ -110,7 +112,10 @@ fun SettingsScreen(navController: NavController, context: Context) {
                         },
                         onClick = {
                             FirebaseAuth.getInstance().signOut()
-                            // GoToLogin
+                            authenticationNavController.navigate(AuthenticationScreens.LogInScreen.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
                         }
                     )
                 }

@@ -1,28 +1,18 @@
 package com.example.zbesp.data
 
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import ch.benlu.composeform.fields.PickerValue
-import com.example.zbesp.R
 import com.example.zbesp.screens.userEmail
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
+import com.example.zbesp.screens.vehicles.vehicles
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.time.ZonedDateTime
-import java.util.Calendar
 import java.util.Date
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
 const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedatabase.app/"
 //val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
-val vehiclesDatabase = Firebase.firestore.collection(userEmail)
+lateinit var vehiclesDatabase: CollectionReference
 val idDatabase = Firebase.firestore.collection("id")
 
 //val postListener = object : ValueEventListener {
@@ -75,7 +65,7 @@ data class Vehicle(
     var typeImage: Int,
     var typeImageWhite: Int,
 ) {
-
+    constructor() : this(0,"","","",Date(),"", false, 0, 0, 0)
 //    fun setImage(type: VehicleType) {
 //        if (type.type == VehicleTypeEnum.PrivateCar) {
 //            this.imageId = R.drawable.private_car
@@ -206,17 +196,23 @@ data class Country(val type: CountryEnum?) : PickerValue() {
 //    fun getVehicles(): List<Vehicle> = vehicles
 //}
 
-fun noEnabledVehicle() {
-    vehicles.forEach { vehicle ->
-        vehicle.enabled = false
-    }
-//    vehiclesDatabase.get().addOnCompleteListener {
-//        if (it.isSuccessful) {
-//            it.result.children.forEach { it ->
-//                it.child("enabled").value
-//            }
-//        }
-//    }
+fun noEnabledVehicleInDatabase(currentVehicle: Vehicle) {
+    var vehiclesKeys = listOf<String>()
+    var vehicleEnabledKey = ""
+    vehiclesDatabase.get().addOnSuccessListener { it.forEach {
+            value ->
+        if (value.data["id"] == currentVehicle.id) {
+            vehicleEnabledKey = value.id
+        }
+        vehiclesKeys = vehiclesKeys + value.id
+        vehiclesKeys.forEach { id ->
+            if (id == vehicleEnabledKey) {
+                vehiclesDatabase.document(id).update("enabled", true)
+            } else {
+                vehiclesDatabase.document(id).update("enabled", false)
+            }
+        }
+    } }
 }
 fun createIdOnDatabase() {
     idDatabase.document(userEmail).get().addOnSuccessListener {
@@ -231,7 +227,7 @@ fun createIdOnDatabase() {
     Log.i("getIdFromDatabase", "post $id")
 }*/
 
-var vehicles: List<Vehicle> = listOf()
+
 //    listOf(vehicleNone,
 //        vehicleB,
 //        vehicleC,
@@ -262,12 +258,12 @@ enum class EnvironmentalStickerEnum(type: String) {
 }
 
 fun getVehicle(vehicleId: String): Vehicle {
-    return vehicles.first { it.id == vehicleId.toLong() }
+    return vehicles.value.first { it.id == vehicleId.toLong() }
 }
 
 fun getCurrentVehicle(): Vehicle? {
-    if (vehicles.isNotEmpty()) {
-        return vehicles.first { it.enabled }
+    if (vehicles.value.isNotEmpty()) {
+        return vehicles.value.first { it.enabled }
     }
     return null
 }

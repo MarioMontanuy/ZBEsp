@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.noEnabledVehicle
+import com.example.zbesp.data.noEnabledVehicleInDatabase
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
@@ -62,7 +62,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                 if (!vehicleEnabled.value) {
                     Button(
                         onClick = {
-                            noEnabledVehicle()
+                            noEnabledVehicleInDatabase(vehicle)
                             vehicleEnabled.value = !vehicleEnabled.value
                             vehicle.enabled = !vehicle.enabled
                         },
