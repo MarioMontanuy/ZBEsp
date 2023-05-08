@@ -42,5 +42,8 @@ fun VehiclesNavGraph(
             val viewModel = MainViewModel()
             FormScreen(viewModel, navController, context)
         }
+        composable(VehiclesScreens.CommunityVehicles.route) {
+            CommunityVehiclesScreen(navController = navController)
+        }
     }
 }

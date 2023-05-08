@@ -62,6 +62,7 @@ import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
+import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.MediumTitleText
 import com.example.zbesp.ui.theme.SapphireBlueTransparent

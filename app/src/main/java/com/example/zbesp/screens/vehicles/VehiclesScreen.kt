@@ -30,6 +30,7 @@ import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehicleType
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.screens.VehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
 import java.util.*
@@ -42,7 +43,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-var vehicles = mutableStateOf<List<Vehicle>>(listOf<Vehicle>())
+var vehicles = mutableStateOf(listOf<Vehicle>())
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
@@ -53,7 +54,8 @@ fun VehiclesScreen(navController: NavController) {
 //        Log.e("firebase", "Error getting data", it)
 //    }
 //    vehiclesDatabase.addValueEventListener(postListener)
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title)) }) {
+    getCommunityVehicles()
+    Scaffold(topBar = { VehiclesTopBar(stringResource(id = R.string.vehicles_screen_title), navController) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,

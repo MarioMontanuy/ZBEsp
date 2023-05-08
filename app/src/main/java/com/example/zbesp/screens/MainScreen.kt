@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -28,6 +31,7 @@ import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
+import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.screens.vehicles.vehicles
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -132,6 +136,42 @@ fun ZBEspTopBar(title: String) {
     TopAppBar(
         title = {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
+        },
+    )
+}
+
+@Composable
+fun VehiclesTopBar(title: String, navController: NavController) {
+    TopAppBar(
+        title = {
+            TopBarTittle(text = title, alignment = TextAlign.Justify)
+        },
+        actions = {
+            IconButton(onClick = { navController.navigate(VehiclesScreens.CommunityVehicles.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            } }) {
+                Icon(
+                    imageVector = Icons.Filled.Groups,
+                    contentDescription = "Shared Vehicles"
+                )
+            }
+        }
+    )
+}
+@Composable
+fun CommunityVehiclesTopBar(title: String, navController: NavController) {
+    TopAppBar(
+        title = {
+            TopBarTittle(text = title, alignment = TextAlign.Justify)
+        },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back to Vehicles"
+                )
+            }
         }
     )
 }

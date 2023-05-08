@@ -14,7 +14,6 @@ const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedata
 //val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
 lateinit var vehiclesDatabase: CollectionReference
 val idDatabase = Firebase.firestore.collection("id")
-
 //val postListener = object : ValueEventListener {
 //    var currentVehicleList = listOf<Vehicle>()
 //    override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -64,8 +63,9 @@ data class Vehicle(
     var stickerImage: Int,
     var typeImage: Int,
     var typeImageWhite: Int,
+    var owner: String = userEmail,
 ) {
-    constructor() : this(0,"","","",Date(),"", false, 0, 0, 0)
+    constructor() : this(0,"","","",Date(),"", false, 0, 0, 0, "")
 //    fun setImage(type: VehicleType) {
 //        if (type.type == VehicleTypeEnum.PrivateCar) {
 //            this.imageId = R.drawable.private_car
