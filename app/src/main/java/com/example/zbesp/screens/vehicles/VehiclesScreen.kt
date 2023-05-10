@@ -54,7 +54,6 @@ fun VehiclesScreen(navController: NavController) {
 //        Log.e("firebase", "Error getting data", it)
 //    }
 //    vehiclesDatabase.addValueEventListener(postListener)
-    getCommunityVehicles()
     Scaffold(topBar = { VehiclesTopBar(stringResource(id = R.string.vehicles_screen_title), navController) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -71,8 +70,9 @@ fun VehiclesScreen(navController: NavController) {
                     )
                 }
             } else {
+                //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
                 items(vehicles.value) { vehicle ->
-                    PostItem(vehicle = vehicle, navController = navController)
+                    PostItem(vehicle = vehicle, navController = navController, type = "vehicle")
                     Divider(startIndent = 50.dp)
                 }
             }
@@ -88,14 +88,23 @@ fun VehiclesScreen(navController: NavController) {
 fun PostItem(
     vehicle: Vehicle,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    type: String
 ) {
     ListItem(
         modifier = modifier
             .clickable {
-                navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+                if (type == "vehicle") {
+                    navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+                if (type == "community") {
+                    navController.navigate(VehiclesScreens.VehicleDetailCommunity.withArgs(vehicle.id.toString())) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
                 }
             },
         icon = {

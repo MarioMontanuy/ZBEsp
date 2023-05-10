@@ -32,6 +32,7 @@ import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -159,6 +160,8 @@ fun VehiclesTopBar(title: String, navController: NavController) {
         }
     )
 }
+// TODO Each user should be able to leave comment from a LEZ
+// TODO Fix navigation, now if u go back u dont go to the previous screen, u go to the default one
 @Composable
 fun CommunityVehiclesTopBar(title: String, navController: NavController) {
     TopAppBar(

@@ -24,7 +24,7 @@ data class GeofenceItem(
             this.description = "Lleida, Catalonia, Spain"
             this.forbiddenStickers = listOf(EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone))
             this.imageId = R.drawable.lleida_zbe
-            this.url = "https://cdn01.segre.com/uploads/imagenes/bajacalidad/2022/03/30/_zbe_9f1868be.jpg?d3d6b208763767ca650f5301abad64fd"
+            this.url = "https://firebasestorage.googleapis.com/v0/b/zbesp-a6692.appspot.com/o/Lleida-ZBE.jpg?alt=media&token=de18e797-6787-4dd8-892f-1eac811eb5a8"
         }
         if (this.id == R.raw.zaragoza) {
             this.name = "Zaragoza LEZ"
@@ -34,9 +34,7 @@ data class GeofenceItem(
                 EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.zaragoza_zbe
-            this.url = "https://cadenaser.com/resizer/yBbl0kHU7T6DCDMyuWwa7f9PYKo=/736x414/filters" +
-                    ":format(jpg):quality(70)/cloudfront-eu-central-1.images.arcpublishing.com" +
-                    "/prisaradio/L3XSZE73HRGR3EE6KTTIQNHLRE.jpg"
+            this.url = "https://firebasestorage.googleapis.com/v0/b/zbesp-a6692.appspot.com/o/Zaragoza-ZBE.jpg?alt=media&token=2f511711-0f26-415a-867f-d84bf5c98f05"
         }
         if (this.id == R.raw.madrid) {
             this.name = "Madrid LEZ"
@@ -47,7 +45,7 @@ data class GeofenceItem(
                 EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.madrid_zbe
-            this.url = "https://pre.madrid360.es/wp-content/uploads/2021/12/Portada-Madrid-ZBE-2.png"
+            this.url = "https://firebasestorage.googleapis.com/v0/b/zbesp-a6692.appspot.com/o/Madrid-ZBE.png?alt=media&token=2e30367b-d26d-4de1-b649-4159ac9fa953"
         }
         if (this.id == R.raw.barcelona) {
             this.name = "Barcelona LEZ"
@@ -58,9 +56,7 @@ data class GeofenceItem(
                 EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab)
             )
             this.imageId = R.drawable.barcelona_zbe
-            this.url = "https://www.ocu.org/-/media/ocu/images/home/coches/coches/mapa%20zona" +
-                    "%20bajas%20emisiones%20barcelona.jpg?rev=f8af675e-a912-4ee2-9b03-137ed935ac" +
-                    "36&hash=904A7F9E2663EDCD8E54DC306CE0E793"
+            this.url = "https://firebasestorage.googleapis.com/v0/b/zbesp-a6692.appspot.com/o/Barcelona-ZBE.jpg?alt=media&token=4c4c903f-4744-4363-a65c-7f3242fee679"
         }
     }
 

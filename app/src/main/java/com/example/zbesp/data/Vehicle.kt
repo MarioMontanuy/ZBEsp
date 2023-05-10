@@ -1,8 +1,10 @@
 package com.example.zbesp.data
 
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.screens.userEmail
+import com.example.zbesp.screens.vehicles.communityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -63,7 +65,7 @@ data class Vehicle(
     var stickerImage: Int,
     var typeImage: Int,
     var typeImageWhite: Int,
-    var owner: String = userEmail,
+    var owner: String,
 ) {
     constructor() : this(0,"","","",Date(),"", false, 0, 0, 0, "")
 //    fun setImage(type: VehicleType) {
@@ -215,6 +217,7 @@ fun noEnabledVehicleInDatabase(currentVehicle: Vehicle) {
     } }
 }
 fun createIdOnDatabase() {
+    Log.i("createIdOnDatabase", "llamada")
     idDatabase.document(userEmail).get().addOnSuccessListener {
         if (it.data == null) {
             idDatabase.document(userEmail).set(hashMapOf("id" to 0L))
@@ -260,7 +263,9 @@ enum class EnvironmentalStickerEnum(type: String) {
 fun getVehicle(vehicleId: String): Vehicle {
     return vehicles.value.first { it.id == vehicleId.toLong() }
 }
-
+fun getVehicleCommunity(vehicleId: String): Vehicle {
+    return communityVehicles.value.first { it.id == vehicleId.toLong() }
+}
 fun getCurrentVehicle(): Vehicle? {
     if (vehicles.value.isNotEmpty()) {
         return vehicles.value.first { it.enabled }

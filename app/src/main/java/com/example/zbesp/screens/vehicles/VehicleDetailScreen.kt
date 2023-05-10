@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -11,18 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.noEnabledVehicleInDatabase
+import com.example.zbesp.screens.CommunityVehiclesTopBar
+import com.example.zbesp.screens.VehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun VehicleDetailScreen(vehicle: Vehicle) {
+fun VehicleDetailScreen(vehicle: Vehicle, navController: NavController) {
     val vehicleEnabled = remember { mutableStateOf(vehicle.enabled) }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicle_detail_screen_title)) }) {
+    Scaffold(topBar = { CommunityVehiclesTopBar(stringResource(id = R.string.vehicle_detail_screen_title), navController) }) {
         LazyColumn {
             item {
                 if (vehicleEnabled.value) {
@@ -56,10 +61,16 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                     title = stringResource(id = R.string.environmental_sticker),
                     subtitle = vehicle.environmentalSticker
                 )
-                Spacer(modifier = Modifier.padding(50.dp))
             }
             item {
-                if (!vehicleEnabled.value) {
+                AddTextRow(
+                    title = stringResource(id = R.string.owner),
+                    subtitle = vehicle.owner
+                )
+                Spacer(modifier = Modifier.padding(30.dp))
+            }
+            item {
+                if (!vehicleEnabled.value && vehicle.owner == userEmail) {
                     Button(
                         onClick = {
                             noEnabledVehicleInDatabase(vehicle)

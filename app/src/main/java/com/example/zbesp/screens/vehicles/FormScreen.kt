@@ -237,7 +237,7 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
 
 private fun addVehicleToDatabase(id: Long ,context: Context, viewModel: MainViewModel) {
     val newVehicle = Vehicle(
-        id + 1L,
+        userEmail.hashCode().toLong() + id + 1L,
         viewModel.form.username.state.value!!,
         viewModel.form.country.state.value!!.type!!.name,
         viewModel.form.vehicleType.state.value!!.type!!.name,
@@ -246,7 +246,8 @@ private fun addVehicleToDatabase(id: Long ,context: Context, viewModel: MainView
         viewModel.form.enableVehicle.state.value!!,
         viewModel.form.environmentalSticker.state.value!!.stickerImage,
         viewModel.form.vehicleType.state.value!!.typeImage,
-        viewModel.form.vehicleType.state.value!!.typeImageWhite
+        viewModel.form.vehicleType.state.value!!.typeImageWhite,
+        userEmail
     )
     vehiclesDatabase.add(newVehicle).addOnCompleteListener {
         if (it.isSuccessful) {

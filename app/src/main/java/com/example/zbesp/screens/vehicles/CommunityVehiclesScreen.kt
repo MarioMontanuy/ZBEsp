@@ -52,10 +52,23 @@ fun CommunityVehiclesScreen(navController: NavController){
                     )
                 }
             } else {
-                items(communityVehicles.value) { vehicle ->
-                    PostItem(vehicle = vehicle, navController = navController)
-                    Divider(startIndent = 50.dp)
+
+                communityVehicles.value.groupBy { it.owner }.map {
+                    var time = 0
+                    items(it.value) { vehicle ->
+                        if (time == 0) {
+                            time += 1
+                            SubtitleText(
+                                text = it.value.first().owner,
+                                alignment = TextAlign.Center,
+                                MaterialTheme.typography.body1
+                            )
+                        }
+                        PostItem(vehicle = vehicle, navController = navController, type = "community")
+                        Divider(startIndent = 50.dp)
+                    }
                 }
+
             }
 
         }
@@ -68,15 +81,16 @@ fun getCommunityVehicles() {
         Log.i("getCommunityVehicles", "vuelta 0 " + it.size() + " " + it.documents.toString())
         it.forEach {
             Log.i("getCommunityVehicles", "vuelta 1" + it.id)
-//            if (it.id != userEmail) {
-//                Firebase.firestore.collection(it.id).get().addOnSuccessListener {
-//                    value ->
-//                    value.forEach { vehicle ->
-//                        communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
-//                        Log.i("getCommunityVehicles", "vuelta 2")
-//                    }
-//                }
-//            }
+            if (it.id != userEmail) {
+                Firebase.firestore.collection(it.id).get().addOnSuccessListener {
+                    value ->
+                    value.forEach { vehicle ->
+                        communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
+                        Log.i("getCommunityVehicles", "vuelta 2" + communityVehicles.value)
+                        
+                    }
+                }
+            }
         }
     }
 }

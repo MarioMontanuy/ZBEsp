@@ -193,6 +193,7 @@ fun LogInScreen(navController: NavController, context: Context) {
                         if (it.isSuccessful) {
                             userEmail = email.value
                             vehiclesDatabase = Firebase.firestore.collection(userEmail)
+                            getCommunityVehicles()
                             goToApp(navController)
                         } else {
                             emailError.value = true

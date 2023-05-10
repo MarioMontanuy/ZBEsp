@@ -18,6 +18,7 @@
     <string name="create_vehicle_restrictions">You have to create a vehicle in order to know your restrictions</string>
     <string name="vehicles_screen_title">Vehicles</string>
     <string name="community_vehicles_screen_title">Community Vehicles</string>
+    <string name="zone_comments">Zone Comments</string>
     <string name="create_vehicle_needed">You have not created a vehicle yet</string>
     <string name="current_vehicle">Current Vehicle</string>
     <string name="create_note">Create note</string>
@@ -27,6 +28,7 @@
     <string name="registration_year">Registration Year</string>
     <string name="type">Type</string>
     <string name="environmental_sticker">Environmental Sticker</string>
+    <string name="owner">Owner</string>
     <string name="mark_current_vehicle">Mark as current vehicle</string>
     <string name="vehicle_enabled">This vehicle is enabled</string>
     <string name="information_shown">All information shown is related to the characteristics of this vehicle</string>
