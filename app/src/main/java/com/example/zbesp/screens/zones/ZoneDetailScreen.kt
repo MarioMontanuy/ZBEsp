@@ -96,18 +96,30 @@ fun ZoneDetailScreen(zone: GeofenceItem, context: Context){
 //                    contentScale = ContentScale.Crop,
 //                    modifier = Modifier.clip(CircleShape)
 //                )
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(zone.url)
-                        .crossfade(true)
-                        .build(),
-                    loading = {
-                        CircularProgressIndicator()
-                    },
-                    contentDescription = zone.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.clip(CircleShape)
-                )
+                if (connectivityEnabled()) {
+                    Log.i("ConnectivityEnabled", "True")
+                    SubcomposeAsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(zone.url)
+                            .crossfade(true)
+                            .build(),
+                        loading = {
+                            CircularProgressIndicator()
+                        },
+                        contentDescription = zone.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.clip(CircleShape)
+                    )
+                } else {
+                    Log.i("ConnectivityEnabled", "False")
+                    Image(
+                        painter = painterResource(id = R.drawable.noimage),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.clip(CircleShape)
+                    )
+                }
+
 //                Image(
 //                    painter = rememberAsyncImagePainter("https://pre.madrid360.es/wp-content/uploads/2021/12/Portada-Madrid-ZBE-2.png"),
 //                    contentDescription = null,

@@ -45,6 +45,8 @@
     <string name="map_zoom">Select map Zoom</string>
     <string name="map_zoom_key">mapzoom</string>
     <string name="notification_key">notification</string>
+    <string name="network">Network</string>
+    <string name="network_change">Download only using WiFi</string>
     <string name="notification_enabled">Enable notifications</string>
     <string name="notification_enabled_summary">Receive a notification when you enter a LEZ</string>
     <string name="home">Home</string>

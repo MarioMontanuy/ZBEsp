@@ -2,7 +2,9 @@ package com.example.zbesp.screens.settings
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,16 +21,19 @@ import com.example.zbesp.screens.ZBEspTopBar
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
 import com.example.zbesp.R
+import com.example.zbesp.currentUserConnectivity
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.goToLogIn
 import com.google.firebase.auth.FirebaseAuth
+
+
+
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(navController: NavController, context: Context, authenticationNavController: NavController) {
-
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.settings_screen_title)) }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("MAP") {
@@ -54,7 +59,7 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                             stringResource(id = R.string.home)
                         )
                     },
-                    defaultChecked = false
+                    defaultChecked = false,
                 )
             }
             prefsGroup("EXTRAS") {
@@ -99,6 +104,26 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                     )
                 }
             }
+            prefsGroup("Network") {
+                prefsItem {
+                    SwitchPref(
+                        key = stringResource(id = R.string.network),
+                        title = stringResource(id = R.string.network),
+                        summary = stringResource(id = R.string.network_change),
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Wifi,
+                                stringResource(id = R.string.network)
+                            )
+                        },
+                        defaultChecked = true,
+                        onCheckedChange = {
+                            Log.i("SwitchPref", "change")
+                            currentUserConnectivity = !currentUserConnectivity
+                        }
+                    )
+                }
+            }
             prefsGroup("USER") {
                 prefsItem {
                     TextPref(
@@ -106,7 +131,7 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                         enabled = true,
                         leadingIcon = {
                             Icon(
-                                Icons.Filled.PowerOff,
+                                Icons.Filled.Logout,
                                 stringResource(id = R.string.info)
                             )
                         },
@@ -119,7 +144,6 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                         }
                     )
                 }
-
             }
         }
     }
