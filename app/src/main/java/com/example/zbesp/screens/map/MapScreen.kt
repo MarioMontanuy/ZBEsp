@@ -34,6 +34,8 @@ import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.geofences
 import com.example.zbesp.data.kmlZones
 import com.example.zbesp.dataStore
+import com.example.zbesp.screens.createVehicleListenerOnDatabase
+import com.example.zbesp.screens.createZoneListenerOnDatabase
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SapphireBlueTransparent
@@ -81,6 +83,7 @@ fun MapScreen(context: Context) {
     createGeofence(context)
     CreateSearchBar(context)
     CurrentLocationFloatingActionButton()
+    createZoneListenerOnDatabase()
 }
 
 private fun initializeMap(context: Context) {

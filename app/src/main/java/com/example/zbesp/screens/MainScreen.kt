@@ -34,6 +34,7 @@ import com.example.zbesp.data.Comment
 import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
+import com.example.zbesp.data.geofences
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
@@ -48,7 +49,7 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun MainScreen(context: Context, authenticationNavController: NavController) {
     createIdOnDatabase()
-    createListenerOnDatabase()
+    createVehicleListenerOnDatabase()
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },
@@ -205,7 +206,7 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
         }
     )
 }
-fun createListenerOnDatabase() {
+fun createVehicleListenerOnDatabase() {
     val docRef = Firebase.firestore.collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
@@ -224,22 +225,25 @@ fun createListenerOnDatabase() {
             vehicles.value = listOf()
         }
     }
+}
 
+fun createZoneListenerOnDatabase() {
     val docRefComments = Firebase.firestore.collection("comments")
     docRefComments.addSnapshotListener { snapshot, e ->
         if (e != null) {
-            Log.w("createListenerOnDatabaseComments", "Listen failed.", e)
+            Log.w("zoneListener", "Listen failed.", e)
             return@addSnapshotListener
         }
         if (snapshot != null && !snapshot.isEmpty) {
             comments.value = listOf()
-            Log.d("createListenerOnDatabaseComments", "Current data:")
+            Log.d("zoneListener", "Current data:")
             snapshot.forEach { it ->
+                Log.d("zoneListener", "adding comment")
                 val currentComment = it.toObject<Comment>()
                 comments.value = comments.value + currentComment
             }
         } else {
-            Log.d("createListenerOnDatabase", "Current data: null")
+            Log.d("zoneListener", "Current data: null")
             comments.value = listOf()
         }
     }

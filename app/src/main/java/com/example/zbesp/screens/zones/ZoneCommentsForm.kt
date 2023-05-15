@@ -68,7 +68,7 @@ import com.google.firebase.ktx.Firebase
 fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavController) {
     var commentText by remember { mutableStateOf("") }
     var title by remember { mutableStateOf("") }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title), navController) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.new_comment), navController) }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
@@ -144,8 +144,8 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
 }
 
 private fun addCommentToDatabase(zoneName: String ,title: String, commentText: String, context: Context) {
-    val comment = Comment(title, commentText, userEmail)
-    commentsDatabase = Firebase.firestore.collection(zoneName)
+    val comment = Comment(title, commentText, userEmail, zoneName)
+    commentsDatabase = Firebase.firestore.collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {
             Log.i("vehicleadded", "successful")

@@ -17,6 +17,7 @@
     <string name="meet_restrictions"> is allowed to travel in this Low Emission Zone</string>
     <string name="create_vehicle_restrictions">You have to create a vehicle in order to know your restrictions</string>
     <string name="vehicles_screen_title">Vehicles</string>
+    <string name="comments">Comments</string>
     <string name="community_vehicles_screen_title">Community Vehicles</string>
     <string name="zone_comments">Zone Comments</string>
     <string name="create_vehicle_needed">You have not created a vehicle yet</string>
@@ -36,6 +37,7 @@
     <string name="information_shown">All information shown is related to the characteristics of this vehicle</string>
     <string name="name_min_lenght">The name must be at least 4 characters</string>
     <string name="form_screen_title">New Vehicle</string>
+    <string name="new_comment">New Comment</string>
     <string name="create_your_vehicle">Create your vehicle</string>
     <string name="post">Post</string>
     <string name="leave_comment">Leave a comment</string>

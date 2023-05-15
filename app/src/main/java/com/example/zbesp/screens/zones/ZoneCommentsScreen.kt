@@ -2,6 +2,7 @@ package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -39,22 +40,26 @@ import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.vehicles.CommentsFloatingActionButton
 import com.example.zbesp.screens.vehicles.PostItem
 import com.example.zbesp.screens.vehicles.VehiclesFloatingActionButton
+import com.example.zbesp.screens.vehicles.communityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
+import com.example.zbesp.ui.theme.OwnerTitle
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
+import okhttp3.internal.wait
 
 var comments = mutableStateOf(listOf<Comment>())
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavController) {
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title), navController) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.comments), navController) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (comments.value.isEmpty()) {
+            val zoneComments = comments.value.filter { it.zoneName == zone.name }
+            if (zoneComments.isEmpty()) {
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
@@ -64,12 +69,22 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
                     )
                 }
             } else {
-                //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
-                items(comments.value) { comment ->
-                    PostComment(comment = comment, navController = navController)
-                    Divider(startIndent = 50.dp)
+                zoneComments.groupBy { it.owner }.map {
+                    var title = true
+                    items(it.value) { comment ->
+                        if (title) {
+                            title = false
+                            OwnerTitle(it.value.first().owner)
+                        }
+                        PostComment(comment = comment, navController = navController)
+                        Divider(startIndent = 50.dp)
+
+                    }
                 }
+                //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
+
             }
+
         }
         CommentsFloatingActionButton(zone = zone, navController = navController)
     }

@@ -156,6 +156,7 @@ data class Comment(
     val title: String,
     val commentText: String,
     var owner: String,
+    var zoneName: String
 ) {
-    constructor() : this("","","")
+    constructor() : this("","","", "")
 }
