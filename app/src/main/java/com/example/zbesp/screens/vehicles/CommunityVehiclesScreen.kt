@@ -28,7 +28,6 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.idDatabase
-import com.example.zbesp.screens.CommunityVehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.OwnerTitle
@@ -45,7 +44,7 @@ var communityVehicles = mutableStateOf(listOf<Vehicle>())
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CommunityVehiclesScreen(navController: NavController){
-    Scaffold(topBar = { CommunityVehiclesTopBar(stringResource(id = R.string.community_vehicles_screen_title), navController) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.community_vehicles_screen_title), navController) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,

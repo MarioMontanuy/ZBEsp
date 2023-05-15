@@ -86,10 +86,7 @@ fun PostGeofenceItem(
     ListItem(
         modifier = modifier
             .clickable {
-                navController.navigate(ZonesScreens.ZoneDetail.withArgs(geofenceItem.id.toString())) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                navController.navigate(ZonesScreens.ZoneDetail.withArgs(geofenceItem.id.toString()))
             },
         icon = {
 //            Image(
@@ -100,7 +97,7 @@ fun PostGeofenceItem(
 //                    .clip(shape = MaterialTheme.shapes.small)
 //                    .size(45.dp)
 //            )
-
+            // TODO Comprobar que efectivamente se carga la "no imagen"
             if (connectivityEnabled()) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)

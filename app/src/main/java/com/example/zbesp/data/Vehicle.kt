@@ -15,6 +15,7 @@ import java.util.Date
 const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedatabase.app/"
 //val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
 lateinit var vehiclesDatabase: CollectionReference
+lateinit var commentsDatabase: CollectionReference
 val idDatabase = Firebase.firestore.collection("id")
 //val postListener = object : ValueEventListener {
 //    var currentVehicleList = listOf<Vehicle>()
@@ -68,54 +69,6 @@ data class Vehicle(
     var owner: String,
 ) {
     constructor() : this(0,"","","",Date(),"", false, 0, 0, 0, "")
-//    fun setImage(type: VehicleType) {
-//        if (type.type == VehicleTypeEnum.PrivateCar) {
-//            this.imageId = R.drawable.private_car
-//        }
-//        if (type.type == VehicleTypeEnum.MotorHome) {
-//            this.imageId = R.drawable.motor_home
-//        }
-//        if (type.type == VehicleTypeEnum.Truck) {
-//            this.imageId = R.drawable.truck
-//        }
-//        if (type.type == VehicleTypeEnum.MotorBike) {
-//            this.imageId = R.drawable.motor_bike
-//        }
-//        if (type.type == VehicleTypeEnum.Bus) {
-//            this.imageId = R.drawable.bus
-//        }
-//        if (type.type == VehicleTypeEnum.Van) {
-//            this.imageId = R.drawable.van
-//        }
-//        if (type.type == VehicleTypeEnum.Tractor) {
-//            this.imageId = R.drawable.tractor
-//        }
-//    }
-//
-//    fun changeToWhite(type: VehicleType): Int {
-//        if (type.type == VehicleTypeEnum.PrivateCar) {
-//            return R.drawable.private_car_white
-//        }
-//        if (type.type == VehicleTypeEnum.MotorHome) {
-//            return R.drawable.motor_home_white
-//        }
-//        if (type.type == VehicleTypeEnum.Truck) {
-//            return R.drawable.truck_white
-//        }
-//        if (type.type == VehicleTypeEnum.MotorBike) {
-//            return R.drawable.motor_bike_white
-//        }
-//        if (type.type == VehicleTypeEnum.Bus) {
-//            return R.drawable.bus_white
-//        }
-//        if (type.type == VehicleTypeEnum.Van) {
-//            return R.drawable.van_white
-//        }
-//        if (type.type == VehicleTypeEnum.Tractor) {
-//            return R.drawable.tractor_white
-//        }
-//        return 0
-//    }
 }
 
 data class VehicleType(val type: VehicleTypeEnum?, val typeImage: Int, val typeImageWhite: Int) : PickerValue() {
@@ -135,68 +88,6 @@ data class Country(val type: CountryEnum?) : PickerValue() {
         return this.type!!.name.startsWith(query)
     }
 }
-
-//
-//val vehicleNone: Vehicle =
-//    Vehicle(
-//        id = 1L,
-//        name = "Car1",
-//        country = Country(CountryEnum.Spain),
-//        type = VehicleType(VehicleTypeEnum.PrivateCar),
-//        registrationYear = Date(101, 5, 5),
-//        environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
-//        enabled = true,
-//        imageId = R.drawable.private_car,
-//    )
-//
-//private val vehicleB: Vehicle = Vehicle(
-//    id = 2L,
-//    name = "Car2",
-//    country = Country(CountryEnum.Spain),
-//    type = VehicleType(VehicleTypeEnum.PrivateCar),
-//    registrationYear = Date(101, 5, 5),
-//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
-//    enabled = false,
-//    imageId = R.drawable.private_car
-//)
-//
-//
-//private val vehicleC: Vehicle = Vehicle(
-//    id = 3L,
-//    name = "Car3",
-//    country = Country(CountryEnum.Spain),
-//    type = VehicleType(VehicleTypeEnum.PrivateCar),
-//    registrationYear = Date(101, 5, 5),
-//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
-//    enabled = false,
-//    imageId = R.drawable.private_car,
-//)
-//
-//private val vehicleECO: Vehicle = Vehicle(
-//    id = 4L,
-//    name = "Car4",
-//    country = Country(CountryEnum.Spain),
-//    type = VehicleType(VehicleTypeEnum.PrivateCar),
-//    registrationYear = Date(101, 5, 5),
-//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
-//    enabled = false,
-//    imageId = R.drawable.private_car,
-//)
-//
-//private val vehicleZero: Vehicle = Vehicle(
-//    id = 5L,
-//    name = "Car5",
-//    country = Country(CountryEnum.Spain),
-//    type = VehicleType(VehicleTypeEnum.PrivateCar),
-//    registrationYear = Date(101, 5, 5),
-//    environmentalSticker = EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
-//    enabled = false,
-//    imageId = R.drawable.private_car,
-//)
-//
-//object VehiclesRepo {
-//    fun getVehicles(): List<Vehicle> = vehicles
-//}
 
 fun noEnabledVehicleInDatabase(currentVehicle: Vehicle) {
     var vehiclesKeys = listOf<String>()
@@ -224,19 +115,6 @@ fun createIdOnDatabase() {
         }
     }
 }
-/*fun getIdFromDatabase() : Long {
-
-
-    Log.i("getIdFromDatabase", "post $id")
-}*/
-
-
-//    listOf(vehicleNone,
-//        vehicleB,
-//        vehicleC,
-//        vehicleECO,
-//        vehicleZero,
-//)
 
 enum class CountryEnum(type: String) {
     Spain("Spain"),
@@ -271,4 +149,13 @@ fun getCurrentVehicle(): Vehicle? {
         return vehicles.value.first { it.enabled }
     }
     return null
+}
+
+@Immutable
+data class Comment(
+    val title: String,
+    val commentText: String,
+    var owner: String,
+) {
+    constructor() : this("","","")
 }

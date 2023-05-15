@@ -36,6 +36,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.ImageLoader
 import coil.compose.AsyncImage
@@ -55,6 +56,7 @@ import com.example.zbesp.retrofit.ImageAPI
 import com.example.zbesp.retrofit.ImageAPIService
 import com.example.zbesp.retrofit.MarsPhoto
 import com.example.zbesp.retrofit.ZoneViewModel
+import com.example.zbesp.screens.ZonesDetailTopBar
 import com.example.zbesp.screens.vehicles.PostItem
 import com.example.zbesp.ui.theme.SapphireBlueTransparent
 import com.example.zbesp.ui.theme.TitleText
@@ -67,11 +69,11 @@ var currentImage: Unit? = null
 // TODO Fix image
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ZoneDetailScreen(zone: GeofenceItem, context: Context){
+fun ZoneDetailScreen(zone: GeofenceItem, context: Context, navController: NavController){
     val currentVehicle = getCurrentVehicle()
 //    var image = getImage(zone.name)
     val viewModel = ZoneViewModel(context = context)
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.zone_detail_screen_title)) }) {
+    Scaffold(topBar = { ZonesDetailTopBar(stringResource(id = R.string.zone_detail_screen_title), navController, zone) }) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 25.dp),

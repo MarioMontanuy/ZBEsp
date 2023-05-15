@@ -75,10 +75,7 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                             )
                         },
                         onClick = {
-                            navController.navigate(SettingsScreens.SubscriptionScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
+                            navController.navigate(SettingsScreens.SubscriptionScreen.route)
                         }
                     )
                 }
@@ -96,10 +93,7 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                             )
                         },
                         onClick = {
-                            navController.navigate(SettingsScreens.AboutUsScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
+                            navController.navigate(SettingsScreens.AboutUsScreen.route)
                         }
                     )
                 }
@@ -137,10 +131,7 @@ fun SettingsScreen(navController: NavController, context: Context, authenticatio
                         },
                         onClick = {
                             FirebaseAuth.getInstance().signOut()
-                            authenticationNavController.navigate(AuthenticationScreens.LogInScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
+                            authenticationNavController.navigate(AuthenticationScreens.LogInScreen.route)
                         }
                     )
                 }

@@ -26,10 +26,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
 import com.example.zbesp.data.Country
 import com.example.zbesp.data.EnvironmentalSticker
+import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.VehicleType
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.VehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
@@ -95,16 +97,10 @@ fun PostItem(
         modifier = modifier
             .clickable {
                 if (type == "vehicle") {
-                    navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                    }
+                    navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString()))
                 }
                 if (type == "community") {
-                    navController.navigate(VehiclesScreens.VehicleDetailCommunity.withArgs(vehicle.id.toString())) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                    }
+                    navController.navigate(VehiclesScreens.VehicleDetailCommunity.withArgs(vehicle.id.toString()))
                 }
             },
         icon = {
@@ -138,10 +134,7 @@ fun VehiclesFloatingActionButton(navController: NavController) {
                 .padding(all = 16.dp)
                 .align(alignment = Alignment.BottomEnd),
             onClick = {
-                navController.navigate(VehiclesScreens.NewVehicle.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                navController.navigate(VehiclesScreens.NewVehicle.route)
             },
             backgroundColor = SapphireBlue,
             contentColor = Color.White
@@ -149,6 +142,28 @@ fun VehiclesFloatingActionButton(navController: NavController) {
             Icon(
                 imageVector = Icons.Default.Add, contentDescription = stringResource(
                     id = R.string.create_note
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun CommentsFloatingActionButton(zone: GeofenceItem ,navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .align(alignment = Alignment.BottomEnd),
+            onClick = {
+                navController.navigate(ZonesScreens.ZoneCommentsForm.withArgs(zone.id.toString()))
+            },
+            backgroundColor = SapphireBlue,
+            contentColor = Color.White
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add, contentDescription = stringResource(
+                    id = R.string.create_coment
                 )
             )
         }

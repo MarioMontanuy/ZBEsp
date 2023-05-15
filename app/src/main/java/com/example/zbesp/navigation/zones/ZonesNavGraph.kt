@@ -9,7 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.zbesp.data.getGeofence
+import com.example.zbesp.screens.zones.ZoneCommentsForm
+import com.example.zbesp.screens.zones.ZoneCommentsScreen
 import com.example.zbesp.screens.zones.ZoneDetailScreen
 import com.example.zbesp.screens.zones.ZonesScreen
 
@@ -37,7 +40,30 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context)
+            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
+        }
+        composable(
+            route = ZonesScreens.ZoneComments.route + "/{zone}",
+            arguments = listOf(
+                navArgument("zone") {
+                    type = NavType.StringType
+                    defaultValue = "Some Default"
+                }
+            )
+        ) { entry ->
+            ZoneCommentsScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
+        }
+
+        composable(
+            route = ZonesScreens.ZoneCommentsForm.route + "/{zone}",
+            arguments = listOf(
+                navArgument("zone") {
+                    type = NavType.StringType
+                    defaultValue = "Some Default"
+                }
+            )
+        ) { entry ->
+            ZoneCommentsForm(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
         }
     }
 }

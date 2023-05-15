@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,11 +30,15 @@ import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
+import com.example.zbesp.data.Comment
+import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
+import com.example.zbesp.screens.zones.comments
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -102,10 +107,7 @@ fun RowScope.AddItem(
 //            if (screen.route == "vehicles") {
 //                getVehiclesFromDatabase()
 //            }
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
+            navController.navigate(screen.route)
         }
     )
 }
@@ -137,7 +139,25 @@ fun ZBEspTopBar(title: String) {
     TopAppBar(
         title = {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
+        }
+    )
+}
+@Composable
+fun ZBEspTopBar(title: String, navController: NavController) {
+    TopAppBar(
+        title = {
+            TopBarTittle(text = title, alignment = TextAlign.Justify)
         },
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back to Vehicles"
+                )
+            }
+        }
     )
 }
 
@@ -148,10 +168,7 @@ fun VehiclesTopBar(title: String, navController: NavController) {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
         },
         actions = {
-            IconButton(onClick = { navController.navigate(VehiclesScreens.CommunityVehicles.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            } }) {
+            IconButton(onClick = { navController.navigate(VehiclesScreens.CommunityVehicles.route)}) {
                 Icon(
                     imageVector = Icons.Filled.Groups,
                     contentDescription = "Shared Vehicles"
@@ -160,25 +177,34 @@ fun VehiclesTopBar(title: String, navController: NavController) {
         }
     )
 }
-// TODO Each user should be able to leave comment from a LEZ
-// TODO Fix navigation, now if u go back u dont go to the previous screen, u go to the default one
+
 @Composable
-fun CommunityVehiclesTopBar(title: String, navController: NavController) {
+fun ZonesDetailTopBar(title: String, navController: NavController, zone: GeofenceItem) {
     TopAppBar(
         title = {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
         },
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back to Vehicles"
                 )
             }
+        },
+        actions = {
+            IconButton(onClick = {
+                navController.navigate(ZonesScreens.ZoneComments.withArgs(zone.id.toString())) }) {
+                Icon(
+                    imageVector = Icons.Filled.Comment,
+                    contentDescription = "Shared Vehicles"
+                )
+            }
         }
     )
 }
-
 fun createListenerOnDatabase() {
     val docRef = Firebase.firestore.collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
@@ -196,6 +222,25 @@ fun createListenerOnDatabase() {
         } else {
             Log.d("createListenerOnDatabase", "Current data: null")
             vehicles.value = listOf()
+        }
+    }
+
+    val docRefComments = Firebase.firestore.collection("comments")
+    docRefComments.addSnapshotListener { snapshot, e ->
+        if (e != null) {
+            Log.w("createListenerOnDatabaseComments", "Listen failed.", e)
+            return@addSnapshotListener
+        }
+        if (snapshot != null && !snapshot.isEmpty) {
+            comments.value = listOf()
+            Log.d("createListenerOnDatabaseComments", "Current data:")
+            snapshot.forEach { it ->
+                val currentComment = it.toObject<Comment>()
+                comments.value = comments.value + currentComment
+            }
+        } else {
+            Log.d("createListenerOnDatabase", "Current data: null")
+            comments.value = listOf()
         }
     }
 }

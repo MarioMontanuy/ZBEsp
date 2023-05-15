@@ -15,13 +15,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.screens.ZBEspTopBar
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AboutUsScreen() {
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.about_us_title)) }) {
+fun AboutUsScreen(navController: NavController) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.about_us_title), navController) }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

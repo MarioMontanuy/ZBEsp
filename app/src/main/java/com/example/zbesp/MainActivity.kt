@@ -60,12 +60,7 @@ class MainActivity : ComponentActivity() {
         requestPermissionOnCreate()
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
-        // -----
         statusObserver = NetworkStatusObserver(this)
-//        val intentFilter = IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION)
-//        val receiver = MyBroadcastReceiver()
-//        registerReceiver(receiver, intentFilter)
-        // -----
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
@@ -78,12 +73,9 @@ class MainActivity : ComponentActivity() {
                 if (status != StatusObserver.Status.Unknown) {
                     Toast.makeText(this, "Network $status", Toast.LENGTH_SHORT).show()
                     currentConnectivity = status
-//                    val networkKey = booleanPreferencesKey("Network")
-//                    runBlocking(Dispatchers.IO) {
-//                        dataStore.edit { preferences ->
-//                            preferences[networkKey] = status != StatusObserver.Status.Lost
-//                        }
-//                    }
+                    if (currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi || currentConnectivity == StatusObserver.Status.Lost) {
+                        Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
+                    }
                 }
                 AuthenticationNavGraph(context = this)
             }

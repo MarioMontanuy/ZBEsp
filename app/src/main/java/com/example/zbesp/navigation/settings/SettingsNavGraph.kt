@@ -32,10 +32,10 @@ fun SettingsNavGraph(
             SettingsScreen(navController, context, authenticationNavController)
         }
         composable(SettingsScreens.AboutUsScreen.route) {
-            AboutUsScreen()
+            AboutUsScreen(navController)
         }
         composable(SettingsScreens.SubscriptionScreen.route) {
-            SubscriptionScreen()
+            SubscriptionScreen(navController)
         }
     }
 }

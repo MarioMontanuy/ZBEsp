@@ -136,7 +136,7 @@ class MainViewModel : ViewModel() {
 @Composable
 fun FormScreen(viewModel: MainViewModel, navController: NavController, context: Context) {
     val error = remember { mutableStateOf(false) }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title)) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title), navController) }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

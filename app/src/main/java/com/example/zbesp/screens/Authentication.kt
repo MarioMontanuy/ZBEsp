@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
+import com.example.zbesp.data.commentsDatabase
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
@@ -185,20 +186,20 @@ fun LogInScreen(navController: NavController, context: Context) {
         ) {
             Text(stringResource(id = R.string.sign_in))
         }
-        TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
-            val auth: FirebaseAuth = Firebase.auth
-            auth.signInAnonymously().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Log.i("TestSignIn", "Successful")
-                    goToApp(navController)
-                } else {
-                    Log.i("TestSignIn", "Error")
-                    showDialog(context, "Anonymous user cannot be registered")
-                }
-            }
-        }) {
-            TitleText(text = "Sign in as Anonymous", TextAlign.Center)
-        }
+//        TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
+//            val auth: FirebaseAuth = Firebase.auth
+//            auth.signInAnonymously().addOnCompleteListener {
+//                if (it.isSuccessful) {
+//                    Log.i("TestSignIn", "Successful")
+//                    goToApp(navController)
+//                } else {
+//                    Log.i("TestSignIn", "Error")
+//                    showDialog(context, "Anonymous user cannot be registered")
+//                }
+//            }
+//        }) {
+//            TitleText(text = "Sign in as Anonymous", TextAlign.Center)
+//        }
         TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
             goToResetPassword(navController)
         }) {
@@ -208,10 +209,7 @@ fun LogInScreen(navController: NavController, context: Context) {
         Row {
             Text(modifier = Modifier.padding(vertical = 13.dp),text = "Don't have an account?", textAlign = TextAlign.Center)
             TextButton(interactionSource = NoRippleInteractionSource(),onClick = {
-                navController.navigate(AuthenticationScreens.RegisterScreen.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                navController.navigate(AuthenticationScreens.RegisterScreen.route)
             }) {
                 TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
             }
@@ -492,24 +490,15 @@ fun showDialog(context: Context, text: String) {
 }
 
 fun goToLogIn(navController: NavController) {
-    navController.navigate(AuthenticationScreens.LogInScreen.route) {
-        popUpTo(navController.graph.findStartDestination().id)
-        launchSingleTop = true
-    }
+    navController.navigate(AuthenticationScreens.LogInScreen.route)
 }
 
 fun goToApp(navController: NavController) {
-    navController.navigate(AuthenticationScreens.MainScreen.route) {
-        popUpTo(navController.graph.findStartDestination().id)
-        launchSingleTop = true
-    }
+    navController.navigate(AuthenticationScreens.MainScreen.route)
 }
 
 fun goToResetPassword(navController: NavController) {
-    navController.navigate(AuthenticationScreens.ResetPassword.route) {
-        popUpTo(navController.graph.findStartDestination().id)
-        launchSingleTop = true
-    }
+    navController.navigate(AuthenticationScreens.ResetPassword.route)
 }
 
 class NoRippleInteractionSource : MutableInteractionSource {

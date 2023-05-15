@@ -16,7 +16,6 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.noEnabledVehicleInDatabase
-import com.example.zbesp.screens.CommunityVehiclesTopBar
 import com.example.zbesp.screens.VehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
@@ -27,7 +26,7 @@ import java.text.DateFormat
 @Composable
 fun VehicleDetailScreen(vehicle: Vehicle, navController: NavController) {
     val vehicleEnabled = remember { mutableStateOf(vehicle.enabled) }
-    Scaffold(topBar = { CommunityVehiclesTopBar(stringResource(id = R.string.vehicle_detail_screen_title), navController) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicle_detail_screen_title), navController) }) {
         LazyColumn {
             item {
                 if (vehicleEnabled.value) {
