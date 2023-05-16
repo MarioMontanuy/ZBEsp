@@ -21,6 +21,7 @@
     <string name="community_vehicles_screen_title">Community Vehicles</string>
     <string name="zone_comments">Zone Comments</string>
     <string name="create_vehicle_needed">You have not created a vehicle yet</string>
+    <string name="community_no_vehicles">Your community have not created a vehicle yet</string>
     <string name="no_comments">There are no comments in this LEZ</string>
     <string name="current_vehicle">Current Vehicle</string>
     <string name="create_note">Create note</string>

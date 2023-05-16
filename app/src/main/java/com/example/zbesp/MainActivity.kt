@@ -1,5 +1,6 @@
 package com.example.zbesp
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -38,8 +39,12 @@ import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.jamal.composeprefs.ui.LocalPrefsDataStore
 import kotlinx.coroutines.Dispatchers
@@ -251,6 +256,25 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+//fun getFirestore(): FirebaseFirestore {
+//    val firestore = Firebase.firestore
+////    if () {
+//    firestore.useEmulator("10.0.2.2", 8080)
+//    firestore.firestoreSettings = firestoreSettings {
+//        isPersistenceEnabled = false
+//    }
+////    }
+//    return firestore
+//}
+
+fun getFirebaseAuth(): FirebaseAuth {
+    val firebaseAuth = Firebase.auth
+//    if () {
+    firebaseAuth.useEmulator("10.0.2.2", 9099)
+//    }
+
+    return firebaseAuth
+}
 
 
 

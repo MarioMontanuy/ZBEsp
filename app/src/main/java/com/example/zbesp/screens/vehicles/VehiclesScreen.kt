@@ -63,6 +63,7 @@ fun VehiclesScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (vehicles.value.isEmpty()) {
+                Log.i("vehicles.value", "Empty")
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
@@ -73,6 +74,8 @@ fun VehiclesScreen(navController: NavController) {
                 }
             } else {
                 //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
+                Log.i("vehicles.value", "NotEmpty")
+                Log.i("vehicles.value", vehicles.value.toString())
                 items(vehicles.value) { vehicle ->
                     PostItem(vehicle = vehicle, navController = navController, type = "vehicle")
                     Divider(startIndent = 50.dp)

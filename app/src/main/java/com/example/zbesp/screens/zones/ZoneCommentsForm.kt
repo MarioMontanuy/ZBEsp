@@ -146,6 +146,7 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
 private fun addCommentToDatabase(zoneName: String ,title: String, commentText: String, context: Context) {
     val comment = Comment(title, commentText, userEmail, zoneName)
     commentsDatabase = Firebase.firestore.collection("comments")
+//    commentsDatabase = getFirestore().collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {
             Log.i("vehicleadded", "successful")

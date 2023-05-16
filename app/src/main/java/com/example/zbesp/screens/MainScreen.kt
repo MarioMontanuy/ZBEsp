@@ -208,6 +208,7 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
 }
 fun createVehicleListenerOnDatabase() {
     val docRef = Firebase.firestore.collection(userEmail)
+//    val docRef = getFirestore().collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
             Log.w("createListenerOnDatabase", "Listen failed.", e)
@@ -229,6 +230,7 @@ fun createVehicleListenerOnDatabase() {
 
 fun createZoneListenerOnDatabase() {
     val docRefComments = Firebase.firestore.collection("comments")
+//    val docRefComments = getFirestore().collection("comments")
     docRefComments.addSnapshotListener { snapshot, e ->
         if (e != null) {
             Log.w("zoneListener", "Listen failed.", e)

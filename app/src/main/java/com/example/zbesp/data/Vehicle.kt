@@ -17,6 +17,7 @@ const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedata
 lateinit var vehiclesDatabase: CollectionReference
 lateinit var commentsDatabase: CollectionReference
 val idDatabase = Firebase.firestore.collection("id")
+//val idDatabase = getFirestore().collection("id")
 //val postListener = object : ValueEventListener {
 //    var currentVehicleList = listOf<Vehicle>()
 //    override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -68,7 +69,7 @@ data class Vehicle(
     var typeImageWhite: Int,
     var owner: String,
 ) {
-    constructor() : this(0,"","","",Date(),"", false, 0, 0, 0, "")
+    constructor() : this(0,"Test","Spain","Private Car",Date(),"None", false, 2131165462, 2131165469, 2131165470, "test@test.com")
 }
 
 data class VehicleType(val type: VehicleTypeEnum?, val typeImage: Int, val typeImageWhite: Int) : PickerValue() {
@@ -144,6 +145,7 @@ fun getVehicle(vehicleId: String): Vehicle {
 fun getVehicleCommunity(vehicleId: String): Vehicle {
     return communityVehicles.value.first { it.id == vehicleId.toLong() }
 }
+// TODO Fix this: Collection contains no element matching the predicate.
 fun getCurrentVehicle(): Vehicle? {
     if (vehicles.value.isNotEmpty()) {
         return vehicles.value.first { it.enabled }

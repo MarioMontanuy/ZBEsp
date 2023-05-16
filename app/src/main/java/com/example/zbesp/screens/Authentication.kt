@@ -47,8 +47,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
 import com.example.zbesp.data.commentsDatabase
 import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.getFirebaseAuth
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
+import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.ui.theme.errorColor
 import com.example.zbesp.ui.theme.getOutlinedTextFieldColors
@@ -56,6 +58,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -166,13 +169,23 @@ fun LogInScreen(navController: NavController, context: Context) {
                 passwordError.value = (password.value.length < 6)
                 if (!emailError.value && !passwordError.value) {
                     val auth: FirebaseAuth = Firebase.auth
+//                    val auth: FirebaseAuth = getFirebaseAuth()
                     auth.signInWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             userEmail = email.value
-                            vehiclesDatabase = Firebase.firestore.collection(userEmail)
+                            val firestore = Firebase.firestore
+                            firestore.useEmulator("10.0.2.2", 8080)
+                            vehiclesDatabase = firestore.collection(userEmail)
+//                            val firestore = Firebase.firestore
+////    if () {
+////                            firestore.useEmulator("10.0.2.2", 8080)
+////                            firestore.firestoreSettings = firestoreSettings {
+////                                isPersistenceEnabled = false
+////                            }
+//                            vehiclesDatabase = firestore.collection(userEmail)
                             getCommunityVehicles()
                             goToApp(navController)
                         } else {
@@ -229,7 +242,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
     val passwordVisibility = remember { mutableStateOf(false) }
     val rePassword = remember { mutableStateOf("") }
     val rePasswordVisibility = remember { mutableStateOf(false) }
-
+    val firebaseAuth = getFirebaseAuth()
     val passwordIcon = if (passwordVisibility.value)
         Icons.Default.Visibility
     else
@@ -382,14 +395,18 @@ fun RegisterScreen(navController: NavController, context: Context) {
                     rePasswordError.value = true
                 }
                 if (!emailError.value && !passwordError.value && !rePasswordError.value) {
-                    val auth: FirebaseAuth = Firebase.auth
-                    auth.createUserWithEmailAndPassword(
+//                    val auth: FirebaseAuth = Firebase.auth
+//                    val auth: FirebaseAuth = getFirebaseAuth()
+                    val firebaseAuthentication = Firebase.auth
+//                    firebaseAuthentication.useEmulator("10.0.2.2", 9099)
+                    firebaseAuthentication.createUserWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             goToLogIn(navController)
                         } else {
+                            Log.i("notSuccessful", "ERROR")
                             emailError.value = true
                             passwordError.value = true
                             rePasswordError.value = true
@@ -462,7 +479,8 @@ fun ResetPassword(navController: NavController, context: Context) {
             onClick = {
                 emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 if (!emailError.value) {
-                    val auth: FirebaseAuth = Firebase.auth
+//                    val auth: FirebaseAuth = Firebase.auth
+                    val auth: FirebaseAuth = getFirebaseAuth()
                     auth.sendPasswordResetEmail(email.value)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {

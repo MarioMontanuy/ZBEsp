@@ -54,7 +54,7 @@ fun CommunityVehiclesScreen(navController: NavController){
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
-                        text = stringResource(id = R.string.create_vehicle_needed),
+                        text = stringResource(id = R.string.community_no_vehicles),
                         alignment = TextAlign.Center,
                         MaterialTheme.typography.body1
                     )
@@ -83,7 +83,8 @@ fun getCommunityVehicles() {
     idDatabase.get().addOnSuccessListener { it ->
         it.forEach {
             if (it.id != userEmail) {
-                Firebase.firestore.collection(it.id).get().addOnSuccessListener {
+//                getFirestore().collection(it.id).get().addOnSuccessListener {
+                    Firebase.firestore.collection(it.id).get().addOnSuccessListener {
                     value ->
                     value.forEach { vehicle ->
                         communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
