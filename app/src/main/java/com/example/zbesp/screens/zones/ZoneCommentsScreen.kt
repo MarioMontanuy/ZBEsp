@@ -59,11 +59,12 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val zoneComments = comments.value.filter { it.zoneName == zone.name }
-            if (zoneComments.isEmpty()) {
+            if (zoneComments.isEmpty() || !connectivityEnabled()) {
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
-                        text = stringResource(id = R.string.no_comments),
+                        text = stringResource(id = R.string.no_comments) + "\nor\n" +
+                                stringResource(id = R.string.network_error),
                         alignment = TextAlign.Center,
                         MaterialTheme.typography.body1
                     )

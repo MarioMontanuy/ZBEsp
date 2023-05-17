@@ -31,6 +31,7 @@ import com.example.zbesp.data.idDatabase
 import com.example.zbesp.getFirestore
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
+import com.example.zbesp.screens.zones.connectivityEnabled
 import com.example.zbesp.ui.theme.OwnerTitle
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
@@ -51,11 +52,12 @@ fun CommunityVehiclesScreen(navController: NavController){
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (communityVehicles.value.isEmpty()) {
+            if (communityVehicles.value.isEmpty() || !connectivityEnabled()) {
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
-                        text = stringResource(id = R.string.community_no_vehicles),
+                        text = stringResource(id = R.string.community_no_vehicles) + "\nor\n" +
+                                stringResource(id = R.string.network_error),
                         alignment = TextAlign.Center,
                         MaterialTheme.typography.body1
                     )

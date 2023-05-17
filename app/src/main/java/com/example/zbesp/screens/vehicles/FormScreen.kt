@@ -31,6 +31,7 @@ import com.example.zbesp.data.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.showDialog
 import com.example.zbesp.screens.userEmail
+import com.example.zbesp.screens.zones.connectivityEnabled
 import com.example.zbesp.ui.theme.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
@@ -199,24 +200,29 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
             item {
                 Button(
                     onClick = {
-                        if (viewModel.form.checkFields()) {
-                            if (vehicles.value.isEmpty()) {
-                                viewModel.form.enableVehicle.state.value = true
-                            }
-                            var id = 0L
-                            Log.i("getIdFromDatabase", "pre")
-                            idDatabase.document(userEmail).get().addOnSuccessListener {
-                                id = it["id"] as Long
-                                addVehicleToDatabase(id, context, viewModel)
-                                idDatabase.document(userEmail).update("id", FieldValue.increment(1))
-                                navController.popBackStack()
-                            }
-                            //val currentId = getIdFromDatabase()
-                            //Log.i("currentId", currentId.toString())
+                        if (connectivityEnabled()) {
+                            if (viewModel.form.checkFields()) {
+                                if (vehicles.value.isEmpty()) {
+                                    viewModel.form.enableVehicle.state.value = true
+                                }
+                                var id = 0L
+                                Log.i("getIdFromDatabase", "pre")
+                                idDatabase.document(userEmail).get().addOnSuccessListener {
+                                    id = it["id"] as Long
+                                    addVehicleToDatabase(id, context, viewModel)
+                                    idDatabase.document(userEmail).update("id", FieldValue.increment(1))
+                                    navController.popBackStack()
+                                }
+                                //val currentId = getIdFromDatabase()
+                                //Log.i("currentId", currentId.toString())
 
+                            } else {
+                                error.value = true
+                            }
                         } else {
-                            error.value = true
+                            showDialog(context, context.getString(R.string.network_error) )
                         }
+
                     },
                     colors = getButtonColorsReversed(),
                     modifier = Modifier

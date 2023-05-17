@@ -97,7 +97,6 @@ fun PostGeofenceItem(
 //                    .clip(shape = MaterialTheme.shapes.small)
 //                    .size(45.dp)
 //            )
-            // TODO Comprobar que efectivamente se carga la "no imagen"
             if (connectivityEnabled()) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -137,11 +136,4 @@ fun PostGeofenceItem(
 fun connectivityEnabled(): Boolean {
    return !(currentConnectivity == StatusObserver.Status.Lost ||
            currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi)
-}
-fun setImageByConnectivity(url: String, context: Context) {
-
-
-
-
-
 }

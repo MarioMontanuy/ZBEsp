@@ -35,6 +35,7 @@ import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.VehiclesTopBar
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
+import com.example.zbesp.screens.zones.connectivityEnabled
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
@@ -46,6 +47,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 var vehicles = mutableStateOf(listOf<Vehicle>())
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
@@ -56,18 +58,24 @@ fun VehiclesScreen(navController: NavController) {
 //        Log.e("firebase", "Error getting data", it)
 //    }
 //    vehiclesDatabase.addValueEventListener(postListener)
-    Scaffold(topBar = { VehiclesTopBar(stringResource(id = R.string.vehicles_screen_title), navController) }) {
+    Scaffold(topBar = {
+        VehiclesTopBar(
+            stringResource(id = R.string.vehicles_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (vehicles.value.isEmpty()) {
+            if (vehicles.value.isEmpty() || !connectivityEnabled()) {
                 Log.i("vehicles.value", "Empty")
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
-                        text = stringResource(id = R.string.create_vehicle_needed),
+                        text = stringResource(id = R.string.create_vehicle_needed) + "\nor\n" +
+                                stringResource(id = R.string.network_error),
                         alignment = TextAlign.Center,
                         MaterialTheme.typography.body1
                     )
@@ -152,7 +160,7 @@ fun VehiclesFloatingActionButton(navController: NavController) {
 }
 
 @Composable
-fun CommentsFloatingActionButton(zone: GeofenceItem ,navController: NavController) {
+fun CommentsFloatingActionButton(zone: GeofenceItem, navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         FloatingActionButton(
             modifier = Modifier

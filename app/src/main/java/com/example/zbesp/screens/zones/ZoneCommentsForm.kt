@@ -129,8 +129,12 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
                 Spacer(modifier = Modifier.padding(10.dp))
                 Button(
                     onClick = {
-                        addCommentToDatabase(zone.name ,title, commentText, context)
-                        navController.popBackStack()
+                        if (connectivityEnabled()) {
+                            addCommentToDatabase(zone.name ,title, commentText, context)
+                            navController.popBackStack()
+                        } else {
+                            showDialog(context, context.getString(R.string.network_error))
+                        }
                     },
                     colors = getButtonColorsReversed(),
                     modifier = Modifier
