@@ -47,6 +47,7 @@ import com.example.zbesp.data.commentsDatabase
 import com.example.zbesp.data.idDatabase
 import com.example.zbesp.data.noEnabledVehicleInDatabase
 import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.getFirestore
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.showDialog
 import com.example.zbesp.screens.userEmail
@@ -145,7 +146,7 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
 
 private fun addCommentToDatabase(zoneName: String ,title: String, commentText: String, context: Context) {
     val comment = Comment(title, commentText, userEmail, zoneName)
-    commentsDatabase = Firebase.firestore.collection("comments")
+    commentsDatabase = getFirestore().collection("comments")
 //    commentsDatabase = getFirestore().collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {

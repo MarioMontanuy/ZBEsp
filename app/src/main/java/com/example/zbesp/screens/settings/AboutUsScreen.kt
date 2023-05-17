@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.screens.ZBEspTopBar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

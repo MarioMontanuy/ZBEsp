@@ -48,6 +48,7 @@ import com.example.zbesp.R
 import com.example.zbesp.data.commentsDatabase
 import com.example.zbesp.data.vehiclesDatabase
 import com.example.zbesp.getFirebaseAuth
+import com.example.zbesp.getFirestore
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
@@ -147,7 +148,6 @@ fun LogInScreen(navController: NavController, context: Context) {
                         Icon(passwordIcon, "Visibility")
                     }
                 }
-
             },
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None
             else PasswordVisualTransformation(),
@@ -168,17 +168,18 @@ fun LogInScreen(navController: NavController, context: Context) {
                 emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 passwordError.value = (password.value.length < 6)
                 if (!emailError.value && !passwordError.value) {
-                    val auth: FirebaseAuth = Firebase.auth
+                    //val auth: FirebaseAuth = Firebase.auth
+                    //auth.useEmulator("10.0.2.2", 9099)
 //                    val auth: FirebaseAuth = getFirebaseAuth()
-                    auth.signInWithEmailAndPassword(
+                    getFirebaseAuth().signInWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             userEmail = email.value
-                            val firestore = Firebase.firestore
-                            firestore.useEmulator("10.0.2.2", 8080)
-                            vehiclesDatabase = firestore.collection(userEmail)
+                      //val firestore = Firebase.firestore
+                        //    firestore.useEmulator("10.0.2.2", 8080)
+                            vehiclesDatabase = getFirestore().collection(userEmail)
 //                            val firestore = Firebase.firestore
 ////    if () {
 ////                            firestore.useEmulator("10.0.2.2", 8080)
@@ -242,7 +243,6 @@ fun RegisterScreen(navController: NavController, context: Context) {
     val passwordVisibility = remember { mutableStateOf(false) }
     val rePassword = remember { mutableStateOf("") }
     val rePasswordVisibility = remember { mutableStateOf(false) }
-    val firebaseAuth = getFirebaseAuth()
     val passwordIcon = if (passwordVisibility.value)
         Icons.Default.Visibility
     else
@@ -397,9 +397,9 @@ fun RegisterScreen(navController: NavController, context: Context) {
                 if (!emailError.value && !passwordError.value && !rePasswordError.value) {
 //                    val auth: FirebaseAuth = Firebase.auth
 //                    val auth: FirebaseAuth = getFirebaseAuth()
-                    val firebaseAuthentication = Firebase.auth
-//                    firebaseAuthentication.useEmulator("10.0.2.2", 9099)
-                    firebaseAuthentication.createUserWithEmailAndPassword(
+                    //val firebaseAuthentication = Firebase.auth
+                    //.useEmulator("10.0.2.2", 9099)
+                    getFirebaseAuth().createUserWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
@@ -480,8 +480,8 @@ fun ResetPassword(navController: NavController, context: Context) {
                 emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 if (!emailError.value) {
 //                    val auth: FirebaseAuth = Firebase.auth
-                    val auth: FirebaseAuth = getFirebaseAuth()
-                    auth.sendPasswordResetEmail(email.value)
+                    //val auth: FirebaseAuth = getFirebaseAuth()
+                    getFirebaseAuth().sendPasswordResetEmail(email.value)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 goToLogIn(navController)

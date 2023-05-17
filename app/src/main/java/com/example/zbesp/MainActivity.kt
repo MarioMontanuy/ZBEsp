@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
+        firebaseAuth()
+        firebaseFirestore()
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
@@ -256,25 +258,30 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//fun getFirestore(): FirebaseFirestore {
-//    val firestore = Firebase.firestore
-////    if () {
-//    firestore.useEmulator("10.0.2.2", 8080)
-//    firestore.firestoreSettings = firestoreSettings {
-//        isPersistenceEnabled = false
+fun getFirestore(): FirebaseFirestore {
+    val firestore = Firebase.firestore
+//    if () {
 //    }
-////    }
-//    return firestore
-//}
-
-fun getFirebaseAuth(): FirebaseAuth {
+    return firestore
+}
+fun firebaseFirestore(){
+    val firestore = Firebase.firestore
+//    if () {
+    firestore.useEmulator("10.0.2.2", 8080)
+    firestore.firestoreSettings = firestoreSettings {
+        isPersistenceEnabled = false
+    }
+//    }
+}
+fun firebaseAuth() {
     val firebaseAuth = Firebase.auth
 //    if () {
     firebaseAuth.useEmulator("10.0.2.2", 9099)
 //    }
-
-    return firebaseAuth
 }
 
+fun getFirebaseAuth(): FirebaseAuth {
+    return Firebase.auth
+}
 
 

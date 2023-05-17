@@ -35,6 +35,7 @@ import com.example.zbesp.data.GeofenceItem
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.createIdOnDatabase
 import com.example.zbesp.data.geofences
+import com.example.zbesp.getFirestore
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
@@ -207,7 +208,7 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
     )
 }
 fun createVehicleListenerOnDatabase() {
-    val docRef = Firebase.firestore.collection(userEmail)
+    val docRef = getFirestore().collection(userEmail)
 //    val docRef = getFirestore().collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
@@ -229,7 +230,7 @@ fun createVehicleListenerOnDatabase() {
 }
 
 fun createZoneListenerOnDatabase() {
-    val docRefComments = Firebase.firestore.collection("comments")
+    val docRefComments = getFirestore().collection("comments")
 //    val docRefComments = getFirestore().collection("comments")
     docRefComments.addSnapshotListener { snapshot, e ->
         if (e != null) {
