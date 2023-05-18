@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
+import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -38,6 +39,7 @@ import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -45,7 +47,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import com.jamal.composeprefs.ui.LocalPrefsDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -66,8 +71,8 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
-        firebaseAuth()
-        firebaseFirestore()
+        enableTestMode()
+        getToken()
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
@@ -258,13 +263,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun getFirestore(): FirebaseFirestore {
-    val firestore = Firebase.firestore
-//    if () {
-//    }
-    return firestore
+private fun enableTestMode() {
+    firebaseFirestore()
+    firebaseAuth()
+    firebaseFunctions()
 }
-fun firebaseFirestore(){
+private fun firebaseFirestore(){
     val firestore = Firebase.firestore
 //    if () {
     firestore.useEmulator("10.0.2.2", 8080)
@@ -273,15 +277,26 @@ fun firebaseFirestore(){
     }
 //    }
 }
-fun firebaseAuth() {
-    val firebaseAuth = Firebase.auth
+private fun firebaseAuth() {
+    val auth = Firebase.auth
 //    if () {
-    firebaseAuth.useEmulator("10.0.2.2", 9099)
+    auth.useEmulator("10.0.2.2", 9099)
 //    }
 }
 
-fun getFirebaseAuth(): FirebaseAuth {
-    return Firebase.auth
+private fun firebaseFunctions() {
+    val functions = Firebase.functions
+    functions.useEmulator("10.0.2.2", 5001)
+}
+private fun getToken() {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+        if (!task.isSuccessful) {
+            Log.w("getToken", "Fetching FCM registration token failed", task.exception)
+            return@OnCompleteListener
+        }
+        val token = task.result
+        Log.d("getToken", token)
+    })
 }
 
 

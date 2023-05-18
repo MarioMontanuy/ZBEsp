@@ -28,7 +28,6 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.data.Vehicle
 import com.example.zbesp.data.idDatabase
-import com.example.zbesp.getFirestore
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.zones.connectivityEnabled
@@ -85,7 +84,7 @@ fun getCommunityVehicles() {
         it.forEach {
             if (it.id != userEmail) {
 //                getFirestore().collection(it.id).get().addOnSuccessListener {
-                    getFirestore().collection(it.id).get().addOnSuccessListener {
+                    Firebase.firestore.collection(it.id).get().addOnSuccessListener {
                     value ->
                     value.forEach { vehicle ->
                         communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()

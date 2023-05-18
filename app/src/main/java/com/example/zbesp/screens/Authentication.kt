@@ -47,8 +47,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
 import com.example.zbesp.data.commentsDatabase
 import com.example.zbesp.data.vehiclesDatabase
-import com.example.zbesp.getFirebaseAuth
-import com.example.zbesp.getFirestore
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
@@ -171,7 +169,7 @@ fun LogInScreen(navController: NavController, context: Context) {
                     //val auth: FirebaseAuth = Firebase.auth
                     //auth.useEmulator("10.0.2.2", 9099)
 //                    val auth: FirebaseAuth = getFirebaseAuth()
-                    getFirebaseAuth().signInWithEmailAndPassword(
+                    Firebase.auth.signInWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
@@ -179,7 +177,7 @@ fun LogInScreen(navController: NavController, context: Context) {
                             userEmail = email.value
                       //val firestore = Firebase.firestore
                         //    firestore.useEmulator("10.0.2.2", 8080)
-                            vehiclesDatabase = getFirestore().collection(userEmail)
+                            vehiclesDatabase = Firebase.firestore.collection(userEmail)
 //                            val firestore = Firebase.firestore
 ////    if () {
 ////                            firestore.useEmulator("10.0.2.2", 8080)
@@ -399,7 +397,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
 //                    val auth: FirebaseAuth = getFirebaseAuth()
                     //val firebaseAuthentication = Firebase.auth
                     //.useEmulator("10.0.2.2", 9099)
-                    getFirebaseAuth().createUserWithEmailAndPassword(
+                    Firebase.auth.createUserWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
@@ -481,7 +479,7 @@ fun ResetPassword(navController: NavController, context: Context) {
                 if (!emailError.value) {
 //                    val auth: FirebaseAuth = Firebase.auth
                     //val auth: FirebaseAuth = getFirebaseAuth()
-                    getFirebaseAuth().sendPasswordResetEmail(email.value)
+                    Firebase.auth.sendPasswordResetEmail(email.value)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 goToLogIn(navController)

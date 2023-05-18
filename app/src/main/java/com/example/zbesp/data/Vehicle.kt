@@ -3,7 +3,6 @@ package com.example.zbesp.data
 import android.util.Log
 import androidx.compose.runtime.Immutable
 import ch.benlu.composeform.fields.PickerValue
-import com.example.zbesp.getFirestore
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.vehicles.communityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
@@ -17,7 +16,7 @@ const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedata
 //val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
 lateinit var vehiclesDatabase: CollectionReference
 lateinit var commentsDatabase: CollectionReference
-val idDatabase = getFirestore().collection("id")
+val idDatabase = Firebase.firestore.collection("id")
 //val idDatabase = getFirestore().collection("id")
 //val postListener = object : ValueEventListener {
 //    var currentVehicleList = listOf<Vehicle>()
