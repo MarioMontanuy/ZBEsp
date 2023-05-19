@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,29 +21,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
-import com.example.zbesp.data.Country
-import com.example.zbesp.data.EnvironmentalSticker
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.VehicleType
-import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.Vehicle
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.VehiclesTopBar
-import com.example.zbesp.screens.ZBEspTopBar
-import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.zones.connectivityEnabled
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 var vehicles = mutableStateOf(listOf<Vehicle>())
 

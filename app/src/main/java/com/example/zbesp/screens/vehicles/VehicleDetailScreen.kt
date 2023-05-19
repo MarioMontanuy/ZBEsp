@@ -1,7 +1,6 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -14,9 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.zbesp.R
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.noEnabledVehicleInDatabase
-import com.example.zbesp.screens.VehiclesTopBar
+import com.example.zbesp.domain.Vehicle
+import com.example.zbesp.domain.noEnabledVehicleInDatabase
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.*

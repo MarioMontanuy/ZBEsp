@@ -2,15 +2,10 @@ package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
@@ -22,30 +17,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
-import com.example.zbesp.data.Comment
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.navigation.vehicles.VehiclesScreens
-import com.example.zbesp.screens.VehiclesTopBar
+import com.example.zbesp.domain.Comment
+import com.example.zbesp.domain.GeofenceItem
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.vehicles.CommentsFloatingActionButton
-import com.example.zbesp.screens.vehicles.PostItem
-import com.example.zbesp.screens.vehicles.VehiclesFloatingActionButton
-import com.example.zbesp.screens.vehicles.communityVehicles
-import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.ui.theme.OwnerTitle
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
-import okhttp3.internal.wait
 
 var comments = mutableStateOf(listOf<Comment>())
 

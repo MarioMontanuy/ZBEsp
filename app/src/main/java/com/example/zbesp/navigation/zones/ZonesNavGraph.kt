@@ -9,8 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
-import com.example.zbesp.data.getGeofence
+import com.example.zbesp.domain.getGeofence
 import com.example.zbesp.screens.zones.ZoneCommentsForm
 import com.example.zbesp.screens.zones.ZoneCommentsScreen
 import com.example.zbesp.screens.zones.ZoneDetailScreen

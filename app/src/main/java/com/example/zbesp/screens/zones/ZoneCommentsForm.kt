@@ -2,7 +2,6 @@ package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +16,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,31 +31,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import ch.benlu.composeform.fields.CheckboxField
-import ch.benlu.composeform.fields.DateField
-import ch.benlu.composeform.fields.PickerField
-import ch.benlu.composeform.fields.TextField
-import ch.benlu.composeform.formatters.dateShort
 import com.example.zbesp.R
-import com.example.zbesp.data.Comment
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.commentsDatabase
-import com.example.zbesp.data.idDatabase
-import com.example.zbesp.data.noEnabledVehicleInDatabase
-import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.domain.Comment
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.commentsDatabase
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.showDialog
 import com.example.zbesp.screens.userEmail
-import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.ui.theme.CommentField
-import com.example.zbesp.ui.theme.SapphireBlue
-import com.example.zbesp.ui.theme.SapphireBlueTransparent
 import com.example.zbesp.ui.theme.TitleText
-import com.example.zbesp.ui.theme.TitleTextRed
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.ui.theme.getButtonColorsReversed
-import com.example.zbesp.ui.theme.getOutlinedTextFieldColors
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 

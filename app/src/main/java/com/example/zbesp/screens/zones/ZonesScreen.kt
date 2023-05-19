@@ -1,7 +1,6 @@
 package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,14 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.zbesp.MainActivity
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.geofences
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.geofences
 import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.ui.theme.SubtitleText
@@ -38,14 +33,7 @@ import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.R
 import com.example.zbesp.currentConnectivity
 import com.example.zbesp.currentUserConnectivity
-import com.example.zbesp.dataStore
 import com.example.zbesp.network.StatusObserver
-import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

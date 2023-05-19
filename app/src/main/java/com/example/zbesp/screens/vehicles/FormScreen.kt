@@ -27,16 +27,13 @@ import ch.benlu.composeform.formatters.dateShort
 import ch.benlu.composeform.validators.MinLengthValidator
 import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
-import com.example.zbesp.data.*
+import com.example.zbesp.domain.*
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.showDialog
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.zones.connectivityEnabled
 import com.example.zbesp.ui.theme.*
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 

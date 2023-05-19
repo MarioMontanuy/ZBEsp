@@ -30,11 +30,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.datastore.preferences.core.floatPreferencesKey
 import com.example.zbesp.R
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.geofences
-import com.example.zbesp.data.kmlZones
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.geofences
+import com.example.zbesp.domain.kmlZones
 import com.example.zbesp.dataStore
-import com.example.zbesp.screens.createVehicleListenerOnDatabase
 import com.example.zbesp.screens.createZoneListenerOnDatabase
 import com.example.zbesp.screens.map.MyLocationOverlay.myLocationOverlay
 import com.example.zbesp.ui.theme.SapphireBlue

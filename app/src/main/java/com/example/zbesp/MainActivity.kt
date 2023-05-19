@@ -30,12 +30,15 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.zbesp.domain.noEnabledVehicleInDatabase
+import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.network.NetworkStatusObserver
 import com.example.zbesp.network.StatusObserver
 import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
+import com.example.zbesp.screens.showDialog
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -71,8 +74,8 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
-        enableTestMode()
-        getToken()
+        checkTestMode()
+        getToken(this)
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
@@ -263,38 +266,46 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private fun enableTestMode() {
-    firebaseFirestore()
-    firebaseAuth()
-    firebaseFunctions()
+private fun checkTestMode() {
+        firebaseFirestore()
+        firebaseAuth()
+        firebaseFunctions()
 }
 private fun firebaseFirestore(){
     val firestore = Firebase.firestore
-//    if () {
     firestore.useEmulator("10.0.2.2", 8080)
     firestore.firestoreSettings = firestoreSettings {
         isPersistenceEnabled = false
     }
-//    }
+    vehiclesDatabase = Firebase.firestore.collection("vehicles")
 }
 private fun firebaseAuth() {
     val auth = Firebase.auth
-//    if () {
     auth.useEmulator("10.0.2.2", 9099)
-//    }
 }
 
 private fun firebaseFunctions() {
     val functions = Firebase.functions
     functions.useEmulator("10.0.2.2", 5001)
 }
-private fun getToken() {
+private fun getToken(context: Context) {
     FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
         if (!task.isSuccessful) {
             Log.w("getToken", "Fetching FCM registration token failed", task.exception)
             return@OnCompleteListener
         }
         val token = task.result
+        val tokenMap : MutableMap<String, Boolean> = mutableMapOf()
+        tokenMap[token] = true
+        val firebaseRef = Firebase.firestore.collection("tokens").document(token)
+        firebaseRef.set(tokenMap).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.i("token added", "successful")
+            } else {
+                Log.i("token added", "error")
+                showDialog(context= context, "Vehicle cloud not be created")
+            }
+        }
         Log.d("getToken", token)
     })
 }

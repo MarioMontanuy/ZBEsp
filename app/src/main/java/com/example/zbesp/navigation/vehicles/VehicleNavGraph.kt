@@ -1,7 +1,6 @@
 package com.example.zbesp.navigation.vehicles
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.zbesp.data.getVehicle
-import com.example.zbesp.data.getVehicleCommunity
+import com.example.zbesp.domain.getVehicle
+import com.example.zbesp.domain.getVehicleCommunity
 import com.example.zbesp.screens.vehicles.*
 
 @Composable

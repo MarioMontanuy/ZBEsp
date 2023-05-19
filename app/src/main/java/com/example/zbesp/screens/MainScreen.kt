@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -30,14 +29,12 @@ import com.example.zbesp.navigation.bottombar.BottomBarScreen
 import com.example.zbesp.navigation.bottombar.BottomNavGraph
 import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.R
-import com.example.zbesp.data.Comment
-import com.example.zbesp.data.GeofenceItem
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.createIdOnDatabase
-import com.example.zbesp.data.geofences
+import com.example.zbesp.domain.Comment
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.Vehicle
+import com.example.zbesp.domain.createIdOnDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.navigation.zones.ZonesScreens
-import com.example.zbesp.screens.vehicles.getCommunityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.screens.zones.comments
 import com.google.firebase.firestore.ktx.firestore
@@ -207,7 +204,7 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
     )
 }
 fun createVehicleListenerOnDatabase() {
-    val docRef = Firebase.firestore.collection(userEmail)
+    val docRef = Firebase.firestore.collection("vehicles")
 //    val docRef = getFirestore().collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {

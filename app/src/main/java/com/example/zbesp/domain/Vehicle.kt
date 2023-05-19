@@ -1,4 +1,4 @@
-package com.example.zbesp.data
+package com.example.zbesp.domain
 
 import android.util.Log
 import androidx.compose.runtime.Immutable

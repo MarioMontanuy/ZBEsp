@@ -43,21 +43,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
-import com.example.zbesp.data.commentsDatabase
-import com.example.zbesp.data.vehiclesDatabase
+import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
 import com.example.zbesp.screens.vehicles.getCommunityVehicles
-import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.ui.theme.errorColor
 import com.example.zbesp.ui.theme.getOutlinedTextFieldColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -177,7 +172,6 @@ fun LogInScreen(navController: NavController, context: Context) {
                             userEmail = email.value
                       //val firestore = Firebase.firestore
                         //    firestore.useEmulator("10.0.2.2", 8080)
-                            vehiclesDatabase = Firebase.firestore.collection(userEmail)
 //                            val firestore = Firebase.firestore
 ////    if () {
 ////                            firestore.useEmulator("10.0.2.2", 8080)

@@ -1,9 +1,7 @@
-package com.example.zbesp.data
+package com.example.zbesp.domain
 
-import android.provider.Settings.Global.getString
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.res.stringResource
 import com.example.zbesp.R
 import org.osmdroid.util.GeoPoint
 
