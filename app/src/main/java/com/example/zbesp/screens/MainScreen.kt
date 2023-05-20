@@ -35,6 +35,7 @@ import com.example.zbesp.domain.Vehicle
 import com.example.zbesp.domain.createIdOnDatabase
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
 import com.example.zbesp.navigation.zones.ZonesScreens
+import com.example.zbesp.screens.vehicles.createCommunityVehiclesListenerOnDatabase
 import com.example.zbesp.screens.vehicles.vehicles
 import com.example.zbesp.screens.zones.comments
 import com.google.firebase.firestore.ktx.firestore
@@ -47,6 +48,7 @@ import com.google.firebase.ktx.Firebase
 fun MainScreen(context: Context, authenticationNavController: NavController) {
     createIdOnDatabase()
     createVehicleListenerOnDatabase()
+    createCommunityVehiclesListenerOnDatabase()
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) },

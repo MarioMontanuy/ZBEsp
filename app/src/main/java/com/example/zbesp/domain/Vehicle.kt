@@ -8,6 +8,7 @@ import com.example.zbesp.screens.vehicles.communityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.Date
 
@@ -93,20 +94,20 @@ data class Country(val type: CountryEnum?) : PickerValue() {
 fun noEnabledVehicleInDatabase(currentVehicle: Vehicle) {
     var vehiclesKeys = listOf<String>()
     var vehicleEnabledKey = ""
-    vehiclesDatabase.get().addOnSuccessListener { it.forEach {
-            value ->
-        if (value.data["id"] == currentVehicle.id) {
-            vehicleEnabledKey = value.id
-        }
-        vehiclesKeys = vehiclesKeys + value.id
-        vehiclesKeys.forEach { id ->
-            if (id == vehicleEnabledKey) {
-                vehiclesDatabase.document(id).update("enabled", true)
+    Log.i("noEnabledVehicleInDatabase", "noEnabledVehicleInDatabase")
+    vehiclesDatabase.get().addOnSuccessListener {
+        it.forEach { snapshot ->
+            val dbVehicle = snapshot.toObject<Vehicle>()
+            Log.i("noEnabledVehicleInDatabase", dbVehicle.toString())
+            if (dbVehicle.id == currentVehicle.id) {
+                vehiclesDatabase.document(snapshot.id).update("enabled", true)
             } else {
-                vehiclesDatabase.document(id).update("enabled", false)
+                if (dbVehicle.owner == userEmail) {
+                    vehiclesDatabase.document(snapshot.id).update("enabled", false)
+                }
             }
         }
-    } }
+    }
 }
 fun createIdOnDatabase() {
     Log.i("createIdOnDatabase", "llamada")
@@ -145,7 +146,7 @@ fun getVehicle(vehicleId: String): Vehicle {
 fun getVehicleCommunity(vehicleId: String): Vehicle {
     return communityVehicles.value.first { it.id == vehicleId.toLong() }
 }
-// TODO Fix this: Collection contains no element matching the predicate.
+
 fun getCurrentVehicle(): Vehicle? {
     if (vehicles.value.isNotEmpty()) {
         return vehicles.value.first { it.enabled }

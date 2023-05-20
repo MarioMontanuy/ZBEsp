@@ -179,7 +179,7 @@ fun LogInScreen(navController: NavController, context: Context) {
 ////                                isPersistenceEnabled = false
 ////                            }
 //                            vehiclesDatabase = firestore.collection(userEmail)
-                            createCommunityVehiclesListenerOnDatabase()
+
                             goToApp(navController)
                         } else {
                             emailError.value = true

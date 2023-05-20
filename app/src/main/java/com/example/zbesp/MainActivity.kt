@@ -30,13 +30,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.zbesp.domain.noEnabledVehicleInDatabase
 import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.network.NetworkStatusObserver
 import com.example.zbesp.network.StatusObserver
 import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen
+import com.example.zbesp.screens.createVehicleListenerOnDatabase
 import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
 import com.example.zbesp.screens.showDialog
 import com.example.zbesp.service.MapNotificationService

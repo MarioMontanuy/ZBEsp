@@ -24,11 +24,11 @@ import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.zbesp.domain.GeofenceItem
-import com.example.zbesp.domain.getCurrentVehicle
 import com.example.zbesp.ui.theme.BigTitleText
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.R
 import com.example.zbesp.domain.EnvironmentalSticker
+import com.example.zbesp.domain.getCurrentVehicle
 import com.example.zbesp.retrofit.ZoneViewModel
 import com.example.zbesp.screens.ZonesDetailTopBar
 import com.example.zbesp.ui.theme.TitleText
@@ -40,8 +40,8 @@ var currentImage: Unit? = null
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ZoneDetailScreen(zone: GeofenceItem, context: Context, navController: NavController){
-    val currentVehicle = getCurrentVehicle()
 //    var image = getImage(zone.name)
+    val currentVehicle = getCurrentVehicle()
     val viewModel = ZoneViewModel(context = context)
     Scaffold(topBar = { ZonesDetailTopBar(stringResource(id = R.string.zone_detail_screen_title), navController, zone) }) {
         LazyColumn(modifier = Modifier
