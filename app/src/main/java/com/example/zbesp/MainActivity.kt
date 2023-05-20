@@ -280,7 +280,6 @@ private fun firebaseFirestore(){
     firestore.firestoreSettings = firestoreSettings {
         isPersistenceEnabled = false
     }
-    vehiclesDatabase = Firebase.firestore.collection("vehicles")
 }
 private fun firebaseAuth() {
     val auth = Firebase.auth
@@ -306,7 +305,6 @@ private fun getToken(context: Context) {
                 Log.i("token added", "successful")
             } else {
                 Log.i("token added", "error")
-                showDialog(context= context, "Vehicle cloud not be created")
             }
         }
         Log.d("getToken", token)

@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationScreens
-import com.example.zbesp.screens.vehicles.getCommunityVehicles
+import com.example.zbesp.screens.vehicles.createCommunityVehiclesListenerOnDatabase
 import com.example.zbesp.ui.theme.TitleText
 import com.example.zbesp.ui.theme.errorColor
 import com.example.zbesp.ui.theme.getOutlinedTextFieldColors
@@ -179,7 +179,7 @@ fun LogInScreen(navController: NavController, context: Context) {
 ////                                isPersistenceEnabled = false
 ////                            }
 //                            vehiclesDatabase = firestore.collection(userEmail)
-                            getCommunityVehicles()
+                            createCommunityVehiclesListenerOnDatabase()
                             goToApp(navController)
                         } else {
                             emailError.value = true

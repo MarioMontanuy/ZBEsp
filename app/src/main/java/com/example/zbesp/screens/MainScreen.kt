@@ -216,7 +216,9 @@ fun createVehicleListenerOnDatabase() {
             Log.d("createListenerOnDatabase", "Current data:")
             snapshot.forEach { it ->
                 val currentVehicle = it.toObject<Vehicle>()
-                vehicles.value = vehicles.value + currentVehicle
+                if (currentVehicle.owner == userEmail) {
+                    vehicles.value = vehicles.value + currentVehicle
+                }
             }
         } else {
             Log.d("createListenerOnDatabase", "Current data: null")

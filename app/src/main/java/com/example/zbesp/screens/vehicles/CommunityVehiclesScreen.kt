@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -69,19 +70,43 @@ fun CommunityVehiclesScreen(navController: NavController){
         }
     }
 }
-fun getCommunityVehicles() {
-    communityVehicles.value = listOf()
-    idDatabase.get().addOnSuccessListener { it ->
-        it.forEach {
-            if (it.id != userEmail) {
-//                getFirestore().collection(it.id).get().addOnSuccessListener {
-                    Firebase.firestore.collection(it.id).get().addOnSuccessListener {
-                    value ->
-                    value.forEach { vehicle ->
-                        communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
-                    }
+//fun getCommunityVehicles() {
+//    communityVehicles.value = listOf()
+//    idDatabase.get().addOnSuccessListener { it ->
+//        it.forEach {
+//            if (it.id != userEmail) {
+////                getFirestore().collection(it.id).get().addOnSuccessListener {
+//                    Firebase.firestore.collection(it.id).get().addOnSuccessListener {
+//                    value ->
+//                    value.forEach { vehicle ->
+//                        communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
+fun createCommunityVehiclesListenerOnDatabase() {
+    val docRef = Firebase.firestore.collection("vehicles")
+//    val docRef = getFirestore().collection(userEmail)
+    docRef.addSnapshotListener { snapshot, e ->
+        if (e != null) {
+            Log.w("createCommunityVehiclesListenerOnDatabase", "Listen failed.", e)
+            return@addSnapshotListener
+        }
+        if (snapshot != null && !snapshot.isEmpty) {
+            communityVehicles.value = listOf()
+            Log.d("createCommunityVehiclesListenerOnDatabase", "Current data:")
+            snapshot.forEach { it ->
+                val currentVehicle = it.toObject<Vehicle>()
+                if (currentVehicle.owner != userEmail) {
+                    communityVehicles.value = communityVehicles.value + currentVehicle
                 }
             }
+        } else {
+            Log.d("createCommunityVehiclesListenerOnDatabase", "Current data: null")
+            communityVehicles.value = listOf()
         }
     }
 }

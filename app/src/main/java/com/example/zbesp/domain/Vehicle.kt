@@ -14,7 +14,7 @@ import java.util.Date
 
 const val DATABASE = "https://zbesp-a6692-default-rtdb.europe-west1.firebasedatabase.app/"
 //val vehiclesDatabase: DatabaseReference = Firebase.database(DATABASE).getReference("Vehicles")
-lateinit var vehiclesDatabase: CollectionReference
+var vehiclesDatabase = Firebase.firestore.collection("vehicles")
 lateinit var commentsDatabase: CollectionReference
 val idDatabase = Firebase.firestore.collection("id")
 //val idDatabase = getFirestore().collection("id")
