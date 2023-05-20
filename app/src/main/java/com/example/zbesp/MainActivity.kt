@@ -274,9 +274,9 @@ private fun getToken() {
         val firebaseRef = Firebase.firestore.collection("tokens").document(token)
         firebaseRef.set(tokenMap).addOnCompleteListener {
             if (it.isSuccessful) {
-                Log.i("token added", "successful")
+                Log.d("getToken", "successful")
             } else {
-                Log.i("token added", "error")
+                Log.d("getToken", "error")
             }
         }
         Log.d("getToken", token)
