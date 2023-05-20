@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.domain.Vehicle
-import com.example.zbesp.domain.idDatabase
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.zones.connectivityEnabled
@@ -33,11 +32,15 @@ import com.google.firebase.ktx.Firebase
 
 var communityVehicles = mutableStateOf(listOf<Vehicle>())
 
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CommunityVehiclesScreen(navController: NavController){
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.community_vehicles_screen_title), navController) }) {
+fun CommunityVehiclesScreen(navController: NavController) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.community_vehicles_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
@@ -61,7 +64,11 @@ fun CommunityVehiclesScreen(navController: NavController){
                             title = false
                             OwnerTitle(it.value.first().owner)
                         }
-                        PostItem(vehicle = vehicle, navController = navController, type = "community")
+                        PostItem(
+                            vehicle = vehicle,
+                            navController = navController,
+                            type = "community"
+                        )
                         Divider(startIndent = 50.dp)
                     }
                 }
@@ -70,26 +77,9 @@ fun CommunityVehiclesScreen(navController: NavController){
         }
     }
 }
-//fun getCommunityVehicles() {
-//    communityVehicles.value = listOf()
-//    idDatabase.get().addOnSuccessListener { it ->
-//        it.forEach {
-//            if (it.id != userEmail) {
-////                getFirestore().collection(it.id).get().addOnSuccessListener {
-//                    Firebase.firestore.collection(it.id).get().addOnSuccessListener {
-//                    value ->
-//                    value.forEach { vehicle ->
-//                        communityVehicles.value = communityVehicles.value + vehicle.toObject<Vehicle>()
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 fun createCommunityVehiclesListenerOnDatabase() {
     val docRef = Firebase.firestore.collection("vehicles")
-//    val docRef = getFirestore().collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
             Log.w("createCommunityVehiclesListenerOnDatabase", "Listen failed.", e)

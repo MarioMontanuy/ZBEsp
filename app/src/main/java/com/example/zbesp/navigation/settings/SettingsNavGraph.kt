@@ -29,7 +29,7 @@ fun SettingsNavGraph(
         startDestination = startDestination
     ) {
         composable(SettingsScreens.SettingScreen.route) {
-            SettingsScreen(navController, context, authenticationNavController)
+            SettingsScreen(navController, authenticationNavController)
         }
         composable(SettingsScreens.AboutUsScreen.route) {
             AboutUsScreen(navController)

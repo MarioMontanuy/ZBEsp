@@ -38,13 +38,6 @@ var vehicles = mutableStateOf(listOf<Vehicle>())
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
-//    vehiclesDatabase.document(userEmail)
-//    val vehicles = vehiclesDatabase.get().addOnSuccessListener {
-//        Log.i("firebase", "Got value ${it.value}")
-//    }.addOnFailureListener{
-//        Log.e("firebase", "Error getting data", it)
-//    }
-//    vehiclesDatabase.addValueEventListener(postListener)
     Scaffold(topBar = {
         VehiclesTopBar(
             stringResource(id = R.string.vehicles_screen_title),
@@ -68,19 +61,14 @@ fun VehiclesScreen(navController: NavController) {
                     )
                 }
             } else {
-//                //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
-//                Log.i("vehicles.value", "NotEmpty")
-//                Log.i("vehicles.value", vehicles.value.toString())
                 items(vehicles.value) { vehicle ->
                     PostItem(vehicle = vehicle, navController = navController, type = "vehicle")
                     Divider(startIndent = 50.dp)
                 }
             }
-
         }
         VehiclesFloatingActionButton(navController = navController)
     }
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)

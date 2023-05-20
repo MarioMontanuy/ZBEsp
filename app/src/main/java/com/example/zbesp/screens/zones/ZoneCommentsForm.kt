@@ -81,9 +81,10 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
                             IconButton(
                                 onClick = { title = "" }
                             ) {
-                                Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                                Icon(Icons.Default.Clear, contentDescription = "Clear")
                             }
-                        }}
+                        }
+                    }
                 )
             }
             item {
@@ -101,9 +102,10 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
                             IconButton(
                                 onClick = { commentText = "" }
                             ) {
-                                Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                                Icon(Icons.Default.Clear, contentDescription = "Clear")
                             }
-                        }}
+                        }
+                    }
                 )
             }
             item {
@@ -111,7 +113,7 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
                 Button(
                     onClick = {
                         if (connectivityEnabled()) {
-                            addCommentToDatabase(zone.name ,title, commentText, context)
+                            addCommentToDatabase(zone.name, title, commentText, context)
                             navController.popBackStack()
                         } else {
                             showDialog(context, context.getString(R.string.network_error))
@@ -129,16 +131,20 @@ fun ZoneCommentsForm(zone: GeofenceItem, context: Context, navController: NavCon
     }
 }
 
-private fun addCommentToDatabase(zoneName: String ,title: String, commentText: String, context: Context) {
+private fun addCommentToDatabase(
+    zoneName: String,
+    title: String,
+    commentText: String,
+    context: Context
+) {
     val comment = Comment(title, commentText, userEmail, zoneName)
     commentsDatabase = Firebase.firestore.collection("comments")
-//    commentsDatabase = getFirestore().collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {
             Log.i("vehicleadded", "successful")
         } else {
             Log.i("vehicleadded", "error")
-            showDialog(context= context, "Comment cloud not be created")
+            showDialog(context = context, "Comment cloud not be created")
         }
     }
 }

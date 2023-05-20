@@ -60,15 +60,12 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
                             title = false
                             OwnerTitle(it.value.first().owner)
                         }
-                        PostComment(comment = comment, navController = navController)
+                        PostComment(comment = comment)
                         Divider(startIndent = 50.dp)
 
                     }
                 }
-                //vehicles.value.groupBy { it.owner }.map { Log.i("vehiclesGrouped", "it.value" + it.value) }
-
             }
-
         }
         CommentsFloatingActionButton(zone = zone, navController = navController)
     }
@@ -78,8 +75,7 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
 @Composable
 fun PostComment(
     comment: Comment,
-    modifier: Modifier = Modifier,
-    navController: NavController
+    modifier: Modifier = Modifier
 ) {
     ListItem(
         modifier = modifier,
@@ -87,7 +83,7 @@ fun PostComment(
             TitleText(text = comment.title, alignment = TextAlign.Justify)
         },
         secondaryText = {
-                SubtitleText(comment.commentText, TextAlign.Justify)
+            SubtitleText(comment.commentText, TextAlign.Justify)
         }
     )
 }

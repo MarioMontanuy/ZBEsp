@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -15,7 +16,9 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.domain.Vehicle
 import com.example.zbesp.domain.noEnabledVehicleInDatabase
+import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.showDialog
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
@@ -86,6 +89,25 @@ fun VehicleDetailScreen(vehicle: Vehicle, navController: NavController) {
                     }
                 }
             }
+            item {
+                if (!vehicleEnabled.value && vehicle.owner == userEmail) {
+                    Button(
+                        onClick = {
+                            deleteVehicle(vehicle)
+                            navController.popBackStack()
+                        },
+                        colors = getButtonColorsReversed(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                    ) {
+                        TopBarTittle(
+                            stringResource(id = R.string.delete_vehicle),
+                            TextAlign.Justify
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -118,4 +140,11 @@ fun AddEnabledInfoRow() {
         },
     )
     Divider(startIndent = 20.dp)
+}
+
+private fun deleteVehicle(vehicle: Vehicle) {
+    val vehicleToDelete = vehiclesDatabase.whereEqualTo("id", vehicle.id)
+    vehicleToDelete.get().addOnSuccessListener { it.forEach { value ->
+        vehiclesDatabase.document(value.id).delete()
+    } }
 }

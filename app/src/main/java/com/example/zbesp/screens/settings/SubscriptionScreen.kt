@@ -22,7 +22,12 @@ import com.example.zbesp.screens.ZBEspTopBar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SubscriptionScreen(navController: NavController) {
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.subscription_screen_title), navController) }) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.subscription_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

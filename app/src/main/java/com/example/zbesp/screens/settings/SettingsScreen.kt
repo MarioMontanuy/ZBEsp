@@ -28,12 +28,14 @@ import com.example.zbesp.screens.goToLogIn
 import com.google.firebase.auth.FirebaseAuth
 
 
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController, context: Context, authenticationNavController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    authenticationNavController: NavController
+) {
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.settings_screen_title)) }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("MAP") {

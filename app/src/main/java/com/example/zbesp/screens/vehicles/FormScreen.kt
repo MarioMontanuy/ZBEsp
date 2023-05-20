@@ -72,10 +72,22 @@ class FormScreen : Form() {
     val vehicleType = FieldState(
         state = mutableStateOf<VehicleType?>(null),
         options = mutableListOf(
-            VehicleType(VehicleTypeEnum.PrivateCar, R.drawable.private_car, R.drawable.private_car_white),
-            VehicleType(VehicleTypeEnum.MotorHome, R.drawable.motor_home, R.drawable.motor_home_white),
+            VehicleType(
+                VehicleTypeEnum.PrivateCar,
+                R.drawable.private_car,
+                R.drawable.private_car_white
+            ),
+            VehicleType(
+                VehicleTypeEnum.MotorHome,
+                R.drawable.motor_home,
+                R.drawable.motor_home_white
+            ),
             VehicleType(VehicleTypeEnum.Truck, R.drawable.truck, R.drawable.truck_white),
-            VehicleType(VehicleTypeEnum.MotorBike, R.drawable.motor_bike, R.drawable.motor_bike_white),
+            VehicleType(
+                VehicleTypeEnum.MotorBike,
+                R.drawable.motor_bike,
+                R.drawable.motor_bike_white
+            ),
             VehicleType(VehicleTypeEnum.Bus, R.drawable.bus, R.drawable.bus_white),
             VehicleType(VehicleTypeEnum.Van, R.drawable.van, R.drawable.van_white),
             VehicleType(VehicleTypeEnum.Tractor, R.drawable.tractor, R.drawable.tractor_white),
@@ -117,7 +129,6 @@ class FormScreen : Form() {
 
 }
 
-// TODO Move to another folder
 class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) : Validator<Date?>(
     validate = {
         (it?.time ?: -1) < minDateTime()
@@ -129,12 +140,16 @@ class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
 
-// TODO change color in some fields in dark mode
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun FormScreen(viewModel: MainViewModel, navController: NavController, context: Context) {
     val error = remember { mutableStateOf(false) }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title), navController) }) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.form_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -207,17 +222,15 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
                                 idDatabase.document(userEmail).get().addOnSuccessListener {
                                     id = it["id"] as Long
                                     addVehicleToDatabase(id, context, viewModel)
-                                    idDatabase.document(userEmail).update("id", FieldValue.increment(1))
+                                    idDatabase.document(userEmail)
+                                        .update("id", FieldValue.increment(1))
                                     navController.popBackStack()
                                 }
-                                //val currentId = getIdFromDatabase()
-                                //Log.i("currentId", currentId.toString())
-
                             } else {
                                 error.value = true
                             }
                         } else {
-                            showDialog(context, context.getString(R.string.network_error) )
+                            showDialog(context, context.getString(R.string.network_error))
                         }
 
                     },
@@ -238,7 +251,7 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController, context: 
     }
 }
 
-private fun addVehicleToDatabase(id: Long ,context: Context, viewModel: MainViewModel) {
+private fun addVehicleToDatabase(id: Long, context: Context, viewModel: MainViewModel) {
     val newVehicle = Vehicle(
         userEmail.hashCode().toLong() + id + 1L,
         viewModel.form.username.state.value!!,
@@ -260,7 +273,7 @@ private fun addVehicleToDatabase(id: Long ,context: Context, viewModel: MainView
             }
         } else {
             Log.i("vehicleadded", "error")
-            showDialog(context= context, "Vehicle cloud not be created")
+            showDialog(context = context, "Vehicle cloud not be created")
         }
     }
 }

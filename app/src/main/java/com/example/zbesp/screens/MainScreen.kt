@@ -104,36 +104,11 @@ fun RowScope.AddItem(
         } == true,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
-//            if (screen.route == "vehicles") {
-//                getVehiclesFromDatabase()
-//            }
             navController.navigate(screen.route)
         }
     )
 }
 
-//fun getVehiclesFromDatabase() {
-//    vehiclesDatabase.get().addOnSuccessListener {
-//        it.forEach {
-//                value ->
-//            // Poner el value.toObject<Vehicle>()
-//            val id = value.data["id"] as Long
-//            val name = value.data["name"] as String
-//            val country = value.data["country"] as String
-//            val type = value.data["type"] as String
-//            val registrationYear = value.data["registrationYear"] as com.google.firebase.Timestamp
-//            val environmentalSticker = value.data["environmentalSticker"] as String
-//            val enabled = value.data["enabled"] as Boolean
-//            val stickerImage = value.data["stickerImage"] as Long
-//            val typeImage = value.data["typeImage"] as Long
-//            val typeImageWhite = value.data["typeImageWhite"] as Long
-//            val currentVehicle = Vehicle(
-//                id, name, country, type, registrationYear.toDate(), environmentalSticker,
-//                enabled, stickerImage.toInt(), typeImage.toInt(), typeImageWhite.toInt())
-//            addVehicleIfNotIn(currentVehicle)
-//        }
-//    }
-//}
 @Composable
 fun ZBEspTopBar(title: String) {
     TopAppBar(
@@ -142,6 +117,7 @@ fun ZBEspTopBar(title: String) {
         }
     )
 }
+
 @Composable
 fun ZBEspTopBar(title: String, navController: NavController) {
     TopAppBar(
@@ -168,7 +144,7 @@ fun VehiclesTopBar(title: String, navController: NavController) {
             TopBarTittle(text = title, alignment = TextAlign.Justify)
         },
         actions = {
-            IconButton(onClick = { navController.navigate(VehiclesScreens.CommunityVehicles.route)}) {
+            IconButton(onClick = { navController.navigate(VehiclesScreens.CommunityVehicles.route) }) {
                 Icon(
                     imageVector = Icons.Filled.Groups,
                     contentDescription = "Shared Vehicles"
@@ -196,7 +172,8 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
         },
         actions = {
             IconButton(onClick = {
-                navController.navigate(ZonesScreens.ZoneComments.withArgs(zone.id.toString())) }) {
+                navController.navigate(ZonesScreens.ZoneComments.withArgs(zone.id.toString()))
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Comment,
                     contentDescription = "Shared Vehicles"
@@ -205,12 +182,13 @@ fun ZonesDetailTopBar(title: String, navController: NavController, zone: Geofenc
         }
     )
 }
+
 fun createVehicleListenerOnDatabase() {
     val docRef = Firebase.firestore.collection("vehicles")
 //    val docRef = getFirestore().collection(userEmail)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
-            Log.w("createListenerOnDatabase", "Listen failed.", e)
+            Log.d("createListenerOnDatabase", "Listen failed.", e)
             return@addSnapshotListener
         }
         if (snapshot != null && !snapshot.isEmpty) {
@@ -231,7 +209,6 @@ fun createVehicleListenerOnDatabase() {
 
 fun createZoneListenerOnDatabase() {
     val docRefComments = Firebase.firestore.collection("comments")
-//    val docRefComments = getFirestore().collection("comments")
     docRefComments.addSnapshotListener { snapshot, e ->
         if (e != null) {
             Log.w("zoneListener", "Listen failed.", e)

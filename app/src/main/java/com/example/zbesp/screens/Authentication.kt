@@ -58,6 +58,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 var userEmail = ""
+
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
@@ -90,7 +91,7 @@ fun LogInScreen(navController: NavController, context: Context) {
         )
         OutlinedTextField(
             value = email.value,
-            onValueChange = { email.value = it ; emailError.value = false },
+            onValueChange = { email.value = it; emailError.value = false },
             label = { Text(stringResource(id = R.string.email)) },
             placeholder = { Text(stringResource(id = R.string.enter_email)) },
             modifier = Modifier.fillMaxWidth(),
@@ -122,7 +123,7 @@ fun LogInScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = password.value,
-            onValueChange = { password.value = it ; passwordError.value = false},
+            onValueChange = { password.value = it; passwordError.value = false },
             label = { Text(stringResource(id = R.string.password)) },
             placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
@@ -158,28 +159,16 @@ fun LogInScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+                emailError.value =
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 passwordError.value = (password.value.length < 6)
                 if (!emailError.value && !passwordError.value) {
-                    //val auth: FirebaseAuth = Firebase.auth
-                    //auth.useEmulator("10.0.2.2", 9099)
-//                    val auth: FirebaseAuth = getFirebaseAuth()
                     Firebase.auth.signInWithEmailAndPassword(
                         email.value,
                         password.value
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             userEmail = email.value
-                      //val firestore = Firebase.firestore
-                        //    firestore.useEmulator("10.0.2.2", 8080)
-//                            val firestore = Firebase.firestore
-////    if () {
-////                            firestore.useEmulator("10.0.2.2", 8080)
-////                            firestore.firestoreSettings = firestoreSettings {
-////                                isPersistenceEnabled = false
-////                            }
-//                            vehiclesDatabase = firestore.collection(userEmail)
-
                             goToApp(navController)
                         } else {
                             emailError.value = true
@@ -192,20 +181,6 @@ fun LogInScreen(navController: NavController, context: Context) {
         ) {
             Text(stringResource(id = R.string.sign_in))
         }
-//        TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
-//            val auth: FirebaseAuth = Firebase.auth
-//            auth.signInAnonymously().addOnCompleteListener {
-//                if (it.isSuccessful) {
-//                    Log.i("TestSignIn", "Successful")
-//                    goToApp(navController)
-//                } else {
-//                    Log.i("TestSignIn", "Error")
-//                    showDialog(context, "Anonymous user cannot be registered")
-//                }
-//            }
-//        }) {
-//            TitleText(text = "Sign in as Anonymous", TextAlign.Center)
-//        }
         TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
             goToResetPassword(navController)
         }) {
@@ -213,20 +188,24 @@ fun LogInScreen(navController: NavController, context: Context) {
         }
         Spacer(modifier = Modifier.padding(65.dp))
         Row {
-            Text(modifier = Modifier.padding(vertical = 13.dp),text = "Don't have an account?", textAlign = TextAlign.Center)
-            TextButton(interactionSource = NoRippleInteractionSource(),onClick = {
+            Text(
+                modifier = Modifier.padding(vertical = 13.dp),
+                text = "Don't have an account?",
+                textAlign = TextAlign.Center
+            )
+            TextButton(interactionSource = NoRippleInteractionSource(), onClick = {
                 navController.navigate(AuthenticationScreens.RegisterScreen.route)
             }) {
                 TitleText(text = stringResource(id = R.string.register), TextAlign.Center)
             }
         }
-        
+
     }
 }
-// TODO integrar restaurar contraseña
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController, context: Context) {
+fun RegisterScreen(navController: NavController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val emailError = remember { mutableStateOf(false) }
@@ -261,7 +240,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
         )
         OutlinedTextField(
             value = email.value,
-            onValueChange = { email.value = it ; emailError.value = false },
+            onValueChange = { email.value = it; emailError.value = false },
             label = { Text(stringResource(id = R.string.email)) },
             placeholder = { Text(stringResource(id = R.string.enter_email)) },
             modifier = Modifier.fillMaxWidth(),
@@ -293,7 +272,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = password.value,
-            onValueChange = { password.value = it ; passwordError.value = false},
+            onValueChange = { password.value = it; passwordError.value = false },
             label = { Text(stringResource(id = R.string.password)) },
             placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
@@ -323,7 +302,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
                         text = "Invalid password, at least 6 characters",
                         color = MaterialTheme.colors.error
                     )
-                } else if (passwordError.value && password.value != rePassword.value){
+                } else if (passwordError.value && password.value != rePassword.value) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Passwords mismatch",
@@ -336,7 +315,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = rePassword.value,
-            onValueChange = { rePassword.value = it ; rePasswordError.value = false},
+            onValueChange = { rePassword.value = it; rePasswordError.value = false },
             label = { Text(stringResource(id = R.string.confirm_password)) },
             placeholder = { Text(stringResource(id = R.string.enter_password)) },
             modifier = Modifier.fillMaxWidth(),
@@ -366,7 +345,7 @@ fun RegisterScreen(navController: NavController, context: Context) {
                         text = "Invalid password, at least 6 characters",
                         color = MaterialTheme.colors.error
                     )
-                } else if (passwordError.value && password.value != rePassword.value){
+                } else if (passwordError.value && password.value != rePassword.value) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Passwords mismatch",
@@ -379,7 +358,8 @@ fun RegisterScreen(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+                emailError.value =
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 passwordError.value = password.value.length < 6
                 rePasswordError.value = rePassword.value.length < 6
                 if (password.value != rePassword.value) {
@@ -387,10 +367,6 @@ fun RegisterScreen(navController: NavController, context: Context) {
                     rePasswordError.value = true
                 }
                 if (!emailError.value && !passwordError.value && !rePasswordError.value) {
-//                    val auth: FirebaseAuth = Firebase.auth
-//                    val auth: FirebaseAuth = getFirebaseAuth()
-                    //val firebaseAuthentication = Firebase.auth
-                    //.useEmulator("10.0.2.2", 9099)
                     Firebase.auth.createUserWithEmailAndPassword(
                         email.value,
                         password.value
@@ -437,7 +413,7 @@ fun ResetPassword(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField(
             value = email.value,
-            onValueChange = { email.value = it ; emailError.value = false },
+            onValueChange = { email.value = it; emailError.value = false },
             label = { Text(stringResource(id = R.string.email)) },
             placeholder = { Text(stringResource(id = R.string.enter_email)) },
             modifier = Modifier.fillMaxWidth(),
@@ -469,17 +445,16 @@ fun ResetPassword(navController: NavController, context: Context) {
         Spacer(modifier = Modifier.padding(5.dp))
         Button(
             onClick = {
-                emailError.value = !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
+                emailError.value =
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email.value).matches()
                 if (!emailError.value) {
-//                    val auth: FirebaseAuth = Firebase.auth
-                    //val auth: FirebaseAuth = getFirebaseAuth()
                     Firebase.auth.sendPasswordResetEmail(email.value)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 goToLogIn(navController)
                             } else {
                                 emailError.value = true
-                                showDialog(context, "Error sending email" )
+                                showDialog(context, "Error sending email")
                             }
                         }
                 }

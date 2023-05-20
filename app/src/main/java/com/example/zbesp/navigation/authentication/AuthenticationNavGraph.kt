@@ -25,7 +25,7 @@ fun AuthenticationNavGraph(
     modifier: Modifier = Modifier,
     startDestination: String = AuthenticationScreens.LogInScreen.route,
     context: Context
-){
+) {
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
@@ -36,7 +36,7 @@ fun AuthenticationNavGraph(
             LogInScreen(navController, context)
         }
         composable(AuthenticationScreens.RegisterScreen.route) {
-            RegisterScreen(navController, context)
+            RegisterScreen(navController)
         }
         composable(AuthenticationScreens.MainScreen.route) {
             MainScreen(context, navController)

@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class NetworkStatusObserver(private val context: Context) : StatusObserver {
 
-    private val networkManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val networkManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     override fun observe(): Flow<StatusObserver.Status> {
         return callbackFlow {

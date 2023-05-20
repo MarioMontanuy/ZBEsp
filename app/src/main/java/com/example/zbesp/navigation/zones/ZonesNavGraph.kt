@@ -39,7 +39,11 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
+            ZoneDetailScreen(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                context = context,
+                navController = navController
+            )
         }
         composable(
             route = ZonesScreens.ZoneComments.route + "/{zone}",
@@ -50,7 +54,11 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneCommentsScreen(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
+            ZoneCommentsScreen(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                context = context,
+                navController = navController
+            )
         }
 
         composable(
@@ -62,7 +70,11 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneCommentsForm(zone = getGeofence(entry.arguments?.getString("zone")!!), context = context, navController = navController)
+            ZoneCommentsForm(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                context = context,
+                navController = navController
+            )
         }
     }
 }

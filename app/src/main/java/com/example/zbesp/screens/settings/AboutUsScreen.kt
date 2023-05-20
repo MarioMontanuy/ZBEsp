@@ -24,7 +24,12 @@ import com.google.firebase.ktx.Firebase
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AboutUsScreen(navController: NavController) {
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.about_us_title), navController) }) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.about_us_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

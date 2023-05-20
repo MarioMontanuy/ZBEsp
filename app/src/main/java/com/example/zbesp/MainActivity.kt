@@ -1,18 +1,13 @@
 package com.example.zbesp
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -27,47 +22,33 @@ import androidx.compose.runtime.getValue
 import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
 import com.example.zbesp.network.NetworkStatusObserver
 import com.example.zbesp.network.StatusObserver
-import com.example.zbesp.screens.LogInScreen
-import com.example.zbesp.screens.MainScreen
-import com.example.zbesp.screens.createVehicleListenerOnDatabase
-import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
-import com.example.zbesp.screens.showDialog
 import com.example.zbesp.service.MapNotificationService
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.ktx.messaging
-import com.jamal.composeprefs.ui.LocalPrefsDataStore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.osmdroid.config.Configuration
 
 private lateinit var statusObserver: StatusObserver
 var currentConnectivity = StatusObserver.Status.Unknown
 var currentUserConnectivity = true
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainActivity : ComponentActivity() {
     private var settings = false
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<Array<String>>
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +56,8 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
-//        checkTestMode()
-        getToken(this)
+        checkTestMode()
+        getToken()
         val intentService = Intent(this, MapNotificationService::class.java)
         startService(intentService)
         setContent {
@@ -87,33 +68,20 @@ class MainActivity : ComponentActivity() {
                         color = SapphireBlue
                     )
                 }
-                val status by statusObserver.observe().collectAsState(initial = StatusObserver.Status.Unknown)
+                val status by statusObserver.observe()
+                    .collectAsState(initial = StatusObserver.Status.Unknown)
                 if (status != StatusObserver.Status.Unknown) {
                     Toast.makeText(this, "Network $status", Toast.LENGTH_SHORT).show()
                     currentConnectivity = status
                     if (currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi || currentConnectivity == StatusObserver.Status.Lost) {
-                        Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 AuthenticationNavGraph(context = this)
             }
         }
     }
-
-//    inner class MyBroadcastReceiver : BroadcastReceiver() {
-//        override fun onReceive(context: Context, intent: Intent) {
-//            val wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
-//
-//            if (wifiStateExtra == WifiManager.WIFI_STATE_ENABLED) {
-//                Log.i("wifiStateExtra" , "WIFI_STATE_ENABLED")
-//                Toast.makeText(context, "WiFi Enabled", Toast.LENGTH_SHORT).show()
-//            }
-//            if (wifiStateExtra == WifiManager.WIFI_STATE_DISABLED) {
-//                Log.i("wifiStateExtra" , "WIFI_STATE_DISABLED")
-//                Toast.makeText(context, "WiFi Disabled", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     public override fun onResume() {
@@ -200,6 +168,7 @@ class MainActivity : ComponentActivity() {
                         showBackgroundPermissionSettingsSnackbar()
                     }
                 }
+
                 else -> {
                     showSnackbar(
                         R.string.permission_denied_explanation,
@@ -270,17 +239,19 @@ class MainActivity : ComponentActivity() {
 }
 
 private fun checkTestMode() {
-        firebaseFirestore()
-        firebaseAuth()
-        firebaseFunctions()
+    firebaseFirestore()
+    firebaseAuth()
+    firebaseFunctions()
 }
-private fun firebaseFirestore(){
+
+private fun firebaseFirestore() {
     val firestore = Firebase.firestore
     firestore.useEmulator("10.0.2.2", 8080)
     firestore.firestoreSettings = firestoreSettings {
         isPersistenceEnabled = false
     }
 }
+
 private fun firebaseAuth() {
     val auth = Firebase.auth
     auth.useEmulator("10.0.2.2", 9099)
@@ -290,14 +261,15 @@ private fun firebaseFunctions() {
     val functions = Firebase.functions
     functions.useEmulator("10.0.2.2", 5001)
 }
-private fun getToken(context: Context) {
+
+private fun getToken() {
     FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
         if (!task.isSuccessful) {
             Log.w("getToken", "Fetching FCM registration token failed", task.exception)
             return@OnCompleteListener
         }
         val token = task.result
-        val tokenMap : MutableMap<String, Boolean> = mutableMapOf()
+        val tokenMap: MutableMap<String, Boolean> = mutableMapOf()
         tokenMap[token] = true
         val firebaseRef = Firebase.firestore.collection("tokens").document(token)
         firebaseRef.set(tokenMap).addOnCompleteListener {

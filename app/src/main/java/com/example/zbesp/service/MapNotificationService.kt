@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
-class MapNotificationService: Service() {
+class MapNotificationService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
@@ -29,8 +29,13 @@ class MapNotificationService: Service() {
         super.onCreate()
         instance = this
     }
+
     @RequiresApi(Build.VERSION_CODES.S)
-    fun sendNotification(context: Context, notificationHelper: NotificationHelper, geofencingEvent: GeofencingEvent) {
+    fun sendNotification(
+        context: Context,
+        notificationHelper: NotificationHelper,
+        geofencingEvent: GeofencingEvent
+    ) {
         val geofenceList = geofencingEvent.triggeringGeofences
         for (geofence in geofenceList!!) {
             Log.d(TAG, "onReceive: " + geofence.requestId)
@@ -53,6 +58,7 @@ class MapNotificationService: Service() {
                     }
                 }
             }
+
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
                 Toast.makeText(context, GEOFENCE_TRANSITION_EXIT, Toast.LENGTH_SHORT).show()
                 runBlocking(Dispatchers.IO) {
@@ -67,8 +73,10 @@ class MapNotificationService: Service() {
             }
         }
     }
+
     companion object {
         private lateinit var instance: MapNotificationService
+
         @JvmStatic
         fun getServiceInstance() = instance
         private const val TAG = "GeofenceBroadcastReceiv"

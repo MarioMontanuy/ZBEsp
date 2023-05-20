@@ -221,14 +221,15 @@ private fun CreateSearchBar(context: Context) {
             ),
             trailingIcon = {
                 if (searchQuery.value.isEmpty()) {
-                    Icon(Icons.Default.Search, contentDescription = "Search" )
+                    Icon(Icons.Default.Search, contentDescription = "Search")
                 } else {
                     IconButton(
                         onClick = { searchQuery.value = "" }
                     ) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear" )
+                        Icon(Icons.Default.Clear, contentDescription = "Clear")
                     }
-                } }
+                }
+            }
         )
         Button(
             onClick = { searchLocation(searchQuery.value, geocoder, searchResults) },

@@ -15,7 +15,11 @@ import com.example.zbesp.navigation.zones.ZonesNavGraph
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun BottomNavGraph(navController: NavHostController, context: Context, authenticationNavController: NavController) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    context: Context,
+    authenticationNavController: NavController
+) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Map.route
@@ -31,7 +35,10 @@ fun BottomNavGraph(navController: NavHostController, context: Context, authentic
             ZonesNavGraph(context = context)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsNavGraph(context = context, authenticationNavController = authenticationNavController)
+            SettingsNavGraph(
+                context = context,
+                authenticationNavController = authenticationNavController
+            )
         }
     }
 }

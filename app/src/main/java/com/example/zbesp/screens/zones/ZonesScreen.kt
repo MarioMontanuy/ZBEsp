@@ -121,7 +121,8 @@ fun PostGeofenceItem(
         }
     )
 }
+
 fun connectivityEnabled(): Boolean {
-   return !(currentConnectivity == StatusObserver.Status.Lost ||
-           currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi)
+    return !(currentConnectivity == StatusObserver.Status.Lost ||
+            currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi)
 }

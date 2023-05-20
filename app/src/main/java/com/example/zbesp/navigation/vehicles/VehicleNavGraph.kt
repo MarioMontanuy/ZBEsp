@@ -37,7 +37,10 @@ fun VehiclesNavGraph(
                 }
             )
         ) { entry ->
-            VehicleDetailScreen(vehicle = getVehicle(entry.arguments?.getString("vehicle")!!), navController)
+            VehicleDetailScreen(
+                vehicle = getVehicle(entry.arguments?.getString("vehicle")),
+                navController
+            )
         }
         composable(
             route = VehiclesScreens.VehicleDetailCommunity.route + "/{vehicle}",
@@ -48,7 +51,10 @@ fun VehiclesNavGraph(
                 }
             )
         ) { entry ->
-            VehicleDetailScreen(vehicle = getVehicleCommunity(entry.arguments?.getString("vehicle")!!), navController)
+            VehicleDetailScreen(
+                vehicle = getVehicleCommunity(entry.arguments?.getString("vehicle")),
+                navController
+            )
         }
         composable(VehiclesScreens.NewVehicle.route) {
             val viewModel = MainViewModel()
