@@ -29,6 +29,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service  android:name=".service.MapNotificationService" />
         <receiver
             android:name=".screens.map.GeofenceBroadcastReceiver"
             android:enabled="true"

@@ -39,6 +39,7 @@ import com.example.zbesp.screens.LogInScreen
 import com.example.zbesp.screens.MainScreen
 import com.example.zbesp.screens.map.GeofenceBroadcastReceiver
 import com.example.zbesp.screens.showDialog
+import com.example.zbesp.service.MapNotificationService
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -74,8 +75,10 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
-        checkTestMode()
+//        checkTestMode()
         getToken(this)
+        val intentService = Intent(this, MapNotificationService::class.java)
+        startService(intentService)
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
