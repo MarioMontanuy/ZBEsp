@@ -8,24 +8,41 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.zbesp.screens.MainScreen
+import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
+import com.example.zbesp.network.NetworkStatusObserver
+import com.example.zbesp.network.StatusObserver
+import com.example.zbesp.service.MapNotificationService
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.ZBEspTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import org.osmdroid.config.Configuration
 
+private lateinit var statusObserver: StatusObserver
+var currentConnectivity = StatusObserver.Status.Unknown
+var currentUserConnectivity = true
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +55,11 @@ class MainActivity : ComponentActivity() {
         requestPermissionOnCreate()
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+        statusObserver = NetworkStatusObserver(this)
+//        checkTestMode()
+        getToken()
+        val intentService = Intent(this, MapNotificationService::class.java)
+        startService(intentService)
         setContent {
             ZBEspTheme {
                 val systemUiController = rememberSystemUiController()
@@ -46,7 +68,17 @@ class MainActivity : ComponentActivity() {
                         color = SapphireBlue
                     )
                 }
-                MainScreen(applicationContext)
+                val status by statusObserver.observe()
+                    .collectAsState(initial = StatusObserver.Status.Unknown)
+                if (status != StatusObserver.Status.Unknown) {
+                    Toast.makeText(this, "Network $status", Toast.LENGTH_SHORT).show()
+                    currentConnectivity = status
+                    if (currentUserConnectivity && currentConnectivity != StatusObserver.Status.WiFi || currentConnectivity == StatusObserver.Status.Lost) {
+                        Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                AuthenticationNavGraph(context = this)
             }
         }
     }
@@ -136,6 +168,7 @@ class MainActivity : ComponentActivity() {
                         showBackgroundPermissionSettingsSnackbar()
                     }
                 }
+
                 else -> {
                     showSnackbar(
                         R.string.permission_denied_explanation,
@@ -205,6 +238,49 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private fun checkTestMode() {
+    firebaseFirestore()
+    firebaseAuth()
+    firebaseFunctions()
+}
 
+private fun firebaseFirestore() {
+    val firestore = Firebase.firestore
+    firestore.useEmulator("10.0.2.2", 8080)
+    firestore.firestoreSettings = firestoreSettings {
+        isPersistenceEnabled = false
+    }
+}
+
+private fun firebaseAuth() {
+    val auth = Firebase.auth
+    auth.useEmulator("10.0.2.2", 9099)
+}
+
+private fun firebaseFunctions() {
+    val functions = Firebase.functions
+    functions.useEmulator("10.0.2.2", 5001)
+}
+
+private fun getToken() {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+        if (!task.isSuccessful) {
+            Log.w("getToken", "Fetching FCM registration token failed", task.exception)
+            return@OnCompleteListener
+        }
+        val token = task.result
+        val tokenMap: MutableMap<String, Boolean> = mutableMapOf()
+        tokenMap[token] = true
+        val firebaseRef = Firebase.firestore.collection("tokens").document(token)
+        firebaseRef.set(tokenMap).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d("getToken", "successful")
+            } else {
+                Log.d("getToken", "error")
+            }
+        }
+        Log.d("getToken", token)
+    })
+}
 
 

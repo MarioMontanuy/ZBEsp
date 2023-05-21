@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -11,18 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.zbesp.R
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.noEnabledVehicle
+import com.example.zbesp.domain.Vehicle
+import com.example.zbesp.domain.noEnabledVehicleInDatabase
+import com.example.zbesp.domain.vehiclesDatabase
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.showDialog
+import com.example.zbesp.screens.userEmail
 import com.example.zbesp.ui.theme.*
 import java.text.DateFormat
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun VehicleDetailScreen(vehicle: Vehicle) {
+fun VehicleDetailScreen(vehicle: Vehicle, navController: NavController) {
     val vehicleEnabled = remember { mutableStateOf(vehicle.enabled) }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicle_detail_screen_title)) }) {
+    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicle_detail_screen_title), navController) }) {
         LazyColumn {
             item {
                 if (vehicleEnabled.value) {
@@ -36,7 +41,7 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.country),
-                    subtitle = vehicle.country.type!!.name
+                    subtitle = vehicle.country
                 )
             }
             item {
@@ -48,21 +53,27 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.type),
-                    subtitle = vehicle.type.type!!.name
+                    subtitle = vehicle.type
                 )
             }
             item {
                 AddTextRow(
                     title = stringResource(id = R.string.environmental_sticker),
-                    subtitle = vehicle.environmentalSticker.type!!.name
+                    subtitle = vehicle.environmentalSticker
                 )
-                Spacer(modifier = Modifier.padding(50.dp))
             }
             item {
-                if (!vehicleEnabled.value) {
+                AddTextRow(
+                    title = stringResource(id = R.string.owner),
+                    subtitle = vehicle.owner
+                )
+                Spacer(modifier = Modifier.padding(30.dp))
+            }
+            item {
+                if (!vehicleEnabled.value && vehicle.owner == userEmail) {
                     Button(
                         onClick = {
-                            noEnabledVehicle()
+                            noEnabledVehicleInDatabase(vehicle)
                             vehicleEnabled.value = !vehicleEnabled.value
                             vehicle.enabled = !vehicle.enabled
                         },
@@ -73,6 +84,25 @@ fun VehicleDetailScreen(vehicle: Vehicle) {
                     ) {
                         TopBarTittle(
                             stringResource(id = R.string.mark_current_vehicle),
+                            TextAlign.Justify
+                        )
+                    }
+                }
+            }
+            item {
+                if (!vehicleEnabled.value && vehicle.owner == userEmail) {
+                    Button(
+                        onClick = {
+                            deleteVehicle(vehicle)
+                            navController.popBackStack()
+                        },
+                        colors = getButtonColorsReversed(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                    ) {
+                        TopBarTittle(
+                            stringResource(id = R.string.delete_vehicle),
                             TextAlign.Justify
                         )
                     }
@@ -110,4 +140,11 @@ fun AddEnabledInfoRow() {
         },
     )
     Divider(startIndent = 20.dp)
+}
+
+private fun deleteVehicle(vehicle: Vehicle) {
+    val vehicleToDelete = vehiclesDatabase.whereEqualTo("id", vehicle.id)
+    vehicleToDelete.get().addOnSuccessListener { it.forEach { value ->
+        vehiclesDatabase.document(value.id).delete()
+    } }
 }

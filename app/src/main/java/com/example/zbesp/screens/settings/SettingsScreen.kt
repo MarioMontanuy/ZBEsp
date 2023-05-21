@@ -1,6 +1,11 @@
 package com.example.zbesp.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,17 +14,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.rememberNavController
 import com.example.zbesp.dataStore
 import com.example.zbesp.navigation.settings.SettingsScreens
 import com.example.zbesp.screens.ZBEspTopBar
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
 import com.example.zbesp.R
+import com.example.zbesp.currentUserConnectivity
+import com.example.zbesp.navigation.authentication.AuthenticationNavGraph
+import com.example.zbesp.navigation.authentication.AuthenticationScreens
+import com.example.zbesp.screens.goToLogIn
+import com.google.firebase.auth.FirebaseAuth
 
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    authenticationNavController: NavController
+) {
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.settings_screen_title)) }) {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("MAP") {
@@ -45,7 +61,7 @@ fun SettingsScreen(navController: NavController) {
                             stringResource(id = R.string.home)
                         )
                     },
-                    defaultChecked = false
+                    defaultChecked = false,
                 )
             }
             prefsGroup("EXTRAS") {
@@ -61,10 +77,7 @@ fun SettingsScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-                            navController.navigate(SettingsScreens.SubscriptionScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
+                            navController.navigate(SettingsScreens.SubscriptionScreen.route)
                         }
                     )
                 }
@@ -82,10 +95,45 @@ fun SettingsScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-                            navController.navigate(SettingsScreens.AboutUsScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
+                            navController.navigate(SettingsScreens.AboutUsScreen.route)
+                        }
+                    )
+                }
+            }
+            prefsGroup("Network") {
+                prefsItem {
+                    SwitchPref(
+                        key = stringResource(id = R.string.network),
+                        title = stringResource(id = R.string.network),
+                        summary = stringResource(id = R.string.network_change),
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Wifi,
+                                stringResource(id = R.string.network)
+                            )
+                        },
+                        defaultChecked = true,
+                        onCheckedChange = {
+                            Log.i("SwitchPref", "change")
+                            currentUserConnectivity = !currentUserConnectivity
+                        }
+                    )
+                }
+            }
+            prefsGroup("USER") {
+                prefsItem {
+                    TextPref(
+                        title = "Log out",
+                        enabled = true,
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Logout,
+                                stringResource(id = R.string.info)
+                            )
+                        },
+                        onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            authenticationNavController.navigate(AuthenticationScreens.LogInScreen.route)
                         }
                     )
                 }

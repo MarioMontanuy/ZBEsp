@@ -6,14 +6,14 @@ import androidx.compose.material.lightColors
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 
-private val DarkColorScheme = darkColors(
+val DarkColorScheme = darkColors(
     surface = SapphireBlue,
     primary = SapphireBlue,
     primaryVariant = SapphireBlue,
     secondary = SapphireBlue
 )
 
-private val LightColorScheme = lightColors(
+val LightColorScheme = lightColors(
     primary = SapphireBlue,
     primaryVariant = SapphireBlue,
     secondary = SapphireBlue,

@@ -1,5 +1,6 @@
 package com.example.zbesp.navigation.zones
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -8,7 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.zbesp.data.getGeofence
+import com.example.zbesp.domain.getComment
+import com.example.zbesp.domain.getGeofence
+import com.example.zbesp.screens.zones.ZoneCommentsDetail
+import com.example.zbesp.screens.zones.ZoneCommentsForm
+import com.example.zbesp.screens.zones.ZoneCommentsScreen
 import com.example.zbesp.screens.zones.ZoneDetailScreen
 import com.example.zbesp.screens.zones.ZonesScreen
 
@@ -16,7 +21,8 @@ import com.example.zbesp.screens.zones.ZonesScreen
 fun ZonesNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ZonesScreens.ZoneList.route
+    startDestination: String = ZonesScreens.ZoneList.route,
+    context: Context
 ) {
     NavHost(
         modifier = modifier,
@@ -35,7 +41,55 @@ fun ZonesNavGraph(
                 }
             )
         ) { entry ->
-            ZoneDetailScreen(zone = getGeofence(entry.arguments?.getString("zone")!!))
+            ZoneDetailScreen(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                context = context,
+                navController = navController
+            )
+        }
+        composable(
+            route = ZonesScreens.ZoneComments.route + "/{zone}",
+            arguments = listOf(
+                navArgument("zone") {
+                    type = NavType.StringType
+                    defaultValue = "Some Default"
+                }
+            )
+        ) { entry ->
+            ZoneCommentsScreen(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                navController = navController
+            )
+        }
+
+        composable(
+            route = ZonesScreens.ZoneCommentsForm.route + "/{zone}",
+            arguments = listOf(
+                navArgument("zone") {
+                    type = NavType.StringType
+                    defaultValue = "Some Default"
+                }
+            )
+        ) { entry ->
+            ZoneCommentsForm(
+                zone = getGeofence(entry.arguments?.getString("zone")!!),
+                context = context,
+                navController = navController
+            )
+        }
+        composable(
+            route = ZonesScreens.ZoneCommentsDetail.route + "/{comment}",
+            arguments = listOf(
+                navArgument("comment") {
+                    type = NavType.StringType
+                    defaultValue = "Some Default"
+                }
+            )
+        ) { entry ->
+            ZoneCommentsDetail(
+                comment = getComment(entry.arguments?.getString("comment")!!),
+                navController = navController
+            )
         }
     }
 }

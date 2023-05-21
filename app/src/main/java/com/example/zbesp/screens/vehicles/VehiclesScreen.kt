@@ -1,6 +1,7 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,7 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,47 +21,54 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.zbesp.R
-import com.example.zbesp.data.Vehicle
-import com.example.zbesp.data.VehiclesRepo
+import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.domain.Vehicle
 import com.example.zbesp.navigation.vehicles.VehiclesScreens
-import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.navigation.zones.ZonesScreens
+import com.example.zbesp.screens.VehiclesTopBar
+import com.example.zbesp.screens.zones.connectivityEnabled
 import java.util.*
 import com.example.zbesp.ui.theme.SapphireBlue
 import com.example.zbesp.ui.theme.SubtitleText
 import com.example.zbesp.ui.theme.TitleText
 
+var vehicles = mutableStateOf(listOf<Vehicle>())
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun VehiclesScreen(navController: NavController) {
-    val vehicles = remember { VehiclesRepo.getVehicles() }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.vehicles_screen_title)) }) {
+    Scaffold(topBar = {
+        VehiclesTopBar(
+            stringResource(id = R.string.vehicles_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (vehicles.isEmpty()) {
+            if (vehicles.value.isEmpty() || !connectivityEnabled()) {
+                Log.i("vehicles.value", "Empty")
                 item {
                     Spacer(modifier = Modifier.padding(30.dp))
                     SubtitleText(
-                        text = stringResource(id = R.string.create_vehicle_needed),
+                        text = stringResource(id = R.string.create_vehicle_needed) + "\nor\n" +
+                                stringResource(id = R.string.network_error),
                         alignment = TextAlign.Center,
                         MaterialTheme.typography.body1
                     )
                 }
             } else {
-                items(vehicles) { vehicle ->
-                    PostItem(vehicle = vehicle, navController = navController)
+                items(vehicles.value) { vehicle ->
+                    PostItem(vehicle = vehicle, navController = navController, type = "vehicle")
                     Divider(startIndent = 50.dp)
                 }
             }
-
         }
         VehiclesFloatingActionButton(navController = navController)
     }
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -68,20 +76,23 @@ fun VehiclesScreen(navController: NavController) {
 fun PostItem(
     vehicle: Vehicle,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    type: String
 ) {
     ListItem(
         modifier = modifier
             .clickable {
-                navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString())) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+                if (type == "vehicle") {
+                    navController.navigate(VehiclesScreens.VehicleDetail.withArgs(vehicle.id.toString()))
+                }
+                if (type == "community") {
+                    navController.navigate(VehiclesScreens.VehicleDetailCommunity.withArgs(vehicle.id.toString()))
                 }
             },
         icon = {
             Image(
-                painter = if (isSystemInDarkTheme()) painterResource(vehicle.changeToWhite(vehicle.type)) else painterResource(
-                    vehicle.imageId
+                painter = if (isSystemInDarkTheme()) painterResource(vehicle.typeImageWhite) else painterResource(
+                    vehicle.typeImage
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
@@ -109,10 +120,7 @@ fun VehiclesFloatingActionButton(navController: NavController) {
                 .padding(all = 16.dp)
                 .align(alignment = Alignment.BottomEnd),
             onClick = {
-                navController.navigate(VehiclesScreens.NewVehicle.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                navController.navigate(VehiclesScreens.NewVehicle.route)
             },
             backgroundColor = SapphireBlue,
             contentColor = Color.White
@@ -120,6 +128,28 @@ fun VehiclesFloatingActionButton(navController: NavController) {
             Icon(
                 imageVector = Icons.Default.Add, contentDescription = stringResource(
                     id = R.string.create_note
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun CommentsFloatingActionButton(zone: GeofenceItem, navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .align(alignment = Alignment.BottomEnd),
+            onClick = {
+                navController.navigate(ZonesScreens.ZoneCommentsForm.withArgs(zone.id.toString()))
+            },
+            backgroundColor = SapphireBlue,
+            contentColor = Color.White
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add, contentDescription = stringResource(
+                    id = R.string.create_coment
                 )
             )
         }

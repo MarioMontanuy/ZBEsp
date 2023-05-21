@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,23 +15,30 @@ import com.example.zbesp.navigation.zones.ZonesNavGraph
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun BottomNavGraph(navController: NavHostController, context: Context) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    context: Context,
+    authenticationNavController: NavController
+) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Map.route
     ) {
         composable(route = BottomBarScreen.Vehicles.route) {
-            VehiclesNavGraph()
+            VehiclesNavGraph(context = context)
         }
 
         composable(route = BottomBarScreen.Map.route) {
             MapScreen(context)
         }
         composable(route = BottomBarScreen.Zones.route) {
-            ZonesNavGraph()
+            ZonesNavGraph(context = context)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsNavGraph()
+            SettingsNavGraph(
+                context = context,
+                authenticationNavController = authenticationNavController
+            )
         }
     }
 }

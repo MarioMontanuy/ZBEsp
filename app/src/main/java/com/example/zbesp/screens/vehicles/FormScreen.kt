@@ -1,6 +1,8 @@
 package com.example.zbesp.screens.vehicles
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -25,9 +27,14 @@ import ch.benlu.composeform.formatters.dateShort
 import ch.benlu.composeform.validators.MinLengthValidator
 import ch.benlu.composeform.validators.NotEmptyValidator
 import com.example.zbesp.R
-import com.example.zbesp.data.*
+import com.example.zbesp.domain.*
 import com.example.zbesp.screens.ZBEspTopBar
+import com.example.zbesp.screens.showDialog
+import com.example.zbesp.screens.userEmail
+import com.example.zbesp.screens.zones.connectivityEnabled
 import com.example.zbesp.ui.theme.*
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class FormScreen : Form() {
@@ -38,12 +45,6 @@ class FormScreen : Form() {
     fun checkFields(): Boolean {
         return username.isValid.value!! && country.isValid.value!! && vehicleType.isValid.value!!
                 && environmentalSticker.isValid.value!! && registrationYear.isValid.value!!
-    }
-
-    fun showError() {
-        if (!username.isValid.value!!) {
-            username.errorText
-        }
     }
 
     @FormField
@@ -71,13 +72,25 @@ class FormScreen : Form() {
     val vehicleType = FieldState(
         state = mutableStateOf<VehicleType?>(null),
         options = mutableListOf(
-            VehicleType(VehicleTypeEnum.PrivateCar),
-            VehicleType(VehicleTypeEnum.MotorHome),
-            VehicleType(VehicleTypeEnum.Truck),
-            VehicleType(VehicleTypeEnum.MotorBike),
-            VehicleType(VehicleTypeEnum.Bus),
-            VehicleType(VehicleTypeEnum.Van),
-            VehicleType(VehicleTypeEnum.Tractor),
+            VehicleType(
+                VehicleTypeEnum.PrivateCar,
+                R.drawable.private_car,
+                R.drawable.private_car_white
+            ),
+            VehicleType(
+                VehicleTypeEnum.MotorHome,
+                R.drawable.motor_home,
+                R.drawable.motor_home_white
+            ),
+            VehicleType(VehicleTypeEnum.Truck, R.drawable.truck, R.drawable.truck_white),
+            VehicleType(
+                VehicleTypeEnum.MotorBike,
+                R.drawable.motor_bike,
+                R.drawable.motor_bike_white
+            ),
+            VehicleType(VehicleTypeEnum.Bus, R.drawable.bus, R.drawable.bus_white),
+            VehicleType(VehicleTypeEnum.Van, R.drawable.van, R.drawable.van_white),
+            VehicleType(VehicleTypeEnum.Tractor, R.drawable.tractor, R.drawable.tractor_white),
         ),
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
@@ -87,11 +100,11 @@ class FormScreen : Form() {
     val environmentalSticker = FieldState(
         state = mutableStateOf<EnvironmentalSticker?>(null),
         options = mutableListOf(
-            EnvironmentalSticker(EnvironmentalStickerEnum.Zero),
-            EnvironmentalSticker(EnvironmentalStickerEnum.ECO),
-            EnvironmentalSticker(EnvironmentalStickerEnum.C),
-            EnvironmentalSticker(EnvironmentalStickerEnum.B),
-            EnvironmentalSticker(EnvironmentalStickerEnum.None),
+            EnvironmentalSticker(EnvironmentalStickerEnum.Zero, R.drawable.pegatinazero),
+            EnvironmentalSticker(EnvironmentalStickerEnum.ECO, R.drawable.pegatinaeco),
+            EnvironmentalSticker(EnvironmentalStickerEnum.C, R.drawable.pegatinac),
+            EnvironmentalSticker(EnvironmentalStickerEnum.B, R.drawable.pegatinab),
+            EnvironmentalSticker(EnvironmentalStickerEnum.None, R.drawable.pegatinanone),
         ),
         optionItemFormatter = { "${it?.type}" },
         validators = mutableListOf(NotEmptyValidator())
@@ -116,7 +129,6 @@ class FormScreen : Form() {
 
 }
 
-// TODO Move to another folder
 class PreviousDateValidator(minDateTime: () -> Long, errorText: String? = null) : Validator<Date?>(
     validate = {
         (it?.time ?: -1) < minDateTime()
@@ -128,13 +140,16 @@ class MainViewModel : ViewModel() {
     var form = FormScreen()
 }
 
-// TODO change color in some fields in dark mode
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun FormScreen(viewModel: MainViewModel, navController: NavController) {
-    // TODO Marcar los fields obligatorios
+fun FormScreen(viewModel: MainViewModel, navController: NavController, context: Context) {
     val error = remember { mutableStateOf(false) }
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.form_screen_title)) }) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.form_screen_title),
+            navController
+        )
+    }) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -197,30 +212,27 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
             item {
                 Button(
                     onClick = {
-                        if (viewModel.form.checkFields()) {
-                            if (viewModel.form.enableVehicle.state.value!!) {
-                                noEnabledVehicle()
+                        if (connectivityEnabled()) {
+                            if (viewModel.form.checkFields()) {
+                                if (vehicles.value.isEmpty()) {
+                                    viewModel.form.enableVehicle.state.value = true
+                                }
+                                var id = 0L
+                                Log.i("getIdFromDatabase", "pre")
+                                idDatabase.document(userEmail).get().addOnSuccessListener {
+                                    id = it["id"] as Long
+                                    addVehicleToDatabase(id, context, viewModel)
+                                    idDatabase.document(userEmail)
+                                        .update("id", FieldValue.increment(1))
+                                    navController.popBackStack()
+                                }
+                            } else {
+                                error.value = true
                             }
-                            if (vehicles.isEmpty()) {
-                                viewModel.form.enableVehicle.state.value = true
-                            }
-                            val newVehicle = Vehicle(
-                                currentId,
-                                viewModel.form.username.state.value!!,
-                                viewModel.form.country.state.value!!,
-                                viewModel.form.vehicleType.state.value!!,
-                                viewModel.form.registrationYear.state.value!!,
-                                viewModel.form.environmentalSticker.state.value!!,
-                                viewModel.form.enableVehicle.state.value!!,
-                            )
-                            currentId += 1L
-                            newVehicle.setImage(viewModel.form.vehicleType.state.value!!)
-                            vehicles = vehicles + newVehicle
-                            navController.popBackStack()
                         } else {
-                            // TODO show error in the field
-                            error.value = true
+                            showDialog(context, context.getString(R.string.network_error))
                         }
+
                     },
                     colors = getButtonColorsReversed(),
                     modifier = Modifier
@@ -238,3 +250,31 @@ fun FormScreen(viewModel: MainViewModel, navController: NavController) {
         }
     }
 }
+
+private fun addVehicleToDatabase(id: Long, context: Context, viewModel: MainViewModel) {
+    val newVehicle = Vehicle(
+        userEmail.hashCode().toLong() + id + 1L,
+        viewModel.form.username.state.value!!,
+        viewModel.form.country.state.value!!.type!!.name,
+        viewModel.form.vehicleType.state.value!!.type!!.name,
+        viewModel.form.registrationYear.state.value!!,
+        viewModel.form.environmentalSticker.state.value!!.type!!.name,
+        viewModel.form.enableVehicle.state.value!!,
+        viewModel.form.environmentalSticker.state.value!!.stickerImage,
+        viewModel.form.vehicleType.state.value!!.typeImage,
+        viewModel.form.vehicleType.state.value!!.typeImageWhite,
+        userEmail
+    )
+    vehiclesDatabase.add(newVehicle).addOnCompleteListener {
+        if (it.isSuccessful) {
+            Log.i("vehicleadded", "successful")
+            if (newVehicle.enabled) {
+                noEnabledVehicleInDatabase(newVehicle)
+            }
+        } else {
+            Log.i("vehicleadded", "error")
+            showDialog(context = context, "Vehicle cloud not be created")
+        }
+    }
+}
+
