@@ -27,6 +27,7 @@
     <string name="create_note">Create note</string>
     <string name="create_coment">Create comment</string>
     <string name="vehicle_detail_screen_title">Vehicle Information</string>
+    <string name="comment_detail_screen_title">Comment Information</string>
     <string name="name">Name</string>
     <string name="country">Country</string>
     <string name="registration_year">Registration Year</string>
@@ -35,6 +36,7 @@
     <string name="owner">Owner</string>
     <string name="mark_current_vehicle">Mark as current vehicle</string>
     <string name="delete_vehicle">Delete vehicle</string>
+    <string name="delete_comment">Delete comment</string>
     <string name="vehicle_enabled">This vehicle is enabled</string>
     <string name="information_shown">All information shown is related to the characteristics of this vehicle</string>
     <string name="name_min_lenght">The name must be at least 4 characters</string>

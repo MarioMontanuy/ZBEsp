@@ -3,6 +3,7 @@ package com.example.zbesp.domain
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import com.example.zbesp.R
+import com.example.zbesp.screens.zones.comments
 import org.osmdroid.util.GeoPoint
 
 @Immutable
@@ -80,3 +81,4 @@ var kmlZones: List<Int> = listOf(R.raw.zaragoza, R.raw.madrid, R.raw.lleida, R.r
 fun getGeofence(geofenceId: String): GeofenceItem {
     return geofences.first { it.id == geofenceId.toInt() }
 }
+

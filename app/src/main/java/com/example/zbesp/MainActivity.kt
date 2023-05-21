@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
         val ctx = applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         statusObserver = NetworkStatusObserver(this)
-        checkTestMode()
+//        checkTestMode()
         getToken()
         val intentService = Intent(this, MapNotificationService::class.java)
         startService(intentService)

@@ -44,6 +44,7 @@ import com.example.zbesp.ui.theme.TopBarTittle
 import com.example.zbesp.ui.theme.getButtonColorsReversed
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -137,7 +138,7 @@ private fun addCommentToDatabase(
     commentText: String,
     context: Context
 ) {
-    val comment = Comment(title, commentText, userEmail, zoneName)
+    val comment = Comment(Date().hashCode(),title, commentText, userEmail, zoneName)
     commentsDatabase = Firebase.firestore.collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {

@@ -2,6 +2,7 @@ package com.example.zbesp.screens.zones
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import androidx.navigation.NavController
 import com.example.zbesp.R
 import com.example.zbesp.domain.Comment
 import com.example.zbesp.domain.GeofenceItem
+import com.example.zbesp.navigation.vehicles.VehiclesScreens
+import com.example.zbesp.navigation.zones.ZonesScreens
 import com.example.zbesp.screens.ZBEspTopBar
 import com.example.zbesp.screens.vehicles.CommentsFloatingActionButton
 import com.example.zbesp.ui.theme.OwnerTitle
@@ -34,7 +37,7 @@ var comments = mutableStateOf(listOf<Comment>())
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavController) {
+fun ZoneCommentsScreen(zone: GeofenceItem, navController: NavController) {
     Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.comments), navController) }) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -54,15 +57,14 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
                 }
             } else {
                 zoneComments.groupBy { it.owner }.map {
-                    var title = true
+//                    var title = true
                     items(it.value) { comment ->
-                        if (title) {
-                            title = false
-                            OwnerTitle(it.value.first().owner)
-                        }
-                        PostComment(comment = comment)
+//                        if (title) {
+//                            title = false
+//                            OwnerTitle(it.value.first().owner)
+//                        }
+                        PostComment(comment = comment, navController)
                         Divider(startIndent = 50.dp)
-
                     }
                 }
             }
@@ -75,15 +77,19 @@ fun ZoneCommentsScreen(zone: GeofenceItem, context: Context, navController: NavC
 @Composable
 fun PostComment(
     comment: Comment,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     ListItem(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {
+                navController.navigate(ZonesScreens.ZoneCommentsDetail.withArgs(comment.id.toString()))
+            },
         text = {
-            TitleText(text = comment.title, alignment = TextAlign.Justify)
+            TitleText(text = comment.owner, alignment = TextAlign.Justify)
         },
         secondaryText = {
-            SubtitleText(comment.commentText, TextAlign.Justify)
+            SubtitleText(comment.title, TextAlign.Justify)
         }
     )
 }

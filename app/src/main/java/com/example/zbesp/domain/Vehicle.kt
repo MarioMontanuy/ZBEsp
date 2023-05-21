@@ -6,6 +6,7 @@ import ch.benlu.composeform.fields.PickerValue
 import com.example.zbesp.screens.userEmail
 import com.example.zbesp.screens.vehicles.communityVehicles
 import com.example.zbesp.screens.vehicles.vehicles
+import com.example.zbesp.screens.zones.comments
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -81,7 +82,6 @@ fun noEnabledVehicleInDatabase(currentVehicle: Vehicle) {
 }
 
 fun createIdOnDatabase() {
-    Log.i("createIdOnDatabase", "llamada")
     idDatabase.document(userEmail).get().addOnSuccessListener {
         if (it.data == null) {
             idDatabase.document(userEmail).set(hashMapOf("id" to 0L))
@@ -117,7 +117,6 @@ fun getVehicle(vehicleId: String?): Vehicle {
     } catch (e: NoSuchElementException) {
         Vehicle()
     }
-//    return vehicles.value.first { it.id == vehicleId!!.toLong() }
 }
 
 fun getVehicleCommunity(vehicleId: String?): Vehicle {
@@ -131,12 +130,3 @@ fun getCurrentVehicle(): Vehicle? {
     return null
 }
 
-@Immutable
-data class Comment(
-    val title: String,
-    val commentText: String,
-    var owner: String,
-    var zoneName: String
-) {
-    constructor() : this("", "", "", "")
-}
