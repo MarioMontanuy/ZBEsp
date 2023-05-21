@@ -85,6 +85,4 @@
     <string name="send">Send</string>
     <string name="register">Register</string>
     <string name="network_error">Your device connectivity does not match with your network preferences or is unavailable</string>
-
-
 </resources>

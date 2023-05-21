@@ -138,7 +138,7 @@ private fun addCommentToDatabase(
     commentText: String,
     context: Context
 ) {
-    val comment = Comment(Date().hashCode(),title, commentText, userEmail, zoneName)
+    val comment = Comment(Date().hashCode(), title, commentText, userEmail, zoneName)
     commentsDatabase = Firebase.firestore.collection("comments")
     commentsDatabase.add(comment).addOnCompleteListener {
         if (it.isSuccessful) {

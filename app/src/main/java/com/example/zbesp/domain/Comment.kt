@@ -12,8 +12,9 @@ data class Comment(
     var owner: String,
     var zoneName: String
 ) {
-    constructor() : this(0,"", "", "", "")
+    constructor() : this(0, "", "", "", "")
 }
+
 fun getComment(commentId: String): Comment {
     return try {
         comments.value.first { it.id == commentId.toInt() }

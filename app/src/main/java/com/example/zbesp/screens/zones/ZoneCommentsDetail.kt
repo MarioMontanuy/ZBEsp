@@ -27,7 +27,12 @@ import com.example.zbesp.ui.theme.getButtonColorsReversed
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ZoneCommentsDetail(comment: Comment, navController: NavController) {
-    Scaffold(topBar = { ZBEspTopBar(stringResource(id = R.string.comment_detail_screen_title), navController) }) {
+    Scaffold(topBar = {
+        ZBEspTopBar(
+            stringResource(id = R.string.comment_detail_screen_title),
+            navController
+        )
+    }) {
         LazyColumn {
 
             item {
@@ -73,7 +78,9 @@ fun ZoneCommentsDetail(comment: Comment, navController: NavController) {
 
 private fun deleteComment(comment: Comment) {
     val commentToDelete = commentsDatabase.whereEqualTo("id", comment.id)
-    commentToDelete.get().addOnSuccessListener { it.forEach { value ->
-        commentsDatabase.document(value.id).delete()
-    } }
+    commentToDelete.get().addOnSuccessListener {
+        it.forEach { value ->
+            commentsDatabase.document(value.id).delete()
+        }
+    }
 }
